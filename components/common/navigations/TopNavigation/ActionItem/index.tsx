@@ -8,8 +8,8 @@ interface IProps {
 }
 
 export const Item = styled.button`
-  font-size: 20px;
-  width: 34px;
+  font-size: 22px;
+  width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;

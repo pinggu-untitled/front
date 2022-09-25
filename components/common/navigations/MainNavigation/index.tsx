@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import { FaMapPin } from 'react-icons/fa';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { MdExplore, MdOutlineExplore } from 'react-icons/md';
 import { IoChatbubbles, IoChatbubblesOutline, IoEllipsisHorizontal } from 'react-icons/io5';
@@ -26,10 +25,11 @@ const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 26px;
+  //font-size: 26px;
   cursor: pointer;
   border-bottom: 1px solid #dfdfdf;
 `;
+
 const NavList = styled.ul`
   width: 100%;
   height: 100%;
@@ -44,8 +44,14 @@ export const UserProfile = styled.div`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: gray;
   cursor: pointer;
+  overflow: hidden;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 `;
 
 const MainNavigation = () => {
@@ -58,7 +64,8 @@ const MainNavigation = () => {
       <Base>
         <Logo>
           <Link to={'/'}>
-            <FaMapPin />
+            {/*<FaMapPin />*/}
+            핑구
           </Link>
         </Logo>
         <NavList>
@@ -90,7 +97,9 @@ const MainNavigation = () => {
             }}
           />
         </NavList>
-        <UserProfile onClick={toggleModal}>{/*<img src={'/'} />*/}</UserProfile>
+        <UserProfile onClick={toggleModal}>
+          <img src={'/public/placeholder.png'} />
+        </UserProfile>
       </Base>
       <UserMenuModal show={showUserMenu} onCloseModal={toggleModal} />
     </>

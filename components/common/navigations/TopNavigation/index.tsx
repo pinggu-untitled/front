@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import ActionItem from './ActionItem';
-import { HiOutlineBell, HiOutlineUsers } from 'react-icons/hi';
+import { BiBell } from 'react-icons/bi';
 import { BiSearch } from 'react-icons/bi';
 import { MdOutlineCreate } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,7 @@ export const ActionItemList = styled.div`
   display: flex;
 
   & button:not(:first-of-type) {
-    margin-left: 10px;
+    margin-left: 5px;
   }
 `;
 
@@ -50,7 +50,7 @@ const TopNavigation = ({ title }: IProps) => {
         <ActionItemList>
           <ActionItem icon={<BiSearch />} onClick={() => handleModal('showSearchFormModal')} />
           <ActionItem icon={<MdOutlineCreate />} onClick={() => navigate('/posts/new')} />
-          <ActionItem icon={<HiOutlineBell />} onClick={() => console.log('clicked')} />
+          <ActionItem icon={<BiBell />} onClick={() => console.log('clicked')} />
         </ActionItemList>
       </Header>
       <SearchFormModal show={showModals.showSearchFormModal} onCloseModal={() => handleModal('showSearchFormModal')} />
