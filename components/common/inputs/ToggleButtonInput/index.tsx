@@ -14,6 +14,7 @@ export const Button = styled.label<{ active: boolean; theme: any }>`
   border-radius: 20px;
   align-items: center;
   padding: 3px;
+  //height: 32px;
   background-color: ${({ theme, active }) => (active ? '#0295f6' : '#8e8e8e')};
   cursor: pointer;
 `;
