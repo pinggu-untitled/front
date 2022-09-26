@@ -21,7 +21,7 @@ export const MainContentZone = styled.div`
 `;
 
 export const Form = styled.form`
-  & label:not(:first-of-type) {
+  & label {
     margin-bottom: 20px;
   }
 
@@ -35,13 +35,12 @@ export const Form = styled.form`
 interface IForm {
   title: string;
   content: string;
-  isPrivate: boolean;
+  is_private: boolean;
   images: any[];
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
   mentions: { userId: number }[];
-  myPings: { id: number }[];
 }
 
 const PostsNew = () => {
@@ -51,12 +50,11 @@ const PostsNew = () => {
       title: '',
       content: '',
       images: [],
-      isPrivate: false,
+      is_private: false,
       longitude: '',
       latitude: '',
       hashtags: [{ content: 'hello' }, { content: 'hello2' }],
       mentions: [{ userId: 1 }, { userId: 2 }],
-      myPings: [{ id: 1 }, { id: 2 }],
     },
   });
 
@@ -72,12 +70,12 @@ const PostsNew = () => {
     useCallback(async (data: IForm) => {
       let filenames;
       if (data.images.length >= 1) {
-        filenames = await axios.post('/posts/images', data.images, {
+        filenames = await axios.post('/posts/images', handleFormData('images', data.images), {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
 
-      axios.post('/posts', { data, images: filenames }).then((res) => {
+      axios.post('/posts', { ...data, images: filenames ?? [] }).then((res) => {
         console.log(res.data);
       });
     }, []),
@@ -90,9 +88,8 @@ const PostsNew = () => {
         <Form>
           <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
           <FixedLabelTextarea control={control} label={'게시글 내용'} name={'content'} onSubmit={onSubmit} />
-          <ImageInputList control={control} name={'files'} />
+          <ImageInputList control={control} name={'images'} />
           <ToggleButtonInput control={control} name={'isPrivate'} />
-
           <SquareButton type={'submit'} content={'공유하기'} onClick={onSubmit} />
         </Form>
       </MainContentZone>

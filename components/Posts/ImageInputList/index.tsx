@@ -26,7 +26,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
   return (
     <Base>
       <Ul>
-        <ImageInput control={control} name={'files'} maxCount={8} />
+        <ImageInput control={control} name={name} maxCount={8} />
         {fields.map((field) => (
           <div></div>
         ))}
