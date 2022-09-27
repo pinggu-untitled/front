@@ -6,6 +6,7 @@ interface IProps {
   control: any;
   label: string;
   name: string;
+  defaultValue?: string;
 }
 
 export const Base = styled.label`
@@ -28,7 +29,7 @@ export const Input = styled.input`
     outline: none;
   }
 `;
-const FixedLabelInput: FC<IProps> = ({ control, label, name }) => {
+const FixedLabelInput: FC<IProps> = ({ control, label, name, defaultValue }) => {
   return (
     <Base>
       <span className={'label'}>{label}</span>

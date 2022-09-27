@@ -52,7 +52,7 @@ const PrevButtonHeader: FC<IProps> = ({ onClick }) => {
         <ActionItem onClick={() => modalHandler('showSettingsModal')}>
           <HiOutlineDotsVertical />
         </ActionItem>
-      </Header>{' '}
+      </Header>
       <SettingsModal show={showModals.showSettingsModal} onCloseModal={() => modalHandler('showSettingsModal')} />
     </>
   );

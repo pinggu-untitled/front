@@ -3,6 +3,7 @@ import InnerModal from '@components/common/modals/InnerModal';
 import styled from '@emotion/styled';
 import SettingsMenuList from '@components/Post/TopNavigation/SettingsModal/SettingsMenuList';
 import SettingsMenuItem from '@components/Post/TopNavigation/SettingsModal/SettingsMenuList/SettingsMenuItem';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   show: boolean;
@@ -21,13 +22,12 @@ export const ModalContent = styled.div`
 `;
 
 const SettingsModal: FC<IProps> = ({ show, onCloseModal }) => {
+  const navigate = useNavigate();
   return (
     <InnerModal show={show} onCloseModal={onCloseModal}>
       <ModalContent>
         <SettingsMenuList>
-          <SettingsMenuItem content={'게시물 삭제'} onClick={() => console.log('delete')} />
-          <SettingsMenuItem content={'게시물 공유하기'} onClick={() => console.log('share')} />
-          <SettingsMenuItem content={'게시물 신고하기'} onClick={() => console.log('watch')} />
+          <SettingsMenuItem content={'편집하기'} onClick={() => navigate('edit')} />
         </SettingsMenuList>
       </ModalContent>
     </InnerModal>

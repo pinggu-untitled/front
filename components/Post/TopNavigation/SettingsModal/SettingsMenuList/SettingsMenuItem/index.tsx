@@ -7,18 +7,18 @@ interface IProps {
   onClick: () => void;
 }
 
-export const Base = styled.li<{ theme: any }>`
+export const Base = styled.li`
   width: 100%;
   padding: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.2s;
+  transition: 0.2s ease;
   cursor: pointer;
   font-size: 15px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray[100]};
+    background-color: rgba(0, 0, 0, 0.05);
   }
 `;
 
