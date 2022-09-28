@@ -23,7 +23,7 @@ export const Base = styled.li<{ theme: any; active: boolean }>`
       font-size: 22px;
     }
     & .title {
-      font-size: 10px;
+      font-size: 13px;
       color: ${({ theme }) => theme.colors.gray[800]};
       margin-top: 5px;
     }

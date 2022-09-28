@@ -9,6 +9,9 @@ import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea'
 import SquareButton from '@components/common/buttons/SquareButton';
 import ImageInputList from '@components/Posts/ImageInputList';
 import axios from 'axios';
+import PostUserProfile from '@components/Posts/PostUserProfile';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 export const Base = styled.div`
   width: 100%;
@@ -21,7 +24,7 @@ export const MainContentZone = styled.div`
 `;
 
 export const Form = styled.form`
-  & label {
+  & label:not(:first-of-type) {
     margin-bottom: 20px;
   }
 
@@ -29,6 +32,16 @@ export const Form = styled.form`
     margin-bottom: 20px;
     display: flex;
     align-items: center;
+  }
+`;
+
+export const Private = styled.label`
+  display: flex;
+  align-items: center;
+
+  > span {
+    font-size: 14px;
+    margin-right: 5px;
   }
 `;
 
@@ -40,21 +53,22 @@ interface IForm {
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
-  mentions: { userId: number }[];
+  mentions: { receiver: number }[];
 }
 
 const PostsNew = () => {
   const navigate = useNavigate();
+  const { data: userData, mutate: mutateUserData } = useSWR(`/users/me`, fetcher);
   const { control, handleSubmit } = useForm<IForm>({
     defaultValues: {
       title: '',
       content: '',
       images: [],
       is_private: false,
-      longitude: '',
-      latitude: '',
+      longitude: '111.111111',
+      latitude: '222.222222',
       hashtags: [{ content: 'hello' }, { content: 'hello2' }],
-      mentions: [{ userId: 1 }, { userId: 2 }],
+      mentions: [{ receiver: 1 }, { receiver: 2 }],
     },
   });
 
@@ -75,9 +89,8 @@ const PostsNew = () => {
         });
       }
 
-      axios.post('/posts', { ...data, images: filenames ?? [] }).then((res) => {
-        console.log(res.data);
-      });
+      const newPost = await axios.post('/posts', { ...data, images: filenames?.data ?? [] });
+      console.log(newPost.data);
     }, []),
   );
 
@@ -85,11 +98,16 @@ const PostsNew = () => {
     <Base>
       <PrevButtonTitleHeader title="게시물 생성" onClick={() => navigate('/')} />
       <MainContentZone>
-        <Form>
+        <Form onSubmit={onSubmit}>
+          <PostUserProfile user={userData}>
+            <Private>
+              <span>비공개</span>
+              <ToggleButtonInput control={control} name={'is_private'} />
+            </Private>
+          </PostUserProfile>
           <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
           <FixedLabelTextarea control={control} label={'게시글 내용'} name={'content'} onSubmit={onSubmit} />
           <ImageInputList control={control} name={'images'} />
-          <ToggleButtonInput control={control} name={'isPrivate'} />
           <SquareButton type={'submit'} content={'공유하기'} onClick={onSubmit} />
         </Form>
       </MainContentZone>

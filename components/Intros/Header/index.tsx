@@ -22,7 +22,7 @@ export const Logo = styled.span`
 export const ToggleButton = styled.div`
   background-color: #000;
   color: #fff;
-  padding: 6px 15px;
+  padding: 7px 15px 6px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 700;

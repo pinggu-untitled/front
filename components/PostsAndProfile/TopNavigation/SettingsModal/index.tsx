@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import InnerModal from '@components/common/modals/InnerModal';
 import styled from '@emotion/styled';
-import SettingsMenuList from '@components/Post/TopNavigation/SettingsModal/SettingsMenuList';
-import SettingsMenuItem from '@components/Post/TopNavigation/SettingsModal/SettingsMenuList/SettingsMenuItem';
+import SettingsMenuList from '@components/PostsAndProfile/TopNavigation/SettingsModal/SettingsMenuList';
+import SettingsMenuItem from '@components/PostsAndProfile/TopNavigation/SettingsModal/SettingsMenuList/SettingsMenuItem';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {

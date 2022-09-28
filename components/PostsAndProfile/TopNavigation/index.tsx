@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import PreviousButton from '@components/common/buttons/PreviousButton';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
-import SettingsModal from '@components/Post/TopNavigation/SettingsModal';
+import SettingsModal from '@components/PostsAndProfile/TopNavigation/SettingsModal';
 interface IProps {
   onClick: () => void;
 }

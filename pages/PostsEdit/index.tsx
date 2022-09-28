@@ -1,14 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHeader';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ToggleButtonInput from '@components/common/inputs/ToggleButtonInput';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
 import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
 import SquareButton from '@components/common/buttons/SquareButton';
 import ImageInputList from '@components/Posts/ImageInputList';
 import axios from 'axios';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 export const Base = styled.div`
   width: 100%;
@@ -43,22 +45,46 @@ interface IForm {
   mentions: { receiver: number }[];
 }
 
+interface IPost {
+  title: string;
+  content: string;
+  is_private: number | boolean;
+  longitude: string;
+  latitude: string;
+  images: [];
+}
+
 const PostsEdit = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm<IForm>({
+  const { postId } = useParams<{ postId: string }>();
+  const { data: pd, mutate: postMutate } = useSWR(`/posts/${postId}`, fetcher);
+  const { control, handleSubmit, setValue } = useForm<IForm>({
     defaultValues: {
       title: '',
       content: '',
-      images: [],
       is_private: false,
-      longitude: '111.111111',
-      latitude: '222.222222',
+      longitude: '',
+      latitude: '',
+      images: [],
       hashtags: [{ content: 'hello' }, { content: 'hello2' }],
       mentions: [{ receiver: 1 }, { receiver: 2 }],
     },
   });
 
-  const handleFormData = useCallback((name: string, files: any[]) => {
+  useEffect(() => {
+    (() => {
+      if (pd) {
+        setValue('title', pd?.post.title);
+        setValue('content', pd?.post.content);
+        setValue('images', pd?.files);
+        setValue('is_private', pd?.post.is_private || false);
+        setValue('longitude', pd?.post.longitude);
+        setValue('latitude', pd?.post.latitude);
+      }
+    })();
+  }, [pd]);
+
+  const makeFormData = useCallback((name: string, files: any[]) => {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append(name, files[i]);
@@ -70,7 +96,7 @@ const PostsEdit = () => {
     useCallback(async (data: IForm) => {
       let filenames;
       if (data.images.length >= 1) {
-        filenames = await axios.post('/posts/images', handleFormData('images', data.images), {
+        filenames = await axios.post('/posts/images', makeFormData('images', data.images), {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -90,6 +116,9 @@ const PostsEdit = () => {
           <FixedLabelTextarea control={control} label={'게시글 내용'} name={'content'} onSubmit={onSubmit} />
           <ToggleButtonInput control={control} name={'is_private'} />
           <SquareButton type={'submit'} content={'공유하기'} onClick={onSubmit} />
+          <div>
+            더 필요한 것: 마이핑스, 위치 수정, is_private 수정, mention/hashtag 추가하고 submit, 포스트(3), 겟(2)
+          </div>
         </Form>
       </MainContentZone>
     </Base>

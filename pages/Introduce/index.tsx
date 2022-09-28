@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { Redirect } from 'react-router';
 import { useNavigate } from 'react-router-dom';
+import Header from '@components/Intros/Header';
 
 export const Base = styled.div`
   width: 100%;
@@ -34,31 +35,12 @@ interface IForm {
 }
 const Intro = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm<IForm>({ defaultValues: { email: '', password: '' } });
-  const { data: userData, mutate } = useSWR('/users/me', fetcher);
-  const onSubmit = useCallback((data: IForm) => {
-    axios
-      .post('/users/login', data)
-      .then((res) => {
-        console.log(res.data);
-        mutate();
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (userData === undefined) return <div>로딩중...</div>;
-
-  if (userData) navigate('/');
 
   return (
     <Base>
+      <Header url={'/intro'} name={'인증하기'} />
       <Container>
-        <h1>로그인 및 회원가입</h1>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <MovingLabelInput control={control} type="text" label={'이메일'} name={'email'} />
-          <MovingLabelInput control={control} type="password" label={'패스워드'} name={'password'} />
-          <SquareButton content={'로그인'} onClick={handleSubmit(onSubmit)} />
-        </Form>
+        <h1>소개페이지</h1>
       </Container>
     </Base>
   );

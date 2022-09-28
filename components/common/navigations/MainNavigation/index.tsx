@@ -14,7 +14,7 @@ const Base = styled.nav`
   top: 0;
   left: 0;
   bottom: 0;
-  width: 63px;
+  width: 68px;
   height: 100vh;
   border-right: 1px solid #dfdfdf;
 `;
@@ -63,10 +63,7 @@ const MainNavigation = () => {
     <>
       <Base>
         <Logo>
-          <Link to={'/'}>
-            {/*<FaMapPin />*/}
-            핑구
-          </Link>
+          <Link to={'/'}>핑구</Link>
         </Logo>
         <NavList>
           <NavItem
@@ -76,10 +73,6 @@ const MainNavigation = () => {
           <NavItem
             url={'/explore'}
             contents={{ icons: { filled: <MdExplore />, outlined: <MdOutlineExplore /> }, title: '탐색' }}
-          />
-          <NavItem
-            url={'/mypings'}
-            contents={{ icons: { filled: <RiMapPinUserFill />, outlined: <RiMapPinUserLine /> }, title: '마이핑스' }}
           />
           <NavItem
             url={'/chatrooms'}

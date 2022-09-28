@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import TopNavigation from '@components/common/navigations/TopNavigation';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 export const Base = styled.div`
   width: 100%;
@@ -63,7 +65,7 @@ const Home = () => {
       <MainContentZone>
         <PostCards>
           {posts.map((post) => (
-            <PostCard>
+            <PostCard key={post.id}>
               <Link to={`/posts/${post.id}`}>{post.title}</Link>
             </PostCard>
           ))}

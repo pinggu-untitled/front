@@ -17,7 +17,7 @@ export const Layout = styled.div`
 export const MainPage = styled.main<{ show: boolean }>`
   position: absolute;
   width: 440px;
-  left: 63px;
+  left: 68px;
   top: 0;
   bottom: 0;
   border-right: 1px solid #dfdfdf;
@@ -31,7 +31,7 @@ export const SlideButton = styled.div<{ show: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${({ show }) => (show ? '503px' : '63px')};
+  left: ${({ show }) => (show ? '508px' : '63px')};
   transition: ${({ show }) => show && '0.1s'};
   width: 24px;
   height: 50px;
@@ -48,12 +48,11 @@ export const SlideButton = styled.div<{ show: boolean }>`
 
 const AppLayout: FC<IProps> = ({ children }) => {
   const location = useLocation();
-  console.log(location.pathname);
   const [showPage, setShowPage] = useState(true);
   return (
     <ThemeProvider theme={theme}>
       <Layout>
-        {location.pathname === '/intro' ? (
+        {['/intro', '/introduce'].includes(location.pathname) ? (
           <div>{children}</div>
         ) : (
           <>
