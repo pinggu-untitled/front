@@ -19,7 +19,7 @@ export const Base = styled.div`
     margin-left: 10px;
 
     & .nickname {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
     }
   }

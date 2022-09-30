@@ -9,12 +9,11 @@ export const Base = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: 100%;
-  height: 70px;
-  border-top: 1px solid #dfdfdf;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   padding: 20px 0;
 
   & li:not(:last-of-type) {
-    border-right: 1px solid #dfdfdf;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
   }
 `;
 

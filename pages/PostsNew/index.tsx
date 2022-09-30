@@ -12,6 +12,7 @@ import axios from 'axios';
 import PostUserProfile from '@components/Posts/PostUserProfile';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
+import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
 
 export const Base = styled.div`
   width: 100%;
@@ -24,7 +25,7 @@ export const MainContentZone = styled.div`
 `;
 
 export const Form = styled.form`
-  & label:not(:first-of-type) {
+  > label {
     margin-bottom: 20px;
   }
 
@@ -96,14 +97,15 @@ const PostsNew = () => {
 
   return (
     <Base>
-      <PrevButtonTitleHeader title="게시물 생성" onClick={() => navigate('/')} />
+      <PrevButtonTitleHeader title="게시물 만들기" onClick={() => navigate('/')} />
       <MainContentZone>
         <Form onSubmit={onSubmit}>
           <PostUserProfile user={userData}>
-            <Private>
-              <span>비공개</span>
-              <ToggleButtonInput control={control} name={'is_private'} />
-            </Private>
+            <TextToggleButtonInput
+              control={control}
+              name={'is_private'}
+              messages={{ checked: '모두에게', unChecked: '나에게만' }}
+            />
           </PostUserProfile>
           <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
           <FixedLabelTextarea control={control} label={'게시글 내용'} name={'content'} onSubmit={onSubmit} />

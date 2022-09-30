@@ -12,7 +12,7 @@ export const Base = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 30px;
+  padding: 0 20px;
 `;
 
 const ProfileBox: FC<IProps> = ({ children }) => {

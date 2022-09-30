@@ -4,16 +4,18 @@ import { Link, useLocation, useMatch } from 'react-router-dom';
 import { useRouteMatch } from 'react-router';
 
 interface IProps {
-  content: string;
+  content: string | React.ReactNode;
   onClick: () => void;
 }
 
 export const Base = styled.li`
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
   cursor: pointer;
+
+  & svg {
+    font-size: 24px;
+  }
 `;
 
 const ActionButton: FC<IProps> = ({ content, onClick }) => {

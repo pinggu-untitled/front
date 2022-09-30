@@ -5,7 +5,7 @@ import { useRouteMatch } from 'react-router';
 import { useTheme } from '@emotion/react';
 
 interface IProps {
-  content: string;
+  content: string | React.ReactNode;
   url: string;
   match: string;
 }
@@ -19,6 +19,7 @@ export const Base = styled.li<{ theme: any; active: boolean }>`
     justify-content: center;
     align-items: center;
     color: ${({ active }) => (active ? '#000' : 'gray')};
+    font-weight: ${({ active }) => (active ? 700 : 400)};
   }
 `;
 

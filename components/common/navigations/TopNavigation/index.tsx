@@ -6,6 +6,8 @@ import { BiSearch } from 'react-icons/bi';
 import { MdOutlineCreate } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import SearchFormModal from '@components/common/navigations/TopNavigation/SearchFormModal';
+import { HiOutlineViewGridAdd } from 'react-icons/hi';
+import NewMenu from '@components/common/navigations/TopNavigation/NewMenu';
 
 interface IProps {
   title: string;
@@ -38,7 +40,10 @@ export const ActionItemList = styled.div`
 
 const TopNavigation = ({ title }: IProps) => {
   const navigate = useNavigate();
-  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showSearchFormModal: false });
+  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
+    showSearchFormModal: false,
+    showNewMenu: false,
+  });
   const handleModal = useCallback((modalName: string) => {
     setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
   }, []);
@@ -49,11 +54,12 @@ const TopNavigation = ({ title }: IProps) => {
         <h1>{title}</h1>
         <ActionItemList>
           <ActionItem icon={<BiSearch />} onClick={() => handleModal('showSearchFormModal')} />
-          <ActionItem icon={<MdOutlineCreate />} onClick={() => navigate('/posts/new')} />
+          <ActionItem icon={<HiOutlineViewGridAdd />} onClick={() => handleModal('showNewMenu')} />
           <ActionItem icon={<BiBell />} onClick={() => console.log('clicked')} />
         </ActionItemList>
       </Header>
       <SearchFormModal show={showModals.showSearchFormModal} onCloseModal={() => handleModal('showSearchFormModal')} />
+      <NewMenu show={showModals.showNewMenu} onCloseModal={() => handleModal('showNewMenu')} />
     </>
   );
 };

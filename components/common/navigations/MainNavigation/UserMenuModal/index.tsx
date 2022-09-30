@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
+import { HiOutlineLogout } from 'react-icons/hi';
 
 interface IProps {
   show: boolean;
@@ -17,36 +18,19 @@ interface IProps {
 export const ModalContent = styled.div`
   position: absolute;
   bottom: 30px;
-  left: 56px;
+  left: 60px;
   width: 180px;
+  background-color: #fff;
 `;
 const UserMenu = ({ show, onCloseModal }: IProps) => {
   const navigate = useNavigate();
-  const { data: userData, mutate } = useSWR('/users/me', fetcher);
-  const onLogout = useCallback(() => {
-    axios
-      .post('/users/logout')
-      .then((res) => {
-        mutate();
-        backToSignIn();
-      })
-      .then((err) => console.log(err));
-  }, []);
-
-  const backToSignIn = useCallback(() => {
-    navigate('/sign_in');
-    onCloseModal();
-  }, []);
+  const onLogout = useCallback(() => {}, []);
 
   return (
     <FullScreenModal show={show} onCloseModal={onCloseModal}>
       <ModalContent>
         <MenuList>
-          {userData ? (
-            <MenuItem content={'로그아웃'} onClick={onLogout} />
-          ) : (
-            <MenuItem content={'로그인'} onClick={backToSignIn} />
-          )}
+          <MenuItem icon={<HiOutlineLogout />} content={'로그아웃'} onClick={onLogout} />
         </MenuList>
       </ModalContent>
     </FullScreenModal>

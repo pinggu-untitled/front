@@ -9,6 +9,7 @@ const Profile = loadable(() => import('@pages/Profile'));
 const ProfilePosts = loadable(() => import('@pages/ProfilePosts'));
 const ProfileMyPings = loadable(() => import('@pages/ProfileMyPings'));
 const ProfileFriends = loadable(() => import('@pages/ProfileFriends'));
+const MyPingsNew = loadable(() => import('@pages/MyPingsNew'));
 const Chatrooms = loadable(() => import('@pages/Chatrooms'));
 const Settings = loadable(() => import('@pages/Settings'));
 const More = loadable(() => import('@pages/More'));
@@ -18,6 +19,7 @@ const PostsNew = loadable(() => import('@pages/PostsNew'));
 const Intro = loadable(() => import('@pages/Intro'));
 const Introduce = loadable(() => import('@pages/Introduce'));
 const PostsEdit = loadable(() => import('@pages/PostsEdit'));
+const ProfileEdit = loadable(() => import('@pages/ProfileEdit'));
 
 const App = () => {
   return (
@@ -31,6 +33,8 @@ const App = () => {
           <Route path={'/:nickname/mypings'} element={<ProfileMyPings />} />
           <Route path={'/:nickname/friends'} element={<ProfileFriends />} />
         </Route>
+        <Route path={'/mypings/new'} element={<MyPingsNew />} />
+        <Route path={'/:nickname/edit'} element={<ProfileEdit />} />
         <Route path={'/chatrooms'} element={<Chatrooms />} />
         <Route path={'/chatrooms/:chatroomId'} element={<Chatrooms />} />
         <Route path={'/intro'} element={<Intro />} />

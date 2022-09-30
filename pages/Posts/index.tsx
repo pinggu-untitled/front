@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import TopNavigation from '@components/PostsAndProfile/TopNavigation';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -7,17 +7,19 @@ import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import PillButton from '@components/common/buttons/PillButton';
-import { BsChat } from 'react-icons/bs';
-import { HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';
 import Section from '@components/PostsAndProfile/Section';
 import ActionButtonList from '@components/PostsAndProfile/ProfileBox/ActionButtonList';
 import ActionButton from '@components/PostsAndProfile/ProfileBox/ActionButtonList/ActionButton';
 import ProfileBox from '@components/PostsAndProfile/ProfileBox';
-
+import ProfileImageButton from '@components/PostsAndProfile/ProfileBox/ProfileImageButton';
+import FollowButton from '@components/PostsAndProfile/ProfileBox/FollowButton';
+import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
+import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';
+import { BiCommentDetail } from 'react-icons/bi';
+import HoverLabel from '@components/common/labels/HoverLabel';
 export const Base = styled.div`
   width: 100%;
   height: 100vh;
-  overflow-y: scroll;
 `;
 
 export const MainContentZone = styled.div`
@@ -39,33 +41,20 @@ export const Images = styled.div`
   }
 `;
 
-export const ProfileCard = styled.div`
+export const ProfileBar = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 10px 0;
-
+  > div {
+    display: flex;
+    align-items: center;
+  }
   & .nickname {
     font-size: 15px;
     font-weight: 700;
-    margin-right: 10px;
-  }
-`;
-
-export const ProfileImageButton = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid #dfdfdf;
-  overflow: hidden;
-  background-color: #fff;
-  cursor: pointer;
-  margin-right: 10px;
-
-  & img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
+    margin: 0 10px;
   }
 `;
 
@@ -99,6 +88,19 @@ export const TextZone = styled.div<{ theme: any }>`
   }
 `;
 
+export const ContentWrapper = styled.div`
+  & svg {
+    font-size: 24px;
+  }
+
+  > .counts {
+    font-size: 14px;
+    display: inline-block;
+    margin-left: 5px;
+    transform: translateY(-5px);
+    font-weight: 600;
+  }
+`;
 interface IForm {
   searchQueries: string;
 }
@@ -108,6 +110,7 @@ const Post = () => {
   const theme = useTheme();
   const { postId } = useParams<{ postId: string }>();
   const { data: pd, mutate: mutatePostData } = useSWR(`/posts/${postId}`, fetcher);
+  const [following, setFollowing] = useState(false);
 
   console.log('>>>', pd);
 
@@ -117,23 +120,52 @@ const Post = () => {
     <Base>
       <TopNavigation onClick={() => navigate('/')} />
       <MainContentZone>
-        {/*{pd?.post.files && (*/}
         <Images>
           <img src={'/public/logo.png'} />
         </Images>
-        {/*)}*/}
         <ProfileBox>
-          <ProfileCard>
-            <ProfileImageButton onClick={() => navigate(`/${pd?.post.nickname}`)}>
-              <img src={pd?.post?.profile_image_url || '/public/placeholder.png'} />
-            </ProfileImageButton>
-            <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
-            <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
-          </ProfileCard>
+          <ProfileBar>
+            <div>
+              <ProfileImageButton
+                src={pd?.post?.profile_image_url || '/public/placeholder.png'}
+                nickname={pd?.post?.nickname}
+              />
+              <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
+              <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
+            </div>
+            <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
+          </ProfileBar>
           <ActionButtonList>
-            <ActionButton content={'좋아요'} onClick={() => console.log('clicked')} />
-            <ActionButton content={'위치'} onClick={() => console.log('clicked')} />
-            <ActionButton content={`댓글(0)`} onClick={() => console.log('clicked')} />
+            <ActionButton
+              content={
+                <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
+                  <ContentWrapper>
+                    <AiOutlineLike />
+                    <span className={'counts'}>{pd?.likers?.length}</span>
+                  </ContentWrapper>
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
+            <ActionButton
+              content={
+                <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
+                  <HiOutlineLocationMarker />
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
+            <ActionButton
+              content={
+                <HoverLabel label={'댓글'} style={{ top: '28px' }}>
+                  <ContentWrapper>
+                    <BiCommentDetail />
+                    <span className={'counts'}>{pd?.comments?.length || 10}</span>
+                  </ContentWrapper>
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
           </ActionButtonList>
         </ProfileBox>
         <TextZone theme={theme}>
@@ -145,9 +177,7 @@ const Post = () => {
             <span> · {pd?.post.created_at}</span>
           </div>
           <p className={'content'}>{pd?.post.content}</p>
-          <p className={'meta'}>
-            관심 {pd?.likers.length} · 공유 {0} · 조회 {pd?.post.hits}
-          </p>
+          <p className={'meta'}>조회수 {pd?.post.hits}</p>
         </TextZone>
         {/* 마이핑스 영역 */}
         <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
