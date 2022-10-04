@@ -80,7 +80,7 @@ const PostsEdit = () => {
       title: '',
       content: '',
       images: [],
-      is_private: false,
+      is_private: pd?.post.is_private === 1,
       longitude: '',
       latitude: '',
       hashtags: [],
@@ -104,6 +104,8 @@ const PostsEdit = () => {
       setShowOptions((p) => ({ ...p, showImages: pd?.post?.Images.length > 0 }));
     }
   }, [pd]);
+
+  console.log(pd?.post.is_private === 1);
 
   const { title, images, longitude, latitude } = watch();
 
