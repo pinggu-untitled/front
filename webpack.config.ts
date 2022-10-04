@@ -72,8 +72,15 @@ const config: Configuration = {
       // },
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
-    new webpack.DefinePlugin({
-      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
+    // new webpack.DefinePlugin({
+    //   REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
+    // }),
+
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      minify: false,
+      TEST_KEY: process.env.TEST_KEY,
+      REACT_APP_KAKAO_MAP_KEY: process.env.REACT_APP_KAKAO_MAP_KEY,
     }),
   ],
   output: {
