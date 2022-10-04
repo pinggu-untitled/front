@@ -6,6 +6,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
@@ -77,13 +78,14 @@ const config: Configuration = {
     // }),
 
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './index.html',
       env: process.env,
+      minify: false,
       REACT_APP_KAKAO_MAP_KEY: process.env.REACT_APP_KAKAO_MAP_KEY,
     }),
 
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
+      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
     }),
   ],
   output: {
