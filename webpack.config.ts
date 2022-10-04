@@ -77,10 +77,13 @@ const config: Configuration = {
     // }),
 
     new HtmlWebpackPlugin({
-      template: './index.html',
-      minify: false,
-      TEST_KEY: process.env.TEST_KEY,
+      template: './public/index.html',
+      env: process.env,
       REACT_APP_KAKAO_MAP_KEY: process.env.REACT_APP_KAKAO_MAP_KEY,
+    }),
+
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
     }),
   ],
   output: {
