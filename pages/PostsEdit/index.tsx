@@ -103,7 +103,7 @@ const PostsEdit = () => {
   }, [pd]);
 
   const { title, images, longitude, latitude } = watch();
-
+  console.log(images);
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: pd?.post.Images.length > 0,
     showSearchLocation: false,

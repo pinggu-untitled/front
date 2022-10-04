@@ -8,29 +8,29 @@ interface IProps {
   name: string;
 }
 
-export const Base = styled.div``;
-
-export const Ul = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 6px;
-  gap: 6px;
-  width: 100%;
-  height: 100px;
-  border: 1px solid #dfdfdf;
-  border-radius: 4px;
+export const Base = styled.div`
+  > ul {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 6px;
+    gap: 6px;
+    width: 100%;
+    height: 100px;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+  }
 `;
 
 const ImageInputList: FC<IProps> = ({ control, name }) => {
   const { fields, remove } = useFieldArray({ control, name });
   return (
     <Base>
-      <Ul>
+      <ul>
         <ImageInput control={control} name={name} maxCount={8} />
         {fields.map((field) => (
           <div>...</div>
         ))}
-      </Ul>
+      </ul>
     </Base>
   );
 };

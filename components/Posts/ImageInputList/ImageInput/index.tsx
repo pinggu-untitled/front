@@ -32,7 +32,7 @@ export const Input = styled.input`
   height: 100%;
 `;
 
-const FileInput: FC<IProps> = ({ control, name, maxCount }) => {
+const ImageInput: FC<IProps> = ({ control, name, maxCount }) => {
   const { field } = useController({ control, name });
   const [count, setCount] = useState(0);
   return (
@@ -62,4 +62,4 @@ const FileInput: FC<IProps> = ({ control, name, maxCount }) => {
   );
 };
 
-export default FileInput;
+export default ImageInput;
