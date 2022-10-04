@@ -1,36 +1,36 @@
 import React, { FC } from 'react';
-import InnerModal from '@components/common/modals/InnerModal';
 import styled from '@emotion/styled';
 import SettingsMenuList from '@components/PostsAndProfile/TopNavigation/SettingsModal/SettingsMenuList';
 import SettingsMenuItem from '@components/PostsAndProfile/TopNavigation/SettingsModal/SettingsMenuList/SettingsMenuItem';
 import { useNavigate } from 'react-router-dom';
-
+import FullScreenModal from '@components/common/modals/FullScreenModal';
+import MenuList from '@components/common/lists/MenuList';
+import MenuItem from '@components/common/lists/MenuList/MenuItem';
+import { BiEditAlt } from 'react-icons/bi';
 interface IProps {
   show: boolean;
   onCloseModal: () => void;
 }
 
 export const ModalContent = styled.div`
-  width: 280px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: 1px solid #dfdfdf;
-  overflow: hidden;
+  position: absolute;
+  width: 200px;
   border-radius: 4px;
+  top: 60px;
+  left: 300px;
+  background-color: #fff;
 `;
 
 const SettingsModal: FC<IProps> = ({ show, onCloseModal }) => {
   const navigate = useNavigate();
   return (
-    <InnerModal show={show} onCloseModal={onCloseModal}>
+    <FullScreenModal show={show} onCloseModal={onCloseModal}>
       <ModalContent>
-        <SettingsMenuList>
-          <SettingsMenuItem content={'편집하기'} onClick={() => navigate('edit')} />
-        </SettingsMenuList>
+        <MenuList>
+          <MenuItem icon={<BiEditAlt />} content={'편집하기'} onClick={() => navigate('edit')} />
+        </MenuList>
       </ModalContent>
-    </InnerModal>
+    </FullScreenModal>
   );
 };
 

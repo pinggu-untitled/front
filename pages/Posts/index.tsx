@@ -11,7 +11,7 @@ import Section from '@components/PostsAndProfile/Section';
 import ActionButtonList from '@components/PostsAndProfile/ProfileBox/ActionButtonList';
 import ActionButton from '@components/PostsAndProfile/ProfileBox/ActionButtonList/ActionButton';
 import ProfileBox from '@components/PostsAndProfile/ProfileBox';
-import ProfileImageButton from '@components/PostsAndProfile/ProfileBox/ProfileImageButton';
+import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
 import FollowButton from '@components/PostsAndProfile/ProfileBox/FollowButton';
 import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';

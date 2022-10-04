@@ -13,11 +13,9 @@ interface IProps {
 export const Button = styled.label<{ active: boolean; theme: any }>`
   display: flex;
   padding: 3px;
-  height: 28px;
+  height: 30px;
   border-radius: 20px;
   align-items: center;
-  //padding: 3px;
-  //height: 32px;
   background-color: ${({ theme, active }) => (active ? '#0295f6' : '#8e8e8e')};
   cursor: pointer;
 `;
@@ -25,7 +23,7 @@ export const Button = styled.label<{ active: boolean; theme: any }>`
 export const MessageZone = styled.div<{ active: boolean }>`
   //width: 100%;
   height: 100%;
-  width: 80px;
+  width: 72px;
   border-radius: 20px;
   //background-color: red;
   display: flex;
@@ -34,18 +32,18 @@ export const MessageZone = styled.div<{ active: boolean }>`
 
   > .message {
     position: absolute;
-    font-size: 13px;
-    font-weight: 500;
-    transform: ${({ active }) => (!active ? 'translate(26px, 1px)' : 'translate(8px,1px)')};
+    font-size: 12px;
+    font-weight: 600;
+    transform: ${({ active }) => (!active ? 'translate(26px, 1px)' : 'translate(4px,1px)')};
   }
 `;
 
 export const SlidingBall = styled.div<{ active: boolean }>`
-  width: 22px;
-  height: 22px;
+  width: 23px;
+  height: 23px;
   border-radius: 50%;
   background-color: #fff;
-  transform: ${({ active }) => active && 'translateX(58px)'};
+  transform: ${({ active }) => active && 'translateX(49px)'};
   transition: 0.2s;
 `;
 
@@ -53,6 +51,7 @@ const TextToggleButtonInput = ({ messages, control, name, style }: IProps) => {
   const theme = useTheme();
   const { field } = useController({ control, name });
   const [sliding, setSliding] = useState<boolean>(field.value);
+
   return (
     <Button active={sliding} theme={theme} style={style}>
       <Controller

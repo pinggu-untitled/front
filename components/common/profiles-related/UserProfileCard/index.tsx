@@ -12,17 +12,6 @@ export const Base = styled.div`
   width: 100%;
   height: 60px;
   display: flex;
-
-  & .info {
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-
-    & .nickname {
-      font-size: 15px;
-      font-weight: 600;
-    }
-  }
 `;
 
 export const ProfileImageWrapper = styled.div`
@@ -40,19 +29,31 @@ export const ProfileImageWrapper = styled.div`
   }
 `;
 
-const PostUserProfile: FC<IProps> = ({ children, user }) => {
+export const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+
+  & .nickname {
+    font-size: 15px;
+    font-weight: 600;
+  }
+`;
+
+const UserProfileWrapper: FC<IProps> = ({ children, user }) => {
   const navigate = useNavigate();
+
   return (
     <Base>
       <ProfileImageWrapper onClick={() => navigate(`/users/${user.nickname}`)}>
         <img src={user?.profile_image_url || '/public/placeholder.png'} />
       </ProfileImageWrapper>
-      <div className={'info'}>
+      <InfoWrapper className={'info'}>
         <span className={'nickname'}>{user?.nickname || '아무개'}</span>
         {children}
-      </div>
+      </InfoWrapper>
     </Base>
   );
 };
 
-export default PostUserProfile;
+export default UserProfileWrapper;

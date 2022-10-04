@@ -31,7 +31,7 @@ export const SlideButton = styled.div<{ show: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${({ show }) => (show ? '508px' : '63px')};
+  left: ${({ show }) => (show ? '508px' : '68px')};
   transition: ${({ show }) => show && '0.1s'};
   width: 24px;
   height: 50px;

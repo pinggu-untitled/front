@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { CSSProperties, FC, memo, useCallback, useMemo } from 'react';
 import styled from '@emotion/styled';
 
 interface IProps {
@@ -9,10 +9,11 @@ interface IProps {
 
 export const Base = styled.div`
   position: relative;
+
   > .label {
     height: 30px;
     padding: 0 10px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 4px;
     color: #fff;
     font-size: 13px;
@@ -35,14 +36,17 @@ export const Base = styled.div`
   }
 `;
 const HoverLabel: FC<IProps> = ({ label, children, style }) => {
+  const stopPropagation = useCallback((e: any) => {
+    e.stopPropagation();
+  }, []);
   return (
     <Base>
       <div className={'content'}>{children}</div>
-      <div className={'label'} style={style}>
+      <div className={'label'} style={useMemo(() => style, [])}>
         {label}
       </div>
     </Base>
   );
 };
 
-export default HoverLabel;
+export default memo(HoverLabel);

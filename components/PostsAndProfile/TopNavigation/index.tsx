@@ -42,18 +42,19 @@ export const ActionItem = styled.div`
 const PrevButtonHeader: FC<IProps> = ({ onClick }) => {
   const navigate = useNavigate();
   const [showModals, setShowModals] = useState<{ [key: string]: any }>({ showSettingsModal: false });
-  const modalHandler = useCallback((modalName: string) => {
+  const handleModal = useCallback((modalName: string) => {
     setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
   }, []);
+
   return (
     <>
       <Header>
         <PreviousButton onClick={onClick} />
-        <ActionItem onClick={() => modalHandler('showSettingsModal')}>
+        <ActionItem onClick={() => handleModal('showSettingsModal')}>
           <HiOutlineDotsVertical />
         </ActionItem>
       </Header>
-      <SettingsModal show={showModals.showSettingsModal} onCloseModal={() => modalHandler('showSettingsModal')} />
+      <SettingsModal show={showModals.showSettingsModal} onCloseModal={() => handleModal('showSettingsModal')} />
     </>
   );
 };

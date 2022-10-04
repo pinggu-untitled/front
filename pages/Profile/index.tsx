@@ -7,7 +7,7 @@ import { useTheme } from '@emotion/react';
 import ActionButtonList from '@components/PostsAndProfile/ProfileBox/ActionButtonList';
 import ProfileBox from '@components/PostsAndProfile/ProfileBox';
 import MatchActionButton from '@components/PostsAndProfile/ProfileBox/ActionButtonList/MatchActionButton';
-import ProfileImageButton from '@components/PostsAndProfile/ProfileBox/ProfileImageButton';
+import ProfileImageWrapper from '@components/common/profiles-related/ProfileImageWrapper';
 import FollowButton from '@components/PostsAndProfile/ProfileBox/FollowButton';
 import { BiGrid } from 'react-icons/bi';
 import { MdOutlineBookmarkBorder } from 'react-icons/md';
@@ -73,7 +73,7 @@ const Profile = () => {
       <MainContentZone>
         <ProfileBox>
           <ProfileBar>
-            <ProfileImageButton
+            <ProfileImageWrapper
               src={'/public/placeholder.png'}
               nickname={'nickname'}
               style={{ width: '100px', height: '100px' }}

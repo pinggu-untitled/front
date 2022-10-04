@@ -1,19 +1,25 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHeader';
 import { useNavigate } from 'react-router-dom';
-import ToggleButtonInput from '@components/common/inputs/ToggleButtonInput';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
 import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
 import SquareButton from '@components/common/buttons/SquareButton';
 import ImageInputList from '@components/Posts/ImageInputList';
 import axios from 'axios';
-import PostUserProfile from '@components/Posts/PostUserProfile';
+import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
-
+import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
+import ToolBox from '@components/Posts/ToolBox';
+import ToolButton from '@components/Posts/ToolBox/ToolButton';
+import { BsImages } from 'react-icons/bs';
+import { HiLocationMarker } from 'react-icons/hi';
+import HoverLabel from '@components/common/labels/HoverLabel';
+import SearchInput from '@components/common/inputs/SearchInput';
+import SearchLocationForm from '@components/Posts/SearchLocationForm';
 export const Base = styled.div`
   width: 100%;
 `;
@@ -59,21 +65,36 @@ interface IForm {
 
 const PostsNew = () => {
   const navigate = useNavigate();
-  const { data: userData, mutate: mutateUserData } = useSWR(`/users/me`, fetcher);
-  const { control, handleSubmit } = useForm<IForm>({
+  const { data: ud, mutate: mutateUd } = useSWR(`/users/me`, fetcher);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IForm>({
     defaultValues: {
       title: '',
       content: '',
       images: [],
       is_private: false,
-      longitude: '111.111111',
-      latitude: '222.222222',
+      longitude: '126.111111',
+      latitude: '37.222222',
       hashtags: [{ content: 'hello' }, { content: 'hello2' }],
       mentions: [{ receiver: 1 }, { receiver: 2 }],
     },
   });
+  const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
+    showImages: false,
+    showSearchLocation: false,
+  });
+  const toggleOption = useCallback((option) => {
+    setShowOptions((p) => ({ ...p, [option]: !p[option] }));
+  }, []);
 
-  const handleFormData = useCallback((name: string, files: any[]) => {
+  const { title, images, longitude, latitude } = watch();
+  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
+
+  const makeFormData = useCallback((name: string, files: any[]) => {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append(name, files[i]);
@@ -83,36 +104,79 @@ const PostsNew = () => {
 
   const onSubmit = handleSubmit(
     useCallback(async (data: IForm) => {
+      // if (!isSubmitAvailable) return;
       let filenames;
       if (data.images.length >= 1) {
-        filenames = await axios.post('/posts/images', handleFormData('images', data.images), {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        filenames = await axios
+          .post('/posts/images', makeFormData('images', data.images), {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((res) => res.data);
       }
-
-      const newPost = await axios.post('/posts', { ...data, images: filenames?.data ?? [] });
-      console.log(newPost.data);
+      const newPost = await axios.post('/posts', { ...data, images: filenames || [] }).then((res) => res.data);
+      console.log(newPost);
     }, []),
   );
 
+  console.log(images.length);
+
   return (
     <Base>
-      <PrevButtonTitleHeader title="게시물 만들기" onClick={() => navigate('/')} />
-      <MainContentZone>
-        <Form onSubmit={onSubmit}>
-          <PostUserProfile user={userData}>
-            <TextToggleButtonInput
-              control={control}
-              name={'is_private'}
-              messages={{ checked: '모두에게', unChecked: '나에게만' }}
-            />
-          </PostUserProfile>
-          <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
-          <FixedLabelTextarea control={control} label={'게시글 내용'} name={'content'} onSubmit={onSubmit} />
-          <ImageInputList control={control} name={'images'} />
-          <SquareButton type={'submit'} content={'공유하기'} onClick={onSubmit} />
-        </Form>
-      </MainContentZone>
+      {showOptions.showSearchLocation ? (
+        <>
+          <PrevButtonTitleHeader
+            title="위치 찾기"
+            onClick={() => {
+              navigate('/posts/new');
+              toggleOption('showSearchLocation');
+            }}
+          />
+          <MainContentZone>
+            <SearchLocationForm />
+          </MainContentZone>
+        </>
+      ) : (
+        <>
+          <PrevButtonTitleHeader title="게시물 만들기" onClick={() => navigate('/')} />
+          <MainContentZone>
+            <Form onSubmit={onSubmit}>
+              <UserProfileCard user={ud}>
+                <TextToggleButtonInput
+                  control={control}
+                  name={'is_private'}
+                  messages={{ checked: '모두에게', unChecked: '나에게만' }}
+                />
+              </UserProfileCard>
+              <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
+              <FixedLabelTextarea
+                control={control}
+                label={'게시글 내용'}
+                name={'content'}
+                onSubmit={onSubmit}
+                placeholder={'작성하고 싶은 게시글을 작'}
+              />
+              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
+              <ToolBox title={'게시물에 추가'}>
+                <HoverLabel label={'사진'} style={{ top: '-35px' }}>
+                  <ToolButton
+                    icon={<BsImages />}
+                    colors={{ font: '#44bd63', background: images.length >= 1 && '#e3f0d4' }}
+                    onClick={() => toggleOption('showImages')}
+                  />
+                </HoverLabel>
+                <HoverLabel label={'위치'} style={{ top: '-35px' }}>
+                  <ToolButton
+                    icon={<HiLocationMarker />}
+                    colors={{ font: '#f5533d', background: longitude && latitude && '#fecbd2' }}
+                    onClick={() => toggleOption('showSearchLocation')}
+                  />
+                </HoverLabel>
+              </ToolBox>
+              <SquareSubmitButton content={'공유하기'} valid={isSubmitAvailable} />
+            </Form>
+          </MainContentZone>
+        </>
+      )}
     </Base>
   );
 };

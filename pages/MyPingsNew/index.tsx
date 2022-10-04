@@ -10,8 +10,9 @@ import SquareButton from '@components/common/buttons/SquareButton';
 import ProfileImageInput from '@components/Profile/ProfileImageInput';
 import ToggleButtonInput from '@components/common/inputs/ToggleButtonInput';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
-import PostUserProfile from '@components/Posts/PostUserProfile';
+import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import { Private } from '@pages/PostsNew';
+import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
 
 export const Base = styled.div`
   width: 100%;
@@ -39,7 +40,7 @@ interface IForm {
   title: string;
   category: string; // 선택
   is_private: boolean;
-  posts: []; // 선택
+  posts: { id: number; title: string }[]; // 선택
 }
 
 const MyPingsNew = () => {
@@ -47,15 +48,22 @@ const MyPingsNew = () => {
   const { nickname } = useParams<{ nickname: string }>();
   const ud = { id: 1, nickname: '아무개', bio: '나는야 아무개', profile_image_url: '/public/1.png' };
 
-  const { control, handleSubmit } = useForm<IForm>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<IForm>({
     defaultValues: {
       title: '',
       category: '',
       is_private: false,
-      posts: [],
+      posts: [{ id: 1, title: 'good' }],
     },
   });
 
+  const { title, category, is_private, posts } = watch();
+  const isSubmitAvailable = Boolean(title) && Boolean(category) && posts.length > 0;
   const onSubmit = useCallback(() => {}, []);
 
   return (
@@ -63,17 +71,16 @@ const MyPingsNew = () => {
       <PrevButtonTitleHeader title="마이핑스 만들기" onClick={() => navigate('/')} />
       <MainContentZone>
         <Form onSubmit={onSubmit}>
-          <PostUserProfile user={ud}>
+          <UserProfileCard user={ud}>
             <TextToggleButtonInput
               control={control}
               name={'is_private'}
               messages={{ checked: '모두에게', unChecked: '나에게만' }}
             />
-          </PostUserProfile>
+          </UserProfileCard>
           <FixedLabelInput control={control} label={'제목'} name={'title'} />
           <FixedLabelInput control={control} label={'카테고리'} name={'category'} />
-
-          <SquareButton type={'submit'} content={'완료'} onClick={onSubmit} />
+          <SquareSubmitButton content={'만들기'} valid={isSubmitAvailable} />
         </Form>
       </MainContentZone>
     </Base>
