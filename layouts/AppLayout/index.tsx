@@ -5,6 +5,7 @@ import { theme } from '../../themes/themes';
 import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
+import FullScreenModal from '@components/common/modals/FullScreenModal';
 interface IProps {
   children: React.ReactNode;
 }
@@ -25,6 +26,8 @@ export const MainPage = styled.main<{ show: boolean }>`
   opacity: ${({ show }) => (show ? 1 : 0)};
   transition: ${({ show }) => (show ? '0.3s' : 'none')};
   box-shadow: 15px 0px 15px -10px rgba(0, 0, 0, 0.08);
+  z-index: 4000;
+  background-color: #fff;
 `;
 
 export const SlideButton = styled.div<{ show: boolean }>`
@@ -46,6 +49,15 @@ export const SlideButton = styled.div<{ show: boolean }>`
   background: #fff;
 `;
 
+export const MapZone = styled.div`
+  position: absolute;
+  right: 0;
+  left: 68px;
+  top: 0;
+  bottom: 0;
+  backgroundcolor: red;
+`;
+
 const AppLayout: FC<IProps> = ({ children }) => {
   const location = useLocation();
   const [showPage, setShowPage] = useState(true);
@@ -58,12 +70,12 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <>
             <MainNavigation />
             <MainPage show={showPage}>{children}</MainPage>
+            <MapZone></MapZone>
             <SlideButton show={showPage} onClick={() => setShowPage((p) => !p)}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>
           </>
         )}
-        {/*<Map />*/}
       </Layout>
     </ThemeProvider>
   );
