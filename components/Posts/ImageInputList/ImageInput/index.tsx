@@ -34,7 +34,7 @@ export const Input = styled.input`
 
 const ImageInput: FC<IProps> = ({ control, name, maxCount }) => {
   const { field } = useController({ control, name });
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(field.value.length);
   return (
     <Base>
       <span className={'icon'}>

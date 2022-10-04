@@ -63,6 +63,7 @@ const AppLayout: FC<IProps> = ({ children }) => {
             </SlideButton>
           </>
         )}
+        {/*<Map />*/}
       </Layout>
     </ThemeProvider>
   );

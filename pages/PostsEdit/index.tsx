@@ -81,10 +81,10 @@ const PostsEdit = () => {
       content: '',
       images: [],
       is_private: false,
-      longitude: '126.111111',
-      latitude: '37.222222',
-      hashtags: [{ content: 'hello' }, { content: 'hello2' }],
-      mentions: [{ receiver: 1 }, { receiver: 2 }],
+      longitude: '',
+      latitude: '',
+      hashtags: [],
+      mentions: [],
     },
   });
 
@@ -96,16 +96,19 @@ const PostsEdit = () => {
         'images',
         pd?.post?.Images.map((v: any) => v.src),
       );
-      setValue('is_private', pd?.post.is_private || false);
+      setValue('is_private', pd?.post.is_private === 1);
       setValue('longitude', pd?.post.longitude);
       setValue('latitude', pd?.post.latitude);
+      setValue('hashtags', pd?.post.Hashtags);
+      setValue('mentions', pd?.post.Mentions);
+      setShowOptions((p) => ({ ...p, showImages: pd?.post?.Images.length > 0 }));
     }
   }, [pd]);
 
   const { title, images, longitude, latitude } = watch();
-  console.log(images);
+
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
-    showImages: pd?.post.Images.length > 0,
+    showImages: false,
     showSearchLocation: false,
   });
 

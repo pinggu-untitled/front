@@ -57,6 +57,7 @@ const TextToggleButtonInput = ({ messages, control, name, style }: IProps) => {
       <Controller
         control={control}
         name={name}
+        defaultValue={field.value}
         render={({ field }) => (
           <input
             hidden
