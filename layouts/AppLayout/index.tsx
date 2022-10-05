@@ -5,7 +5,7 @@ import { theme } from '../../themes/themes';
 import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
-import FullScreenModal from '@components/common/modals/FullScreenModal';
+
 interface IProps {
   children: React.ReactNode;
 }
@@ -55,7 +55,6 @@ export const MapZone = styled.div`
   left: 68px;
   top: 0;
   bottom: 0;
-  backgroundcolor: red;
 `;
 
 const AppLayout: FC<IProps> = ({ children }) => {
