@@ -60,6 +60,11 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
 
   const [previews, setPreviews] = useState<any[]>(pd?.post?.Images?.map((im: { src: string }) => im.src) || []);
 
+  // const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showImagesZoomModal: false });
+  // const handleModal = useCallback((modalName: string) => {
+  //   setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
+  // }, []);
+
   useEffect(() => {
     if (previews.length) {
       for (let preview of previews) {

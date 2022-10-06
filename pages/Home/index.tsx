@@ -53,11 +53,15 @@ const Home = () => {
       id: 2,
       title: '개노맛집',
     },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
+    },
   ];
-
-  const clickHandler = useCallback((content: string) => {
-    console.log(content);
-  }, []);
 
   return (
     <Base>

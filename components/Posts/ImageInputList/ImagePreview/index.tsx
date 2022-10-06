@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { IoIosClose } from 'react-icons/io';
+import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 
 interface IProps {
   src: string;
@@ -36,19 +37,39 @@ export const CloseButton = styled.div`
   color: #fff;
   font-size: 20px;
   border-radius: 50%;
+  cursor: pointer;
+
   & .icon {
     font-size: 20px;
   }
 `;
 
 const ImagePreview: FC<IProps> = ({ src, onClose }) => {
+  const stopPropagation = useCallback((e: any) => {
+    e.stopPropagation();
+  }, []);
+
+  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showImagesZoomModal: false });
+  const handleModal = useCallback((modalName: string) => {
+    setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
+  }, []);
+
   return (
-    <Base>
-      <img src={src} />
-      <CloseButton onClick={onClose}>
-        <IoIosClose />
-      </CloseButton>
-    </Base>
+    <>
+      <Base onClick={() => handleModal('showImagesZoomModal')}>
+        <img src={src} />
+        <div onClick={stopPropagation}>
+          <CloseButton onClick={onClose}>
+            <IoIosClose />
+          </CloseButton>
+        </div>
+      </Base>
+      <ImagesZoomModal
+        show={showModals.showImagesZoomModal}
+        onCloseModal={() => handleModal('showImagesZoomModal')}
+        images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
+      />
+    </>
   );
 };
 

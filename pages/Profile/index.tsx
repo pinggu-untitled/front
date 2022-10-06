@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import styled from '@emotion/styled';
 import MainTopNavigation from '@components/common/navigations/TopNavigation';
-import TopNavigation from '@components/PostsAndProfile/TopNavigation';
+import TopNavigation from '@components/common/navigations/DetailTopNavigation';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import ActionButtonList from '@components/common/profiles-related/ProfileBox/ActionButtonList';

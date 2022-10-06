@@ -1,13 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import TopNavigation from '@components/PostsAndProfile/TopNavigation';
-import { useFieldArray, useForm } from 'react-hook-form';
+import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import PillButton from '@components/common/buttons/PillButton';
-import Section from '@components/PostsAndProfile/Section';
+import Section from '@components/common/sections/Section';
 import ActionButtonList from '@components/common/profiles-related/ProfileBox/ActionButtonList';
 import ActionButton from '@components/common/profiles-related/ProfileBox/ActionButtonList/ActionButton';
 import ProfileBox from '@components/common/profiles-related/ProfileBox';
@@ -17,6 +16,8 @@ import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';
 import { BiCommentDetail } from 'react-icons/bi';
 import HoverLabel from '@components/common/labels/HoverLabel';
+import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
+
 export const Base = styled.div`
   width: 100%;
   height: 100vh;
@@ -111,78 +112,88 @@ const Post = () => {
   const { postId } = useParams<{ postId: string }>();
   const { data: pd, mutate: mutatePostData } = useSWR(`/posts/${postId}`, fetcher);
   const [following, setFollowing] = useState(false);
-
+  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showImagesZoomModal: false });
+  const handleModal = useCallback((modalName: string) => {
+    setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
+  }, []);
   console.log('>>>', pd);
 
   if (pd?.post?.is_private) navigate('/');
 
   return (
-    <Base>
-      <TopNavigation onClick={() => navigate('/')} />
-      <MainContentZone>
-        <Images>
-          <img src={'/public/logo.png'} />
-        </Images>
-        <ProfileBox>
-          <ProfileBar>
-            <div>
-              <ProfileImageButton
-                src={pd?.post?.profile_image_url || '/public/placeholder.png'}
-                nickname={pd?.post?.nickname}
+    <>
+      <Base>
+        <DetailTopNavigation onClick={() => navigate('/')} />
+        <MainContentZone>
+          <Images onClick={() => handleModal('showImagesZoomModal')}>
+            <img src={'/public/logo.png'} />
+          </Images>
+          <ImagesZoomModal
+            show={showModals.showImagesZoomModal}
+            onCloseModal={() => handleModal('showImagesZoomModal')}
+            images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
+          />
+          <ProfileBox>
+            <ProfileBar>
+              <div>
+                <ProfileImageButton
+                  src={pd?.post?.profile_image_url || '/public/placeholder.png'}
+                  nickname={pd?.post?.nickname}
+                />
+                <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
+                <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
+              </div>
+              <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
+            </ProfileBar>
+            <ActionButtonList>
+              <ActionButton
+                content={
+                  <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
+                    <ContentWrapper>
+                      <AiOutlineLike />
+                      <span className={'counts'}>{pd?.likers?.length}</span>
+                    </ContentWrapper>
+                  </HoverLabel>
+                }
+                onClick={() => console.log('clicked')}
               />
-              <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
-              <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
+              <ActionButton
+                content={
+                  <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
+                    <HiOutlineLocationMarker />
+                  </HoverLabel>
+                }
+                onClick={() => console.log('clicked')}
+              />
+              <ActionButton
+                content={
+                  <HoverLabel label={'댓글'} style={{ top: '28px' }}>
+                    <ContentWrapper>
+                      <BiCommentDetail />
+                      <span className={'counts'}>{pd?.comments?.length || 10}</span>
+                    </ContentWrapper>
+                  </HoverLabel>
+                }
+                onClick={() => console.log('clicked')}
+              />
+            </ActionButtonList>
+          </ProfileBox>
+          <TextZone theme={theme}>
+            <h3 className={'title'}>{pd?.post.title}</h3>
+            <div className={'mypings'}>
+              <span>
+                <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
+              </span>
+              <span> · {pd?.post.created_at}</span>
             </div>
-            <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
-          </ProfileBar>
-          <ActionButtonList>
-            <ActionButton
-              content={
-                <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
-                  <ContentWrapper>
-                    <AiOutlineLike />
-                    <span className={'counts'}>{pd?.likers?.length}</span>
-                  </ContentWrapper>
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-            <ActionButton
-              content={
-                <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
-                  <HiOutlineLocationMarker />
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-            <ActionButton
-              content={
-                <HoverLabel label={'댓글'} style={{ top: '28px' }}>
-                  <ContentWrapper>
-                    <BiCommentDetail />
-                    <span className={'counts'}>{pd?.comments?.length || 10}</span>
-                  </ContentWrapper>
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-          </ActionButtonList>
-        </ProfileBox>
-        <TextZone theme={theme}>
-          <h3 className={'title'}>{pd?.post.title}</h3>
-          <div className={'mypings'}>
-            <span>
-              <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
-            </span>
-            <span> · {pd?.post.created_at}</span>
-          </div>
-          <p className={'content'}>{pd?.post.content}</p>
-          <p className={'meta'}>조회수 {pd?.post.hits}</p>
-        </TextZone>
-        {/* 마이핑스 영역 */}
-        <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
-      </MainContentZone>
-    </Base>
+            <p className={'content'}>{pd?.post.content}</p>
+            <p className={'meta'}>조회수 {pd?.post.hits}</p>
+          </TextZone>
+          {/* 마이핑스 영역 */}
+          <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
+        </MainContentZone>
+      </Base>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import PreviousButton from '@components/common/buttons/PreviousButton';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
-import SettingsModal from '@components/PostsAndProfile/TopNavigation/SettingsModal';
+import SettingsModal from '@components/common/navigations/DetailTopNavigation/SettingsModal';
 interface IProps {
   onClick: () => void;
 }
@@ -39,8 +39,7 @@ export const ActionItem = styled.div`
   cursor: pointer;
 `;
 
-const PrevButtonHeader: FC<IProps> = ({ onClick }) => {
-  const navigate = useNavigate();
+const DetailTopNavigation: FC<IProps> = ({ onClick }) => {
   const [showModals, setShowModals] = useState<{ [key: string]: any }>({ showSettingsModal: false });
   const handleModal = useCallback((modalName: string) => {
     setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
@@ -59,4 +58,4 @@ const PrevButtonHeader: FC<IProps> = ({ onClick }) => {
   );
 };
 
-export default PrevButtonHeader;
+export default DetailTopNavigation;
