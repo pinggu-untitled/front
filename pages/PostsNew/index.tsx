@@ -20,6 +20,7 @@ import { HiLocationMarker } from 'react-icons/hi';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import SearchInput from '@components/common/inputs/SearchInput';
 import SearchLocationForm from '@components/Posts/SearchLocationForm';
+import { Redirect } from 'react-router';
 export const Base = styled.div`
   width: 100%;
 `;
@@ -116,8 +117,30 @@ const PostsNew = () => {
           .then((res) => res.data);
       }
 
-      const newPost = await axios.post('/posts', { ...data, images: filenames || [] }).then((res) => res.data);
+      const findMatches = (data: string, reg: RegExp, mapFn: (v: string, i: number) => void) => {
+        const temp = data?.match(reg) ?? [];
+        return temp.map(mapFn);
+      };
+
+      const hashtags = findMatches(data.content, /#[^\s#]+/g, (tag, i) => {
+        tag.slice(1);
+        return { content: tag };
+      });
+
+      /* TODO 유저 아이디로 전환*/
+      const mentions = findMatches(data.content, /@[^\s@]+/g, (mt, i) => {
+        mt.slice(1);
+        return { receiver: 1 };
+      });
+
+      const newPost = await axios
+        .post('/posts', { ...data, hashtags, mentions, images: filenames || [] })
+        .then((res) => {
+          return res.data;
+        });
+
       console.log(newPost);
+      if (newPost) navigate('/');
     }, []),
   );
 
