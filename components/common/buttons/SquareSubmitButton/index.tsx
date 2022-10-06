@@ -16,6 +16,7 @@ export const Button = styled.button<{ valid: boolean }>`
   background-color: ${({ valid }) => (valid ? '#0295f6' : 'rgba(0,0,0,0.1)')};
   color: ${({ valid }) => (valid ? '#fff' : 'gray')};
   cursor: ${({ valid }) => (valid ? 'pointer' : 'text')};
+  transition: 0.2s;
 `;
 
 const SquareSubmitButton: FC<IProps> = ({ valid, content }) => {
