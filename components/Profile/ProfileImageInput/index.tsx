@@ -26,7 +26,7 @@ export const ProfileImageWrapper = styled.label`
   > img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   > .text {
@@ -57,18 +57,18 @@ const ProfileImageInput: FC<IProps> = ({ control, name }) => {
   const { field } = useController({ control, name });
   const [preview, setPreview] = useState(field.value);
 
-  const filePromise = useCallback((file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-    });
-  }, []);
-
   const previewHandler = useCallback((files) => {
-    filePromise(files[0]).then((res) => {
+    const promisify = (file: File) => {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+      });
+    };
+
+    promisify(files[0]).then((res) => {
       setPreview(res);
     });
   }, []);

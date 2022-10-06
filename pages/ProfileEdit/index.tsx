@@ -52,13 +52,11 @@ const ProfileEdit = () => {
   });
 
   useEffect(() => {
-    (() => {
-      if (ud) {
-        setValue('nickname', ud?.nickname);
-        setValue('bio', ud?.bio);
-        setValue('profile_image', ud?.profile_image_url);
-      }
-    })();
+    if (ud) {
+      setValue('nickname', ud?.nickname);
+      setValue('bio', ud?.bio);
+      setValue('profile_image', ud?.profile_image_url);
+    }
   }, [ud]);
 
   const makeFormData = useCallback((name: string, file) => {
@@ -66,8 +64,6 @@ const ProfileEdit = () => {
     formData.append(name, file);
     return formData;
   }, []);
-
-  // 이미지, 나머지 컨텐트 분리
 
   const onSubmit = handleSubmit(
     useCallback(async (data: IForm) => {
@@ -86,7 +82,7 @@ const ProfileEdit = () => {
         <Form onSubmit={onSubmit}>
           <ProfileImageInput control={control} name={'profile_image'} />
           <FixedLabelInput control={control} label={'닉네임'} name={'nickname'} />
-          <FixedLabelTextarea control={control} label={'소개'} name={'bio'} />
+          <FixedLabelTextarea control={control} label={'소개'} name={'bio'} placeholder={'자신을 표햔헤 보삼'} />
           <SquareButton type={'submit'} content={'수정하기'} onClick={onSubmit} />
         </Form>
       </MainContentZone>

@@ -83,6 +83,7 @@ const PostsNew = () => {
       mentions: [{ receiver: 1 }, { receiver: 2 }],
     },
   });
+
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: false,
     showSearchLocation: false,
@@ -96,9 +97,10 @@ const PostsNew = () => {
 
   const makeFormData = useCallback((name: string, files: any[]) => {
     const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append(name, files[i]);
+    for (let file of files) {
+      formData.append(name, file);
     }
+
     return formData;
   }, []);
 
@@ -106,19 +108,18 @@ const PostsNew = () => {
     useCallback(async (data: IForm) => {
       // if (!isSubmitAvailable) return;
       let filenames;
-      if (data.images.length >= 1) {
+      if (data.images.length > 0) {
         filenames = await axios
           .post('/posts/images', makeFormData('images', data.images), {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => res.data);
       }
+
       const newPost = await axios.post('/posts', { ...data, images: filenames || [] }).then((res) => res.data);
       console.log(newPost);
     }, []),
   );
-
-  console.log(images.length);
 
   return (
     <Base>
@@ -144,7 +145,7 @@ const PostsNew = () => {
                 <TextToggleButtonInput
                   control={control}
                   name={'is_private'}
-                  messages={{ checked: '모두에게', unChecked: '나에게만' }}
+                  messages={{ checked: '나에게만', unChecked: '모두에게' }}
                 />
               </UserProfileCard>
               <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
@@ -153,9 +154,10 @@ const PostsNew = () => {
                 label={'게시글 내용'}
                 name={'content'}
                 onSubmit={onSubmit}
-                placeholder={'작성하고 싶은 게시글을 작'}
+                placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
               />
-              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
+              {/*{showOptions.showImages && <ImageInputList control={control} name={'images'} />}*/}
+              <ImageInputList control={control} name={'images'} />
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton

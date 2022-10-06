@@ -1,4 +1,4 @@
-import React, { ChangeEvent, CSSProperties, useState } from 'react';
+import React, { ChangeEvent, CSSProperties, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { Controller, useController } from 'react-hook-form';
 import { useTheme } from '@emotion/react';
@@ -51,6 +51,10 @@ const TextToggleButtonInput = ({ messages, control, name, style }: IProps) => {
   const theme = useTheme();
   const { field } = useController({ control, name });
   const [sliding, setSliding] = useState<boolean>(field.value);
+
+  useEffect(() => {
+    setSliding(field.value);
+  }, [field]);
 
   return (
     <Button active={sliding} theme={theme} style={style}>

@@ -29,9 +29,7 @@ const MatchActionButton: FC<IProps> = ({ content, url, match }) => {
 
   return (
     <Base theme={theme} active={Boolean(active)}>
-      <Link to={url}>
-        <a>{content}</a>
-      </Link>
+      <Link to={url}>{content}</Link>
     </Base>
   );
 };

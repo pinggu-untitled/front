@@ -56,7 +56,7 @@ interface IForm {
   title: string;
   content: string;
   is_private: boolean;
-  images: any[];
+  images: string[];
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
@@ -92,10 +92,6 @@ const PostsEdit = () => {
     if (pd) {
       setValue('title', pd?.post.title);
       setValue('content', pd?.post.content);
-      setValue(
-        'images',
-        pd?.post?.Images.map((v: any) => v.src),
-      );
       setValue('is_private', pd?.post.is_private === 1);
       setValue('longitude', pd?.post.longitude);
       setValue('latitude', pd?.post.latitude);
@@ -104,8 +100,6 @@ const PostsEdit = () => {
       setShowOptions((p) => ({ ...p, showImages: pd?.post?.Images.length > 0 }));
     }
   }, [pd]);
-
-  console.log(pd?.post.is_private === 1);
 
   const { title, images, longitude, latitude } = watch();
 
@@ -122,9 +116,10 @@ const PostsEdit = () => {
 
   const makeFormData = useCallback((name: string, files: any[]) => {
     const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append(name, files[i]);
-    }
+    files.forEach((file) => {
+      if (file instanceof File) formData.append(name, file);
+    });
+
     return formData;
   }, []);
 
@@ -132,6 +127,7 @@ const PostsEdit = () => {
     useCallback(async (data: IForm) => {
       // if (!isSubmitAvailable) return;
       let filenames;
+
       if (data.images.length >= 1) {
         filenames = await axios
           .post('/posts/images', makeFormData('images', data.images), {
@@ -139,13 +135,21 @@ const PostsEdit = () => {
           })
           .then((res) => res.data);
       }
-      const editedPost = await axios.patch('/posts', { ...data, images: filenames || [] }).then((res) => res.data);
+
+      const prevs = data.images.filter((img: any) => !(img instanceof File)).map((v: any) => v.src);
+      console.log('final', [...prevs, ...filenames]);
+      const editedPost = await axios
+        .patch('/posts', {
+          ...data,
+          images: [...prevs, ...filenames] || [],
+        })
+        .then((res) => res.data);
       console.log(editedPost);
     }, []),
   );
 
-  console.log(pd);
-
+  console.log('pd', pd);
+  // {src: '2022/10/5
   return (
     <Base>
       {showOptions.showSearchLocation ? (
@@ -170,7 +174,7 @@ const PostsEdit = () => {
                 <TextToggleButtonInput
                   control={control}
                   name={'is_private'}
-                  messages={{ checked: '모두에게', unChecked: '나에게만' }}
+                  messages={{ checked: '나에게만', unChecked: '모두에게' }}
                 />
               </UserProfileCard>
               <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
@@ -179,8 +183,9 @@ const PostsEdit = () => {
                 label={'게시글 내용'}
                 name={'content'}
                 onSubmit={onSubmit}
-                placeholder={'작성하고 싶은 게시글을 작'}
+                placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
               />
+
               {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
