@@ -30,15 +30,43 @@ export const MainContentZone = styled.div`
   bottom: 0;
 `;
 
-export const Images = styled.div`
+export const ImagesWrapper = styled.div`
   width: 100%;
   height: 200px;
+  overflow: hidden;
   border-bottom: 1px solid #dfdfdf;
-
+  display: grid;
+  /* grid-template-columns: repeat(2, 1fr); */
+  position: relative;
   & img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+  }
+`;
+
+export const More = styled.div`
+  position: relative;
+  height: 200px;
+
+  > .button {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #fff;
+    opacity: 0;
+    transition: 0.2s;
+  }
+
+  &:hover .button {
+    opacity: 1;
   }
 `;
 
@@ -102,6 +130,24 @@ export const ContentWrapper = styled.div`
     font-weight: 600;
   }
 `;
+
+export const ImageLeftCnt = styled.div`
+  padding: 4px 10px 3px;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  position: absolute;
+  color: rgba(0, 0, 0, 0.8);
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  > .highlight {
+    color: #fff;
+  }
+`;
+
 interface IForm {
   searchQueries: string;
 }
@@ -125,19 +171,53 @@ const Post = () => {
     <Base>
       <DetailTopNavigation onClick={() => navigate('/')} />
       <MainContentZone>
-        <Images onClick={() => handleModal('showImagesZoomModal')}>
-          <img src={'/public/logo.png'} alt={'profile'} />
-        </Images>
-        <ImagesZoomModal
-          show={showModals.showImagesZoomModal}
-          onCloseModal={() => handleModal('showImagesZoomModal')}
-          images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
-        />
+        {pd?.post.Images.length > 0 && (
+          <>
+            <ImagesWrapper
+              onClick={() => handleModal('showImagesZoomModal')}
+              style={pd?.post.Images.length === 1 ? { height: '300px' } : { gridTemplateColumns: 'repeat(2, 1fr)' }}
+            >
+              {pd?.post?.Images.length === 1 && (
+                <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
+              )}
+
+              {pd?.post?.Images.length === 2 &&
+                pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
+                  <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                ))}
+
+              {pd?.post?.Images.length >= 3 &&
+                pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
+                  if (i === 0) {
+                    return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
+                  }
+
+                  return (
+                    <More>
+                      <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                      <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
+                    </More>
+                  );
+                })}
+              {pd?.post?.Images.length >= 3 && (
+                <ImageLeftCnt>
+                  <span className="highlight">2</span>
+                  <span>/{pd?.post?.Images.length}</span>
+                </ImageLeftCnt>
+              )}
+            </ImagesWrapper>
+            <ImagesZoomModal
+              show={showModals.showImagesZoomModal}
+              onCloseModal={() => handleModal('showImagesZoomModal')}
+              images={pd?.post.Images}
+            />
+          </>
+        )}
         <ProfileBox>
           <ProfileBar>
             <div>
               <ProfileImageButton
-                src={pd?.post?.profile_image_url || '/public/placeholder.png'}
+                src={pd?.post?.User.profile_image_url || '/public/placeholder.png'}
                 nickname={pd?.post?.nickname}
               />
               <span className={'nickname'}>{pd?.post?.User.nickname || '사용자 닉네임'}</span>

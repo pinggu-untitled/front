@@ -54,8 +54,7 @@ const Home = () => {
         <PostCards>
           <Scrollbars universal={true}>
             {pd
-              ?.slice(50, 100)
-              .filter((post: any) => post.is_private === 0)
+              ?.filter((post: any) => post.is_private === 0)
               .map((post: any) => (
                 <PostCard key={post.id}>
                   <Link to={`/posts/${post.id}`}>{post.title}</Link>

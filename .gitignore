@@ -1,8 +1,4 @@
 .idea/
 node_modules/
-<<<<<<< HEAD
-.env
-=======
 .DS_Store
 .env
->>>>>>> feature/map_home
