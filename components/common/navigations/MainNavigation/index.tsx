@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import UserMenuModal from '@components/common/navigations/MainNavigation/UserMenuModal';
 
 const Base = styled.nav`
-  position: relative;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;

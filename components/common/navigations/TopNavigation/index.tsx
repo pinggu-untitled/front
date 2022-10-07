@@ -19,10 +19,13 @@ export const Header = styled.header`
   width: 440px;
   height: 73px;
   border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
   padding: 0 10px 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #fff;
+  z-index: 3000;
 
   & h1 {
     font-size: 18px;

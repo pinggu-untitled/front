@@ -13,6 +13,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import CopyButton from '@components/common/lists/MenuList/CopyButton';
+import { Redirect } from 'react-router';
 
 interface IProps {
   show: boolean;
@@ -38,7 +39,7 @@ const SettingsModal: FC<IProps> = ({ show, onCloseModal }) => {
     axios.delete(`/posts/${postId}`).then((res) => {
       console.log(res.data);
       if (res.data.messages === 'deleted') {
-        navigate('/');
+        return <Redirect to="/" />;
       }
     });
   }, []);
@@ -58,7 +59,7 @@ const SettingsModal: FC<IProps> = ({ show, onCloseModal }) => {
     <FullScreenModal show={show} onCloseModal={onCloseModal}>
       <ModalContent onClick={onCloseModal}>
         <MenuList>
-          {pd?.post?.User.id !== 4 ? (
+          {false ? (
             <>
               <CopyButton icon={<AiOutlineLink />} content={'링크복사'} onClick={copyUrl}>
                 <form>

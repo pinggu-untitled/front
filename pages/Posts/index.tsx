@@ -125,7 +125,7 @@ const Post = () => {
       <DetailTopNavigation onClick={() => navigate('/')} />
       <MainContentZone>
         <Images onClick={() => handleModal('showImagesZoomModal')}>
-          <img src={'/public/logo.png'} />
+          <img src={'/public/logo.png'} alt={'profile'} />
         </Images>
         <ImagesZoomModal
           show={showModals.showImagesZoomModal}

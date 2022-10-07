@@ -37,6 +37,8 @@ interface IForm {
   searchQueries: string;
 }
 const Home = () => {
+  const { data: pd, mutate: mutatePd } = useSWR(`/posts`, fetcher);
+  console.log(pd);
   const { control, handleSubmit } = useForm<IForm>({
     defaultValues: { searchQueries: '' },
   });
@@ -52,6 +54,46 @@ const Home = () => {
     {
       id: 2,
       title: '개노맛집',
+    },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
+    },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
+    },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
+    },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
+    },
+    {
+      id: 211,
+      title: '개노맛집2',
+    },
+    {
+      id: 212,
+      title: '개노맛집3',
     },
     {
       id: 211,

@@ -31,7 +31,7 @@ export const MainPage = styled.main<{ show: boolean }>`
 `;
 
 export const SlideButton = styled.div<{ show: boolean }>`
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translateY(-50%);
   left: ${({ show }) => (show ? '508px' : '68px')};
@@ -55,6 +55,7 @@ export const MapZone = styled.div`
   left: 68px;
   top: 0;
   bottom: 0;
+  background-color: #fff;
 `;
 
 const AppLayout: FC<IProps> = ({ children }) => {
