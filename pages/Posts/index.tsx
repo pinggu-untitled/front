@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
@@ -116,9 +116,10 @@ const Post = () => {
   const handleModal = useCallback((modalName: string) => {
     setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
   }, []);
+
   console.log('>>>', pd);
 
-  // if (pd?.post?.is_private) navigate('/');
+  if (pd?.post?.is_private) return <Navigate replace to="/" />;
 
   return (
     <Base>
@@ -139,7 +140,7 @@ const Post = () => {
                 src={pd?.post?.profile_image_url || '/public/placeholder.png'}
                 nickname={pd?.post?.nickname}
               />
-              <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
+              <span className={'nickname'}>{pd?.post?.User.nickname || '사용자 닉네임'}</span>
               <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
             </div>
             <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />

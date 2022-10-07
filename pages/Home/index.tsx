@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 export const Base = styled.div`
   width: 100%;
@@ -37,8 +38,8 @@ interface IForm {
   searchQueries: string;
 }
 const Home = () => {
-  const { data: pd, mutate: mutatePd } = useSWR(`/posts`, fetcher);
-  console.log(pd);
+  const { data: pd, mutate: mutatePd } = useSWR(`/posts/all`, fetcher);
+
   const { control, handleSubmit } = useForm<IForm>({
     defaultValues: { searchQueries: '' },
   });
@@ -46,35 +47,21 @@ const Home = () => {
     console.log(data);
   }, []);
 
-  const posts: any[] = [
-    {
-      id: 211,
-      title: '개노맛집2',
-    },
-    {
-      id: 212,
-      title: '개노맛집3',
-    },
-    {
-      id: 213,
-      title: 'dfdfd',
-    },
-    {
-      id: 214,
-      title: 'dfdfddfdf',
-    },
-  ];
-
   return (
     <Base>
       <TopNavigation title={'홈'} />
       <MainContentZone>
         <PostCards>
-          {posts.map((post) => (
-            <PostCard key={post.id}>
-              <Link to={`/posts/${post.id}`}>{post.title}</Link>
-            </PostCard>
-          ))}
+          <Scrollbars universal={true}>
+            {pd
+              ?.slice(50, 100)
+              .filter((post: any) => post.is_private === 0)
+              .map((post: any) => (
+                <PostCard key={post.id}>
+                  <Link to={`/posts/${post.id}`}>{post.title}</Link>
+                </PostCard>
+              ))}
+          </Scrollbars>
         </PostCards>
       </MainContentZone>
     </Base>

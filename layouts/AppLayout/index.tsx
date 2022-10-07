@@ -17,7 +17,7 @@ export const Layout = styled.div`
 `;
 
 export const MainPage = styled.main<{ show: boolean }>`
-  position: absolute;
+  position: fixed;
   width: 440px;
   left: 68px;
   top: 0;
@@ -52,7 +52,7 @@ export const SlideButton = styled.div<{ show: boolean }>`
 `;
 
 export const MapZone = styled.div`
-  position: absolute;
+  position: fixed;
   right: 0;
   left: 68px;
   top: 0;
@@ -72,7 +72,9 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <>
             <MainNavigation />
             <MainPage show={showPage}>{children}</MainPage>
-            <MapZone><Map /></MapZone>
+            <MapZone>
+              <Map />
+            </MapZone>
             <SlideButton show={showPage} onClick={() => setShowPage((p) => !p)}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>
