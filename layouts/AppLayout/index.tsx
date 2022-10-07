@@ -47,6 +47,7 @@ export const SlideButton = styled.div<{ show: boolean }>`
   color: gray;
   cursor: pointer;
   background: #fff;
+  z-index: 3000;
 `;
 
 export const MapZone = styled.div`
