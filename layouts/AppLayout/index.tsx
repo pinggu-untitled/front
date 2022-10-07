@@ -72,11 +72,10 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <>
             <MainNavigation />
             <MainPage show={showPage}>{children}</MainPage>
-            <MapZone></MapZone>
+            <MapZone><Map /></MapZone>
             <SlideButton show={showPage} onClick={() => setShowPage((p) => !p)}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>
-            <Map />
           </>
         )}
       </Layout>
