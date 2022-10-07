@@ -14,7 +14,7 @@ export const Base = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3000;
+  z-index: 5000;
 `;
 
 const FullScreenModal: FC<IProps> = ({ children, show, onCloseModal, style }) => {
@@ -25,10 +25,8 @@ const FullScreenModal: FC<IProps> = ({ children, show, onCloseModal, style }) =>
   if (!show) return null;
 
   return (
-    <Base onClick={onCloseModal}>
-      <div onClick={stopPropagation} style={style}>
-        {children}
-      </div>
+    <Base onClick={onCloseModal} style={style}>
+      <div onClick={stopPropagation}>{children}</div>
     </Base>
   );
 };

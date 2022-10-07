@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import TopNavigation from '@components/common/navigations/TopNavigation';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 export const Base = styled.div`
   width: 100%;
@@ -35,6 +37,8 @@ interface IForm {
   searchQueries: string;
 }
 const Home = () => {
+  const { data: pd, mutate: mutatePd } = useSWR(`/posts`, fetcher);
+  console.log(pd);
   const { control, handleSubmit } = useForm<IForm>({
     defaultValues: { searchQueries: '' },
   });
@@ -44,18 +48,22 @@ const Home = () => {
 
   const posts: any[] = [
     {
-      id: 1,
-      title: '맛집',
+      id: 211,
+      title: '개노맛집2',
     },
     {
-      id: 2,
-      title: '개노맛집',
+      id: 212,
+      title: '개노맛집3',
+    },
+    {
+      id: 213,
+      title: 'dfdfd',
+    },
+    {
+      id: 214,
+      title: 'dfdfddfdf',
     },
   ];
-
-  const clickHandler = useCallback((content: string) => {
-    console.log(content);
-  }, []);
 
   return (
     <Base>
@@ -63,7 +71,7 @@ const Home = () => {
       <MainContentZone>
         <PostCards>
           {posts.map((post) => (
-            <PostCard>
+            <PostCard key={post.id}>
               <Link to={`/posts/${post.id}`}>{post.title}</Link>
             </PostCard>
           ))}

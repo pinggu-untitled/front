@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { MdExplore, MdOutlineExplore } from 'react-icons/md';
 import { IoChatbubbles, IoChatbubblesOutline, IoEllipsisHorizontal } from 'react-icons/io5';
-import { RiMapPinUserLine, RiMapPinUserFill } from 'react-icons/ri';
+// import { RiMapPinUserLine, RiMapPinUserFill } from 'react-icons/ri';
 import { HiOutlineDotsHorizontal, HiUser, HiOutlineUser, HiOutlineUserGroup, HiUserGroup } from 'react-icons/hi';
 import NavItem from './NavItem';
 import { Link } from 'react-router-dom';
@@ -14,9 +14,11 @@ const Base = styled.nav`
   top: 0;
   left: 0;
   bottom: 0;
-  width: 63px;
+  width: 68px;
   height: 100vh;
   border-right: 1px solid #dfdfdf;
+  background-color: #fff;
+  z-index: 3000;
 `;
 
 const Logo = styled.div`
@@ -25,7 +27,6 @@ const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  //font-size: 26px;
   cursor: pointer;
   border-bottom: 1px solid #dfdfdf;
 `;
@@ -59,14 +60,12 @@ const MainNavigation = () => {
   const toggleModal = useCallback(() => {
     setShowUserMenu((p) => !p);
   }, []);
+
   return (
     <>
       <Base>
         <Logo>
-          <Link to={'/'}>
-            {/*<FaMapPin />*/}
-            핑구
-          </Link>
+          <Link to={'/'}>핑구</Link>
         </Logo>
         <NavList>
           <NavItem
@@ -76,10 +75,6 @@ const MainNavigation = () => {
           <NavItem
             url={'/explore'}
             contents={{ icons: { filled: <MdExplore />, outlined: <MdOutlineExplore /> }, title: '탐색' }}
-          />
-          <NavItem
-            url={'/mypings'}
-            contents={{ icons: { filled: <RiMapPinUserFill />, outlined: <RiMapPinUserLine /> }, title: '마이핑스' }}
           />
           <NavItem
             url={'/chatrooms'}
@@ -98,7 +93,7 @@ const MainNavigation = () => {
           />
         </NavList>
         <UserProfile onClick={toggleModal}>
-          <img src={'/public/placeholder.png'} />
+          <img src={'/public/placeholder.png'} alt={`profiles`} />
         </UserProfile>
       </Base>
       <UserMenuModal show={showUserMenu} onCloseModal={toggleModal} />
