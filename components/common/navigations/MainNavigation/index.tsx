@@ -18,6 +18,7 @@ const Base = styled.nav`
   height: 100vh;
   border-right: 1px solid #dfdfdf;
   background-color: #fff;
+  z-index: 3000;
 `;
 
 const Logo = styled.div`

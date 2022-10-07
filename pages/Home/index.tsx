@@ -48,14 +48,6 @@ const Home = () => {
 
   const posts: any[] = [
     {
-      id: 1,
-      title: '맛집',
-    },
-    {
-      id: 2,
-      title: '개노맛집',
-    },
-    {
       id: 211,
       title: '개노맛집2',
     },
@@ -64,44 +56,12 @@ const Home = () => {
       title: '개노맛집3',
     },
     {
-      id: 211,
-      title: '개노맛집2',
+      id: 213,
+      title: 'dfdfd',
     },
     {
-      id: 212,
-      title: '개노맛집3',
-    },
-    {
-      id: 211,
-      title: '개노맛집2',
-    },
-    {
-      id: 212,
-      title: '개노맛집3',
-    },
-    {
-      id: 211,
-      title: '개노맛집2',
-    },
-    {
-      id: 212,
-      title: '개노맛집3',
-    },
-    {
-      id: 211,
-      title: '개노맛집2',
-    },
-    {
-      id: 212,
-      title: '개노맛집3',
-    },
-    {
-      id: 211,
-      title: '개노맛집2',
-    },
-    {
-      id: 212,
-      title: '개노맛집3',
+      id: 214,
+      title: 'dfdfddfdf',
     },
   ];
 

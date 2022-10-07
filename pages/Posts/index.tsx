@@ -118,7 +118,7 @@ const Post = () => {
   }, []);
   console.log('>>>', pd);
 
-  if (pd?.post?.is_private) navigate('/');
+  // if (pd?.post?.is_private) navigate('/');
 
   return (
     <Base>
