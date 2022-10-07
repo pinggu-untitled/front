@@ -5,6 +5,7 @@ import { theme } from '../../themes/themes';
 import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
+import Map from '@components/Map/index';
 
 interface IProps {
   children: React.ReactNode;
@@ -75,6 +76,7 @@ const AppLayout: FC<IProps> = ({ children }) => {
             <SlideButton show={showPage} onClick={() => setShowPage((p) => !p)}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>
+            <Map />
           </>
         )}
       </Layout>
