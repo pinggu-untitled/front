@@ -121,79 +121,77 @@ const Post = () => {
   if (pd?.post?.is_private) navigate('/');
 
   return (
-    <>
-      <Base>
-        <DetailTopNavigation onClick={() => navigate('/')} />
-        <MainContentZone>
-          <Images onClick={() => handleModal('showImagesZoomModal')}>
-            <img src={'/public/logo.png'} />
-          </Images>
-          <ImagesZoomModal
-            show={showModals.showImagesZoomModal}
-            onCloseModal={() => handleModal('showImagesZoomModal')}
-            images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
-          />
-          <ProfileBox>
-            <ProfileBar>
-              <div>
-                <ProfileImageButton
-                  src={pd?.post?.profile_image_url || '/public/placeholder.png'}
-                  nickname={pd?.post?.nickname}
-                />
-                <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
-                <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
-              </div>
-              <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
-            </ProfileBar>
-            <ActionButtonList>
-              <ActionButton
-                content={
-                  <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
-                    <ContentWrapper>
-                      <AiOutlineLike />
-                      <span className={'counts'}>{pd?.likers?.length}</span>
-                    </ContentWrapper>
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
+    <Base>
+      <DetailTopNavigation onClick={() => navigate('/')} />
+      <MainContentZone>
+        <Images onClick={() => handleModal('showImagesZoomModal')}>
+          <img src={'/public/logo.png'} />
+        </Images>
+        <ImagesZoomModal
+          show={showModals.showImagesZoomModal}
+          onCloseModal={() => handleModal('showImagesZoomModal')}
+          images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
+        />
+        <ProfileBox>
+          <ProfileBar>
+            <div>
+              <ProfileImageButton
+                src={pd?.post?.profile_image_url || '/public/placeholder.png'}
+                nickname={pd?.post?.nickname}
               />
-              <ActionButton
-                content={
-                  <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
-                    <HiOutlineLocationMarker />
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
-              />
-              <ActionButton
-                content={
-                  <HoverLabel label={'댓글'} style={{ top: '28px' }}>
-                    <ContentWrapper>
-                      <BiCommentDetail />
-                      <span className={'counts'}>{pd?.comments?.length || 10}</span>
-                    </ContentWrapper>
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
-              />
-            </ActionButtonList>
-          </ProfileBox>
-          <TextZone theme={theme}>
-            <h3 className={'title'}>{pd?.post.title}</h3>
-            <div className={'mypings'}>
-              <span>
-                <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
-              </span>
-              <span> · {pd?.post.created_at}</span>
+              <span className={'nickname'}>{pd?.post?.nickname || '사용자 닉네임'}</span>
+              <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
             </div>
-            <p className={'content'}>{pd?.post.content}</p>
-            <p className={'meta'}>조회수 {pd?.post.hits}</p>
-          </TextZone>
-          {/* 마이핑스 영역 */}
-          <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
-        </MainContentZone>
-      </Base>
-    </>
+            <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
+          </ProfileBar>
+          <ActionButtonList>
+            <ActionButton
+              content={
+                <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
+                  <ContentWrapper>
+                    <AiOutlineLike />
+                    <span className={'counts'}>{pd?.likers?.length}</span>
+                  </ContentWrapper>
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
+            <ActionButton
+              content={
+                <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
+                  <HiOutlineLocationMarker />
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
+            <ActionButton
+              content={
+                <HoverLabel label={'댓글'} style={{ top: '28px' }}>
+                  <ContentWrapper>
+                    <BiCommentDetail />
+                    <span className={'counts'}>{pd?.comments?.length || 10}</span>
+                  </ContentWrapper>
+                </HoverLabel>
+              }
+              onClick={() => console.log('clicked')}
+            />
+          </ActionButtonList>
+        </ProfileBox>
+        <TextZone theme={theme}>
+          <h3 className={'title'}>{pd?.post.title}</h3>
+          <div className={'mypings'}>
+            <span>
+              <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
+            </span>
+            <span> · {pd?.post.created_at}</span>
+          </div>
+          <p className={'content'}>{pd?.post.content}</p>
+          <p className={'meta'}>조회수 {pd?.post.hits}</p>
+        </TextZone>
+        {/* 마이핑스 영역 */}
+        <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
+      </MainContentZone>
+    </Base>
   );
 };
 

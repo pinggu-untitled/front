@@ -13,6 +13,7 @@ import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInp
 import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import { Private } from '@pages/PostsNew';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
+import SelectBox from '@components/common/selects/SelectBox';
 
 export const Base = styled.div`
   width: 100%;
@@ -63,9 +64,9 @@ const MyPingsNew = () => {
   });
 
   const { title, category, is_private, posts } = watch();
-  const isSubmitAvailable = Boolean(title) && Boolean(category) && posts.length > 0;
+  const isSubmitAvailable = Boolean(title);
   const onSubmit = useCallback(() => {}, []);
-
+  console.log(category);
   return (
     <Base>
       <PrevButtonTitleHeader title="마이핑스 만들기" onClick={() => navigate('/')} />
@@ -79,7 +80,16 @@ const MyPingsNew = () => {
             />
           </UserProfileCard>
           <FixedLabelInput control={control} label={'제목'} name={'title'} />
-          <FixedLabelInput control={control} label={'카테고리'} name={'category'} />
+          {/*<FixedLabelInput control={control} label={'카테고리'} name={'category'} />*/}
+          <SelectBox
+            label={'카테고리'}
+            name={'category'}
+            control={control}
+            data={[
+              { id: 1, title: '나의 마이핑스1' },
+              { id: 2, title: '나의 마이핑스2' },
+            ]}
+          />
           <SquareSubmitButton content={'만들기'} valid={isSubmitAvailable} />
         </Form>
       </MainContentZone>
