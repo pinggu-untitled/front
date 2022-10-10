@@ -10,7 +10,7 @@ export const Base = styled.ul`
   grid-template-columns: repeat(3, 1fr);
   width: 100%;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 20px 0;
+  padding: 16px 0;
 
   & li:not(:last-of-type) {
     border-right: 1px solid rgba(0, 0, 0, 0.05);

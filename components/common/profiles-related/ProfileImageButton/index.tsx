@@ -9,8 +9,8 @@ interface IProps {
 }
 
 export const Base = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid #dfdfdf;
   overflow: hidden;

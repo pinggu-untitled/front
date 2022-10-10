@@ -76,7 +76,7 @@ export const ProfileBar = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 0;
+  padding: 8px 0;
   > div {
     display: flex;
     align-items: center;
@@ -120,7 +120,7 @@ export const TextZone = styled.div<{ theme: any }>`
 
 export const ContentWrapper = styled.div`
   & svg {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   > .counts {
@@ -277,8 +277,12 @@ const Post = () => {
           <p className={'content'}>{pd?.post.content}</p>
           <p className={'meta'}>조회수 {pd?.post.hits}</p>
         </TextZone>
-        {/* 마이핑스 영역 */}
-        <Section title={`${pd?.post.nickname}의 마이핑스`}>....</Section>
+        <Section title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.nickname}/myPings`}>
+          마이핑스
+        </Section>
+        <Section title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.nickname}/posts`}>
+          게시물
+        </Section>
       </MainContentZone>
     </Base>
   );

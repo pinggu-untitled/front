@@ -18,6 +18,7 @@ export const Base = styled.div`
     color: #bbbbbb;
   }
 `;
+
 const CountPill: FC<IProps> = ({ length }) => {
   return (
     <Base>

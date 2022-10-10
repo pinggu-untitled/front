@@ -14,7 +14,7 @@ export const Base = styled.li`
   cursor: pointer;
 
   & svg {
-    font-size: 24px;
+    font-size: 22px;
   }
 `;
 
