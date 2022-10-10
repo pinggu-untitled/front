@@ -28,7 +28,7 @@ const ProfileImageButton: FC<IProps> = ({ src, nickname, style }) => {
   const navigate = useNavigate();
   return (
     <Base onClick={() => navigate(`/${nickname}`)} style={style}>
-      <img src={src || '/public/placeholder.png'} />
+      <img src={src || '/public/placeholder.png'} alt="/" />
     </Base>
   );
 };
