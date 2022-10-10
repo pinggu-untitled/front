@@ -26,17 +26,18 @@ export const Base = styled.div`
 export const MainContentZone = styled.div`
   padding-top: 73px;
   width: 440px;
-  top: 73px;
-  bottom: 0;
 `;
 
+export const ImageZone = styled.div`
+  background-color: #000;
+`;
 export const ImagesWrapper = styled.div`
   width: 100%;
   height: 200px;
   overflow: hidden;
   border-bottom: 1px solid #dfdfdf;
   display: grid;
-  /* grid-template-columns: repeat(2, 1fr); */
+
   position: relative;
   & img {
     width: 100%;
@@ -171,48 +172,55 @@ const Post = () => {
     <Base>
       <DetailTopNavigation onClick={() => navigate('/')} />
       <MainContentZone>
-        {pd?.post.Images.length > 0 && (
-          <>
-            <ImagesWrapper
-              onClick={() => handleModal('showImagesZoomModal')}
-              style={pd?.post.Images.length === 1 ? { height: '300px' } : { gridTemplateColumns: 'repeat(2, 1fr)' }}
-            >
-              {pd?.post?.Images.length === 1 && (
-                <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
-              )}
+        <ImageZone>
+          {pd?.post.Images.length > 0 && (
+            <>
+              <ImagesWrapper
+                onClick={() => handleModal('showImagesZoomModal')}
+                style={
+                  pd?.post.Images.length === 1
+                    ? { height: '200px', width: '200px', margin: 'auto' }
+                    : { gridTemplateColumns: 'repeat(2, 1fr)' }
+                }
+              >
+                {pd?.post?.Images.length === 1 && (
+                  <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
+                )}
 
-              {pd?.post?.Images.length === 2 &&
-                pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
-                  <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                ))}
+                {pd?.post?.Images.length === 2 &&
+                  pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
+                    <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                  ))}
 
-              {pd?.post?.Images.length >= 3 &&
-                pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
-                  if (i === 0) {
-                    return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
-                  }
+                {pd?.post?.Images.length >= 3 &&
+                  pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
+                    if (i === 0) {
+                      return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
+                    }
 
-                  return (
-                    <More>
-                      <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                      <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
-                    </More>
-                  );
-                })}
-              {pd?.post?.Images.length >= 3 && (
-                <ImageLeftCnt>
-                  <span className="highlight">2</span>
-                  <span>/{pd?.post?.Images.length}</span>
-                </ImageLeftCnt>
-              )}
-            </ImagesWrapper>
-            <ImagesZoomModal
-              show={showModals.showImagesZoomModal}
-              onCloseModal={() => handleModal('showImagesZoomModal')}
-              images={pd?.post.Images}
-            />
-          </>
-        )}
+                    return (
+                      <More>
+                        <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                        <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
+                      </More>
+                    );
+                  })}
+                {pd?.post?.Images.length >= 3 && (
+                  <ImageLeftCnt>
+                    <span className="highlight">2</span>
+                    <span>/{pd?.post?.Images.length}</span>
+                  </ImageLeftCnt>
+                )}
+              </ImagesWrapper>
+              <ImagesZoomModal
+                show={showModals.showImagesZoomModal}
+                onCloseModal={() => handleModal('showImagesZoomModal')}
+                images={pd?.post.Images}
+              />
+            </>
+          )}
+        </ImageZone>
+
         <ProfileBox>
           <ProfileBar>
             <div>

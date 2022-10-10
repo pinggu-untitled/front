@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
 import PreviousButton from '@components/common/buttons/PreviousButton';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import SettingsModal from '@components/common/navigations/DetailTopNavigation/SettingsModal';
@@ -18,6 +17,8 @@ export const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: transparent;
+  z-index: 4000;
 
   & h1 {
     text-align: center;
