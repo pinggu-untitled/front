@@ -9,8 +9,9 @@ const Map = () => {
       level: 3
     }
     const map = new kakao.maps.Map(container, options);
-    
+    map.setZoomable(false);
   }, []);
+
   return (
     <div id='myMap' style={{
       width: '100vw',
