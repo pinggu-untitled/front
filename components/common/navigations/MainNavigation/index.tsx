@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { MdExplore, MdOutlineExplore } from 'react-icons/md';
@@ -55,7 +55,11 @@ export const UserProfile = styled.div`
   }
 `;
 
-const MainNavigation = () => {
+interface IProps {
+  onToggle: () => void;
+}
+
+const MainNavigation: FC<IProps> = ({ onToggle }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const toggleModal = useCallback(() => {
     setShowUserMenu((p) => !p);

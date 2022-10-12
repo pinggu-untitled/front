@@ -5,7 +5,8 @@ import { useRouteMatch } from 'react-router';
 import { useTheme } from '@emotion/react';
 
 interface IProps {
-  content: string | React.ReactNode;
+  icon: React.ReactNode;
+  title: string;
   url: string;
   match: string;
 }
@@ -15,23 +16,33 @@ export const Base = styled.li<{ theme: any; active: boolean }>`
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: ${({ active }) => (active ? '#000' : 'gray')};
     font-weight: ${({ active }) => (active ? 700 : 400)};
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+
+    & svg {
+      font-size: 18px;
+      margin-right: 2px;
+    }
   }
 `;
 
-const MatchActionButton: FC<IProps> = ({ content, url, match }) => {
+const NestedButton: FC<IProps> = ({ icon, title, url, match }) => {
   const theme = useTheme();
   const active = useMatch(match);
 
   return (
     <Base theme={theme} active={Boolean(active)}>
-      <Link to={url}>{content}</Link>
+      <Link to={url}>
+        {icon}
+        {title}
+      </Link>
     </Base>
   );
 };
 
-export default MatchActionButton;
+export default NestedButton;

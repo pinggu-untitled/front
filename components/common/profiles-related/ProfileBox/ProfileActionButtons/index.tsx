@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
 
-interface IProps {
-  children: React.ReactNode;
-}
-
 export const Base = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -17,8 +13,12 @@ export const Base = styled.ul`
   }
 `;
 
-const ActionButtonList: FC<IProps> = ({ children }) => {
+interface IProps {
+  children: React.ReactNode;
+}
+
+const ProfileActionButtons: FC<IProps> = ({ children }) => {
   return <Base>{children}</Base>;
 };
 
-export default ActionButtonList;
+export default ProfileActionButtons;
