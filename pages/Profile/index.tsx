@@ -1,14 +1,15 @@
 import React, { FC, useState } from 'react';
 import styled from '@emotion/styled';
 import MainTopNavigation from '@components/common/navigations/TopNavigation';
-import TopNavigation from '@components/common/navigations/DetailTopNavigation';
+import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
-import ActionButtonList from '@components/common/profiles-related/ProfileBox/ActionButtonList';
+import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
 import ProfileBox from '@components/common/profiles-related/ProfileBox';
-import MatchActionButton from '@components/common/profiles-related/ProfileBox/ActionButtonList/MatchActionButton';
+import MatchActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/NestedButton';
 import ProfileImageWrapper from '@components/common/profiles-related/ProfileImageWrapper';
 import FollowButton from '@components/common/profiles-related/ProfileBox/FollowButton';
+import NestedButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/NestedButton';
 import { BiGrid } from 'react-icons/bi';
 import { MdOutlineBookmarkBorder } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
@@ -66,10 +67,11 @@ const Profile = () => {
   const theme = useTheme();
   const userData = false;
   const [following, setFollowing] = useState(false);
+
   return (
     <Base>
       {/* 로그인 사용자와 프로필 닉네임이 동일하면 */}
-      {userData ? <MainTopNavigation title={'마이페이지'} /> : <TopNavigation onClick={() => navigate('/')} />}
+      {userData ? <MainTopNavigation title={'마이페이지'} /> : <DetailTopNavigation onClick={() => navigate('/')} />}
       <MainContentZone>
         <ProfileBox>
           <ProfileBar>
@@ -83,38 +85,21 @@ const Profile = () => {
             {/* 로그인 사용자와 프로필 닉네임이 다르면*/}
             {userData && <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />}
           </ProfileBar>
-          <ActionButtonList>
-            <MatchActionButton
-              content={
-                <ContentWrapper>
-                  <BiGrid />
-                  게시물
-                </ContentWrapper>
-              }
-              url={'/nickname'}
-              match={'/:nickname'}
-            />
-            <MatchActionButton
-              content={
-                <ContentWrapper>
-                  <MdOutlineBookmarkBorder />
-                  마이핑스
-                </ContentWrapper>
-              }
+          <ProfileActionButtons>
+            <NestedButton icon={<BiGrid />} title={'게시물'} url={'/nickname'} match={'/:nickname'} />
+            <NestedButton
+              icon={<MdOutlineBookmarkBorder />}
+              title={'마이핑스'}
               url={'/nickname/mypings'}
               match={'/:nickname/mypings'}
             />
-            <MatchActionButton
-              content={
-                <ContentWrapper>
-                  <HiOutlineUsers />
-                  친구
-                </ContentWrapper>
-              }
+            <NestedButton
+              icon={<HiOutlineUsers />}
+              title={'친구'}
               url={'/nickname/friends'}
               match={'/:nickname/friends'}
             />
-          </ActionButtonList>
+          </ProfileActionButtons>
         </ProfileBox>
         <Outlet />
       </MainContentZone>

@@ -7,8 +7,7 @@ import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import PillButton from '@components/common/buttons/PillButton';
 import Section from '@components/common/sections/Section';
-import ActionButtonList from '@components/common/profiles-related/ProfileBox/ActionButtonList';
-import ActionButton from '@components/common/profiles-related/ProfileBox/ActionButtonList/ActionButton';
+import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
 import ProfileBox from '@components/common/profiles-related/ProfileBox';
 import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
 import FollowButton from '@components/common/profiles-related/ProfileBox/FollowButton';
@@ -17,6 +16,10 @@ import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } fr
 import { BiCommentDetail } from 'react-icons/bi';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
+import PreviewCard from '@components/previews/PreviewCard';
+import PreviewSection from '../../components/previews/PreviewSection/index';
+import Scrollbars from 'react-custom-scrollbars-2';
+import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
 
 export const Base = styled.div`
   width: 100%;
@@ -24,22 +27,23 @@ export const Base = styled.div`
 `;
 
 export const MainContentZone = styled.div`
-  padding-top: 73px;
+  margin-top: 73px;
   width: 440px;
 `;
 
 export const ImageZone = styled.div`
   background-color: #000;
 `;
+
 export const ImagesWrapper = styled.div`
   width: 100%;
   height: 200px;
   overflow: hidden;
   border-bottom: 1px solid #dfdfdf;
   display: grid;
-
   position: relative;
-  & img {
+
+  > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -168,122 +172,132 @@ const Post = () => {
 
   if (pd?.post?.is_private) return <Navigate replace to="/" />;
 
+  const makeEven = useCallback((data: any[]) => {
+    const len = data.length;
+    return len % 2 === 0 ? data : data.slice(0, len - 1);
+  }, []);
+
   return (
     <Base>
       <DetailTopNavigation onClick={() => navigate('/')} />
-      <MainContentZone>
-        <ImageZone>
-          {pd?.post.Images.length > 0 && (
-            <>
-              <ImagesWrapper
-                onClick={() => handleModal('showImagesZoomModal')}
-                style={
-                  pd?.post.Images.length === 1
-                    ? { height: '200px', width: '200px', margin: 'auto' }
-                    : { gridTemplateColumns: 'repeat(2, 1fr)' }
+      <Scrollbars universal={true}>
+        <MainContentZone>
+          <ImageZone>
+            {pd?.post.Images.length > 0 && (
+              <>
+                <ImagesWrapper
+                  onClick={() => handleModal('showImagesZoomModal')}
+                  style={
+                    pd?.post.Images.length === 1
+                      ? { height: '200px', width: '200px', margin: 'auto' }
+                      : { gridTemplateColumns: 'repeat(2, 1fr)' }
+                  }
+                >
+                  {pd?.post?.Images.length === 1 && (
+                    <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
+                  )}
+
+                  {pd?.post?.Images.length === 2 &&
+                    pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
+                      <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                    ))}
+
+                  {pd?.post?.Images.length >= 3 &&
+                    pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
+                      if (i === 0) {
+                        return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
+                      }
+
+                      return (
+                        <More>
+                          <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
+                          <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
+                        </More>
+                      );
+                    })}
+                  {pd?.post?.Images.length >= 3 && (
+                    <ImageLeftCnt>
+                      <span className="highlight">2</span>
+                      <span>/{pd?.post?.Images.length}</span>
+                    </ImageLeftCnt>
+                  )}
+                </ImagesWrapper>
+                <ImagesZoomModal
+                  show={showModals.showImagesZoomModal}
+                  onCloseModal={() => handleModal('showImagesZoomModal')}
+                  images={pd?.post.Images}
+                />
+              </>
+            )}
+          </ImageZone>
+          <ProfileBox>
+            <ProfileBar>
+              <div>
+                <ProfileImageButton
+                  src={pd?.post?.User.profile_image_url || '/public/placeholder.png'}
+                  nickname={pd?.post?.nickname}
+                />
+                <span className={'nickname'}>{pd?.post?.User.nickname || '사용자 닉네임'}</span>
+                <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
+              </div>
+              <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
+            </ProfileBar>
+            <ProfileActionButtons>
+              <ActionButton
+                content={
+                  <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
+                    <ContentWrapper>
+                      <AiOutlineLike />
+                      <span className={'counts'}>{pd?.likers?.length}</span>
+                    </ContentWrapper>
+                  </HoverLabel>
                 }
-              >
-                {pd?.post?.Images.length === 1 && (
-                  <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
-                )}
-
-                {pd?.post?.Images.length === 2 &&
-                  pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
-                    <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                  ))}
-
-                {pd?.post?.Images.length >= 3 &&
-                  pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
-                    if (i === 0) {
-                      return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
-                    }
-
-                    return (
-                      <More>
-                        <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                        <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
-                      </More>
-                    );
-                  })}
-                {pd?.post?.Images.length >= 3 && (
-                  <ImageLeftCnt>
-                    <span className="highlight">2</span>
-                    <span>/{pd?.post?.Images.length}</span>
-                  </ImageLeftCnt>
-                )}
-              </ImagesWrapper>
-              <ImagesZoomModal
-                show={showModals.showImagesZoomModal}
-                onCloseModal={() => handleModal('showImagesZoomModal')}
-                images={pd?.post.Images}
+                onClick={() => console.log('clicked')}
               />
-            </>
-          )}
-        </ImageZone>
-
-        <ProfileBox>
-          <ProfileBar>
-            <div>
-              <ProfileImageButton
-                src={pd?.post?.User.profile_image_url || '/public/placeholder.png'}
-                nickname={pd?.post?.nickname}
+              <ActionButton
+                content={
+                  <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
+                    <HiOutlineLocationMarker />
+                  </HoverLabel>
+                }
+                onClick={() => console.log('clicked')}
               />
-              <span className={'nickname'}>{pd?.post?.User.nickname || '사용자 닉네임'}</span>
-              <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
+              <ActionButton
+                content={
+                  <HoverLabel label={'댓글'} style={{ top: '28px' }}>
+                    <ContentWrapper>
+                      <BiCommentDetail />
+                      <span className={'counts'}>{pd?.comments?.length || 10}</span>
+                    </ContentWrapper>
+                  </HoverLabel>
+                }
+                onClick={() => console.log('clicked')}
+              />
+            </ProfileActionButtons>
+          </ProfileBox>
+          <TextZone theme={theme}>
+            <h3 className={'title'}>{pd?.post.title}</h3>
+            <div className={'mypings'}>
+              <span>
+                <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
+              </span>
+              <span> · {pd?.post.created_at}</span>
             </div>
-            <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
-          </ProfileBar>
-          <ActionButtonList>
-            <ActionButton
-              content={
-                <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
-                  <ContentWrapper>
-                    <AiOutlineLike />
-                    <span className={'counts'}>{pd?.likers?.length}</span>
-                  </ContentWrapper>
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-            <ActionButton
-              content={
-                <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
-                  <HiOutlineLocationMarker />
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-            <ActionButton
-              content={
-                <HoverLabel label={'댓글'} style={{ top: '28px' }}>
-                  <ContentWrapper>
-                    <BiCommentDetail />
-                    <span className={'counts'}>{pd?.comments?.length || 10}</span>
-                  </ContentWrapper>
-                </HoverLabel>
-              }
-              onClick={() => console.log('clicked')}
-            />
-          </ActionButtonList>
-        </ProfileBox>
-        <TextZone theme={theme}>
-          <h3 className={'title'}>{pd?.post.title}</h3>
-          <div className={'mypings'}>
-            <span>
-              <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
-            </span>
-            <span> · {pd?.post.created_at}</span>
-          </div>
-          <p className={'content'}>{pd?.post.content}</p>
-          <p className={'meta'}>조회수 {pd?.post.hits}</p>
-        </TextZone>
-        <Section title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.nickname}/myPings`}>
-          마이핑스
-        </Section>
-        <Section title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.nickname}/posts`}>
-          게시물
-        </Section>
-      </MainContentZone>
+            <p className={'content'}>{pd?.post.content}</p>
+            <p className={'meta'}>조회수 {pd?.post.hits}</p>
+          </TextZone>
+          <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.nickname}/myPings`}>
+            {makeEven([1, 2, 3]).map((data, i) => (
+              <PreviewCard key={i} data={data} />
+            ))}
+          </PreviewSection>
+          <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.nickname}/posts`}>
+            {makeEven([1, 2, 3]).map((data, i) => (
+              <PreviewCard key={i} data={data} />
+            ))}
+          </PreviewSection>
+        </MainContentZone>
+      </Scrollbars>
     </Base>
   );
 };

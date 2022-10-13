@@ -29,6 +29,7 @@ const config: Configuration = {
       '@utils': path.resolve(__dirname, 'utils'),
       '@typings': path.resolve(__dirname, 'typings'),
       '@themes': path.resolve(__dirname, 'themes'),
+      '@contexts': path.resolve(__dirname, 'contexts'),
     },
   },
   entry: {
