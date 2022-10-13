@@ -4,6 +4,7 @@ const { kakao } = window as any;
 const Map = () => {
   let map: any;
   let marker: any;
+  
   /* geolocation을 이용해 현재 위치를 얻음 */
   useEffect(() => {
     navigator?.geolocation.getCurrentPosition(onSuccess, onError);
