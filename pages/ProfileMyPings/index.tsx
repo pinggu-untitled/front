@@ -1,12 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import AddButton from '@components/Profile/AddButton';
 
 export const Base = styled.div`
   width: 100%;
 `;
 
 const ProfileMyPings = () => {
-  return <Base>해당 유저의 마이핑스 목록</Base>;
+  return (
+    <Base>
+      <AddButton to="/mypings/new" />
+    </Base>
+  );
 };
 
 export default ProfileMyPings;

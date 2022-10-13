@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../themes/themes';
@@ -21,7 +21,7 @@ export const MainPage = styled.main<{ show: boolean }>`
   width: 440px;
   left: 68px;
   top: 0;
-  bottom: 0;
+  min-height: 100vh;
   border-right: 1px solid #dfdfdf;
   visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
   opacity: ${({ show }) => (show ? 1 : 0)};
@@ -63,6 +63,10 @@ export const MapZone = styled.div`
 const AppLayout: FC<IProps> = ({ children }) => {
   const location = useLocation();
   const [showPage, setShowPage] = useState(true);
+  const onToggle = useCallback(() => {
+    setShowPage((p) => !p);
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <Layout>
@@ -70,12 +74,12 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <div>{children}</div>
         ) : (
           <>
-            <MainNavigation />
+            <MainNavigation onToggle={onToggle} />
             <MainPage show={showPage}>{children}</MainPage>
             <MapZone>
               <Map />
             </MapZone>
-            <SlideButton show={showPage} onClick={() => setShowPage((p) => !p)}>
+            <SlideButton show={showPage} onClick={onToggle}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>
           </>
