@@ -4,7 +4,6 @@ let myPositionMarker: kakao.maps.Marker;
 
 /* 지도와 내 위치 마커 생성하기 */
 export const createMap = (container: HTMLElement | null, options: kakao.maps.MapOptions) => {
-  if (map) return;
   map = new kakao.maps.Map(container, options);
   map.setZoomable(false);
   myPositionMarker = new kakao.maps.Marker({ position: options.center });
