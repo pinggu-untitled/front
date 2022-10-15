@@ -7,8 +7,9 @@ import ProfileImageButton from '@components/common/profiles-related/ProfileImage
 import { AiOutlineEye } from 'react-icons/ai';
 import { MdPeopleOutline } from 'react-icons/md';
 import { IPostCard } from '../../typings/db';
+
 interface IProps {
-  data: IPostCard;
+  post: IPostCard;
 }
 
 export const Base = styled.ul`
@@ -65,27 +66,26 @@ export const UserProfileWrapper = styled.div`
   right: 10px;
 `;
 
-const PostCard: FC<IProps> = ({ data }) => {
-  console.log(data);
+const PostCard: FC<IProps> = ({ post }) => {
   return (
     <Base>
       <Container>
-        <Link to={`/posts/${data.id}`}>
+        <Link to={`/posts/${post.id}`}>
           <ImageWrapper>
-            <img src={`http://localhost:8080/uploads/${data?.Images?.src}` || '/public/1.png'} alt={'images'} />
+            <img src={`http://localhost:8080/uploads/${post?.Images?.src}` || '/public/1.png'} alt={'images'} />
             <CountPill length={3} />
           </ImageWrapper>
           <TextWrapper>
-            <h2>{data.title}</h2>
+            <h2>{post.title}</h2>
             <p>
               <span>문래역 · </span>
-              <span>{data.created_at}</span>
+              <span>{post.created_at}</span>
             </p>
           </TextWrapper>
           <UserProfileWrapper>
             <ProfileImageButton
-              src={data.User.profile_image_url || '/public/placeholder.png'}
-              nickname={data.User.nickname}
+              src={post.User.profile_image_url || '/public/placeholder.png'}
+              nickname={post.User.nickname}
               style={{ width: '30px', height: '30px' }}
             />
           </UserProfileWrapper>

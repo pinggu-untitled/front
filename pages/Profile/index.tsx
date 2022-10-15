@@ -1,7 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useCallback, useRef } from 'react';
 import styled from '@emotion/styled';
 import MainTopNavigation from '@components/common/navigations/TopNavigation';
-import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
@@ -13,6 +12,12 @@ import NestedButton from '@components/common/profiles-related/ProfileBox/Profile
 import { BiGrid } from 'react-icons/bi';
 import { MdOutlineBookmarkBorder } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
+import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
+import SettingsModal from '@components/revised/SettingsModal';
+
+import { BiEditAlt } from 'react-icons/bi';
+import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
+import ProfileBoard from '@components/revised/Profile/ProfileBoard';
 
 export const Base = styled.div`
   width: 100%;
@@ -20,9 +25,9 @@ export const Base = styled.div`
 `;
 
 export const MainContentZone = styled.div`
-  padding-top: 73px;
   width: 440px;
   top: 73px;
+  position: absolute;
   bottom: 0;
 `;
 
@@ -66,25 +71,56 @@ const Profile = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const userData = false;
+  const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [following, setFollowing] = useState(false);
+  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showSettingsModal: false });
+
+  const handleModal = useCallback((modalName: string) => {
+    setShowModals((pv) => ({ ...pv, [modalName]: !pv[modalName] }));
+  }, []);
+
+  const copyUrl = useCallback((e: any) => {
+    copyUrlRef.current?.select();
+    document.execCommand('copy');
+    e.target.focus();
+  }, []);
+
+  const userSettingItems = [
+    { content: { icon: <BiEditAlt />, title: '편집하기' }, onClick: () => console.log('good') },
+    { content: { icon: <AiOutlineDelete />, title: '삭제하기' }, onClick: () => console.log('good') },
+  ];
+
+  const viewerSettingItems = [
+    {
+      content: {
+        icon: <AiOutlineLink />,
+        title: '링크 복사',
+        rest: (
+          <form>
+            <textarea ref={copyUrlRef} value={window.location.href} />
+          </form>
+        ),
+      },
+      onClick: copyUrl,
+    },
+  ];
+
+  const ud = { id: 1, nickname: '아무개', profile_image_url: '/public/1.png', bio: '🎃🤖 Holloween 할로윈' };
 
   return (
     <Base>
-      {/* 로그인 사용자와 프로필 닉네임이 동일하면 */}
-      {userData ? <MainTopNavigation title={'마이페이지'} /> : <DetailTopNavigation onClick={() => navigate('/')} />}
+      {/* {userData ? <MainTopNavigation title={'마이페이지'} /> : <DetailTopNavigation onClick={() => navigate('/')} />} */}
+      <DetailTopNavigation toggleOptions={() => handleModal('showSettingsModal')} />
+      <SettingsModal
+        show={showModals.showSettingsModal}
+        onCloseModal={() => handleModal('showSettingsModal')}
+        items={userSettingItems || viewerSettingItems}
+        style={{ top: '60px', left: '310px' }}
+      />
       <MainContentZone>
-        <ProfileBox>
-          <ProfileBar>
-            <ProfileImageWrapper
-              src={'/public/placeholder.png'}
-              nickname={'nickname'}
-              style={{ width: '100px', height: '100px' }}
-            />
-            <span className={'nickname'}>{'사용자 닉네임'}</span>
-            <p className={'bio'}>{'안녕하세요 반갑습니당!!!! 제 프로필 페이지에여 빠이염'}</p>
-            {/* 로그인 사용자와 프로필 닉네임이 다르면*/}
-            {userData && <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />}
-          </ProfileBar>
+        <ProfileBoard profile={ud} />
+
+        {/* <ProfileBox>
           <ProfileActionButtons>
             <NestedButton icon={<BiGrid />} title={'게시물'} url={'/nickname'} match={'/:nickname'} />
             <NestedButton
@@ -100,7 +136,7 @@ const Profile = () => {
               match={'/:nickname/friends'}
             />
           </ProfileActionButtons>
-        </ProfileBox>
+        </ProfileBox> */}
         <Outlet />
       </MainContentZone>
     </Base>

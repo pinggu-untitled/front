@@ -6,8 +6,10 @@ import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import PostCard from '@components/PostCard';
 import { IPostCard } from '../../typings/db';
+import CardList from '@components/revised/CardList';
+import PostCard from '@components/revised/CardList/PostCard';
+import ProfileCard from '@components/revised/CardList/ProfileCard';
 
 export const Base = styled.div`
   width: 100%;
@@ -21,35 +23,24 @@ export const MainContentZone = styled.div`
   bottom: 0;
 `;
 
-export const PostCards = styled.ul``;
-
 interface IForm {
   searchQueries: string;
 }
 const Home = () => {
   const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
 
-  const { control, handleSubmit } = useForm<IForm>({
-    defaultValues: { searchQueries: '' },
-  });
-  const onSubmit = useCallback((data: IForm) => {
-    console.log(data);
-  }, []);
-
   return (
     <Base>
       <TopNavigation title={'홈'} />
       <MainContentZone>
-        <PostCards>
-          <Scrollbars universal={true}>
-            {pd
-              ?.slice(0, 100)
-              ?.filter((post: any) => post.is_private === 0)
-              .map((post) => (
-                <PostCard key={post.id} data={post} />
-              ))}
-          </Scrollbars>
-        </PostCards>
+        <CardList>
+          {pd?.slice(0, 3).map((post, i) => (
+            <ProfileCard profile={post.User} />
+          ))}
+          {pd?.slice(0, 10).map((post, i) => (
+            <PostCard key={`posts/${post.id}}`} post={post} />
+          ))}
+        </CardList>
       </MainContentZone>
     </Base>
   );
