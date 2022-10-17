@@ -21,6 +21,7 @@ export const MainContentZone = styled.div`
   width: 440px;
   top: 73px;
   bottom: 0;
+  overflow: scroll;
 `;
 
 interface IForm {

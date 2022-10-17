@@ -28,7 +28,7 @@ export const Base = styled.button`
     > .icon {
       margin-right: 12px;
       font-size: 17px;
-      transform: translateY(-1px);
+      transform: translateY(1px);
     }
 
     &:hover {

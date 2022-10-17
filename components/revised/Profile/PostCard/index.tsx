@@ -1,13 +1,20 @@
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { IPostCard } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
+import { TbDotsVertical } from 'react-icons/tb';
+
 import { useNavigate } from 'react-router-dom';
+import SettingsModal from '@components/revised/SettingsModal';
+
+import { BiEditAlt } from 'react-icons/bi';
+import { AiOutlineDelete } from 'react-icons/ai';
 
 interface IProps {
   post: IPostCard;
 }
 export const Base = styled.li`
+  position: relative;
   border-bottom: 1px solid #dfdfdf;
   padding: 10px 0;
   position: relative;
@@ -76,11 +83,29 @@ export const AuthorZone = styled.div`
     }
   }
 `;
+
+export const SettingsButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-left: 10px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: gray;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.6;
+  }
+`;
+
 const PostCard: FC<IProps> = ({ post }) => {
   const navigate = useNavigate();
-  const stopPropagation = useCallback((e) => {
-    e.stopPropagation();
-  }, []);
 
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>

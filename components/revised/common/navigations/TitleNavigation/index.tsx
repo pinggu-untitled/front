@@ -2,11 +2,10 @@ import React, { FC } from 'react';
 import styled from '@emotion/styled';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import { TbDotsVertical } from 'react-icons/tb';
-import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  toggleOptions: () => void;
+  title: string | React.ReactNode;
 }
 
 export const Base = styled.header`
@@ -21,54 +20,46 @@ export const Base = styled.header`
   display: flex;
   align-items: center;
   text-align: center;
-  justify-content: space-between;
   z-index: 4000;
   cursor: pointer;
 
-  > .title {
+  > h2 {
     position: absolute;
-    top: 53%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 24px;
   }
 `;
 
 export const Button = styled.div`
   width: 40px;
   height: 40px;
-  font-size: 22px;
+  font-size: 19px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: 0.2s;
   cursor: pointer;
-  /* color: #777777; */
-  border: none;
+  color: #777777;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-
-  &:active {
-    border: 1px solid #dfdfdf;
+    /* border: 1px solid #dfdfdf; */
+    background-color: rgba(0, 0, 0, 0.05);
   }
 `;
 
-const DetailTopNavigation: FC<IProps> = ({ toggleOptions }) => {
+const TitleNavigation: FC<IProps> = ({ title }) => {
   const navigate = useNavigate();
   return (
     <Base>
       <Button onClick={() => navigate(-1)}>
-        <BsArrowLeft />
+        <MdArrowBackIosNew />
       </Button>
-      <Button onClick={toggleOptions}>
-        <TbDotsVertical />
-      </Button>
+      <h2> {title}</h2>
     </Base>
   );
 };
 
-export default DetailTopNavigation;
+export default TitleNavigation;

@@ -76,7 +76,9 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <>
             <MainNavigation onToggle={onToggle} />
             <MainPage show={showPage}>{children}</MainPage>
-            <MapZone>{/* <Map /> */}</MapZone>
+            <MapZone>
+              <Map />
+            </MapZone>
             <SlideButton show={showPage} onClick={onToggle}>
               {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
             </SlideButton>

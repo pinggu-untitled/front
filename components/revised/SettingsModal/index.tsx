@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import SettingItem, { IItem } from './SettingsItem';
 
 export interface ISettings {
+  bgColor?: string;
   show: boolean;
   onCloseModal: any;
   style: CSSProperties;
@@ -23,9 +24,9 @@ export const SettingItemsList = styled.div`
   }
 `;
 
-const SettingsModal: FC<ISettings> = ({ show, onCloseModal, style, items }) => {
+const SettingsModal: FC<ISettings> = ({ bgColor, show, onCloseModal, style, items }) => {
   return (
-    <FullScreenModal show={show} onCloseModal={onCloseModal}>
+    <FullScreenModal show={show} onCloseModal={onCloseModal} style={{ backgroundColor: bgColor }}>
       <SettingItemsList style={style} onClick={onCloseModal}>
         {items.map((item, i) => (
           <SettingItem
