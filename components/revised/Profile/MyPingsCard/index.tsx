@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import { IPostCard } from '@typings/db';
+import { IMyPings, IPostCard } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { TbDotsVertical } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { AiOutlineDelete } from 'react-icons/ai';
 import { Base, ShowTotals, InfoZone } from '@components/revised/Profile/PostCard';
 
 interface IProps {
-  mypings: IPostCard;
+  mypings: IMyPings;
 }
 
 export const MyPingsImage = styled.div`
