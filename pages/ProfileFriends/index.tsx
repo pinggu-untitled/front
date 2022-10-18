@@ -17,6 +17,7 @@ import BottomSummary from '../../components/revised/Profile/BottomSummary';
 import MyPingsCard from '@components/revised/Profile/MyPingsCard';
 import { Base, MainContentZone, Form } from '../ProfilePosts';
 import FriendCard from '@components/revised/Profile/FriendCard';
+import { useParams } from 'react-router-dom';
 
 export interface ICheckedPost {
   id: number;
@@ -24,14 +25,15 @@ export interface ICheckedPost {
 }
 
 const ProfileFriends = () => {
-  const { data: ud, mutate: mutateUd } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
+  const { userId } = useParams<{ userId: string }>();
+  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
   const { data: followersData, mutate: mutateFollowers } = useSWR<IUser[] | null>(
-    ud ? `/users/${ud.id}/followers` : null,
+    `/users/${userId}/followers`,
     fetcher,
   );
   const { data: followeringsData, mutate: mutateFollowings } = useSWR<IUser[] | null>(
-    ud ? `/users/${ud.id}/followings` : null,
+    `/users/${userId}/followings`,
     fetcher,
   );
 
@@ -66,16 +68,14 @@ const ProfileFriends = () => {
     { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
   ];
 
-  if (pd === undefined) return <div>로딩중...</div>;
-
   return (
     <>
       <Base>
         <MainContentZone>
           {!showModals.showEditModal && (
             <CardList>
-              {pd?.slice(0, 10).map((post, i) => (
-                <FriendCard key={uuid()} profile={post.User} />
+              {followersData?.map((user, i) => (
+                <FriendCard key={uuid()} profile={user} />
               ))}
             </CardList>
           )}
@@ -87,14 +87,14 @@ const ProfileFriends = () => {
           items={userSettingItems}
           style={{ bottom: '80px', left: '310px' }}
         />
-        <EditModal
+        {/* <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
           title={{ main: '내 마이핑스', count: pd?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
             <CardList>
-              {pd?.slice(0, 10).map((post) => (
+              {?.slice(0, 10).map((post) => (
                 <SelectPostCard
                   key={uuid()}
                   post={post}
@@ -105,7 +105,7 @@ const ProfileFriends = () => {
             </CardList>
             <BottomSummary checkedPosts={checkedPosts} handleCheck={handleCheck} />
           </Form>
-        </EditModal>
+        </EditModal> */}
       </Base>
     </>
   );

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import AddButton from '@components/Profile/AddButton';
 import PostCard from '@components/revised/Profile/PostCard';
-import { IPostCard } from '@typings/db';
+import { IPost, IUser, IMe } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -16,6 +16,8 @@ import { useForm } from 'react-hook-form';
 import BottomSummary from '../../components/revised/Profile/BottomSummary';
 import MyPingsCard from '@components/revised/Profile/MyPingsCard';
 import { Base, MainContentZone, Form } from '../ProfilePosts';
+import { useParams } from 'react-router-dom';
+import { IMyPings } from '../../typings/db';
 
 export interface ICheckedPost {
   id: number;
@@ -23,7 +25,12 @@ export interface ICheckedPost {
 }
 
 const ProfileMyPings = () => {
-  const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
+  const { userId } = useParams<{ userId: string }>();
+  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
+  const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
+  const { data: mypingsData, mutate: mutateMypingsData } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+
+  // const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
@@ -55,16 +62,14 @@ const ProfileMyPings = () => {
     { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
   ];
 
-  if (pd === undefined) return <div>로딩중...</div>;
-
   return (
     <>
       <Base>
         <MainContentZone>
           {!showModals.showEditModal && (
             <CardList>
-              {pd?.slice(0, 10).map((post, i) => (
-                <MyPingsCard key={uuid()} mypings={post} />
+              {mypingsData?.slice(0, 10).map((ping, i) => (
+                <MyPingsCard key={uuid()} mypings={ping} />
               ))}
             </CardList>
           )}
@@ -79,19 +84,19 @@ const ProfileMyPings = () => {
         <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
-          title={{ main: '내 마이핑스', count: pd?.slice(0, 10).length || 0 }}
+          title={{ main: '내 마이핑스', count: mypingsData?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
-            <CardList>
-              {pd?.slice(0, 10).map((post) => (
+            {/* <CardList>
+              {mypingsData?.slice(0, 10).map((ping) => (
                 <SelectPostCard
                   key={uuid()}
-                  post={post}
-                  isChecked={Boolean(checkedPosts.find((pp) => pp.id === post.id))}
-                  handleCheck={handleCheck(post)}
+                  post={ping}
+                  isChecked={Boolean(checkedPosts.find((pp) => pp.id === ping.id))}
+                  handleCheck={handleCheck(ping)}
                 />
               ))}
-            </CardList>
+            </CardList> */}
             <BottomSummary checkedPosts={checkedPosts} handleCheck={handleCheck} />
           </Form>
         </EditModal>

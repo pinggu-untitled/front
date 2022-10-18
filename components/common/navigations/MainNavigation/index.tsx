@@ -8,6 +8,9 @@ import { HiOutlineDotsHorizontal, HiUser, HiOutlineUser, HiOutlineUserGroup, HiU
 import NavItem from './NavItem';
 import { Link } from 'react-router-dom';
 import UserMenuModal from '@components/common/navigations/MainNavigation/UserMenuModal';
+import useSWR from 'swr';
+import { IMe } from '@typings/db';
+import fetcher from '@utils/fetcher';
 
 const Base = styled.nav`
   position: fixed;
@@ -60,6 +63,7 @@ interface IProps {
 }
 
 const MainNavigation: FC<IProps> = ({ onToggle }) => {
+  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const toggleModal = useCallback(() => {
     setShowUserMenu((p) => !p);
@@ -97,7 +101,7 @@ const MainNavigation: FC<IProps> = ({ onToggle }) => {
           />
         </NavList>
         <UserProfile onClick={toggleModal}>
-          <img src={'/public/placeholder.png'} alt={`profiles`} />
+          <img src={`${md?.profile_image_url}`} alt={`profiles`} />
         </UserProfile>
       </Base>
       <UserMenuModal show={showUserMenu} onCloseModal={toggleModal} />

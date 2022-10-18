@@ -56,3 +56,11 @@ export interface IImage {
 export interface IPostCard extends IPostDefault {
   Images: IImage[];
 }
+
+export interface IMyPings {
+  id: number;
+  title: string;
+  category: number;
+  user: IUser;
+  is_private: boolean;
+}
