@@ -62,8 +62,6 @@ const ProfileMyPings = () => {
     { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
   ];
 
-  // if (pd === undefined) return <div>로딩중...</div>;
-
   return (
     <>
       <Base>
