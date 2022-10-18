@@ -28,13 +28,13 @@ const App = () => {
         <Route index element={<Home />} />
         <Route path={'/explore'} element={<Explore />} />
         <Route path={'/results'} element={<Results />} />
-        <Route path={'/:nickname'} element={<Profile />}>
+        <Route path={'/:userId'} element={<Profile />}>
           <Route index element={<ProfilePosts />} />
-          <Route path={'/:nickname/mypings'} element={<ProfileMyPings />} />
-          <Route path={'/:nickname/friends'} element={<ProfileFriends />} />
+          <Route path={'/:userId/mypings'} element={<ProfileMyPings />} />
+          <Route path={'/:userId/friends'} element={<ProfileFriends />} />
         </Route>
         <Route path={'/mypings/new'} element={<MyPingsNew />} />
-        <Route path={'/:nickname/edit'} element={<ProfileEdit />} />
+        <Route path={'/:userId/edit'} element={<ProfileEdit />} />
         <Route path={'/chatrooms'} element={<Chatrooms />} />
         <Route path={'/chatrooms/:chatroomId'} element={<Chatrooms />} />
         <Route path={'/intro'} element={<Intro />} />

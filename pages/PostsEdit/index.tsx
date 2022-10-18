@@ -8,7 +8,7 @@ import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea'
 import SquareButton from '@components/common/buttons/SquareButton';
 import ImageInputList from '@components/Posts/ImageInputList';
 import axios from 'axios';
-import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
+// import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
@@ -170,13 +170,13 @@ const PostsEdit = () => {
           <PrevButtonTitleHeader title="게시물 편집하기" onClick={() => navigate(`/posts/${postId}`)} />
           <MainContentZone>
             <Form onSubmit={onSubmit}>
-              <UserProfileCard user={ud}>
+              {/* <UserProfileCard user={ud}>
                 <TextToggleButtonInput
                   control={control}
                   name={'is_private'}
                   messages={{ checked: '나에게만', unChecked: '모두에게' }}
                 />
-              </UserProfileCard>
+              </UserProfileCard> */}
               <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
               <FixedLabelTextarea
                 control={control}

@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { IPost } from '@typings/db';
-import CountPill from '@components/PostCard/CountPill';
-import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
 import { AiOutlineEye } from 'react-icons/ai';
 import { MdPeopleOutline } from 'react-icons/md';
 import { IPostCard } from '@typings/db';
@@ -72,8 +70,8 @@ const PreviewCard: FC<IProps> = ({ data }) => {
       <Container>
         <Link to={`/posts/${data.id}`}>
           <ImageWrapper>
-            <img src={`http://localhost:8080/uploads/${data?.Images?.src}` || '/public/1.png'} alt={'images'} />
-            <CountPill length={3} />
+            {/* <img src={`http://localhost:8080/uploads/${data?.Images?.src}` || '/public/1.png'} alt={'images'} /> */}
+            {/* <CountPill length={3} /> */}
           </ImageWrapper>
           <TextWrapper>
             <h2>{data.title}</h2>

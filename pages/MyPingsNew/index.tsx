@@ -10,7 +10,7 @@ import SquareButton from '@components/common/buttons/SquareButton';
 import ProfileImageInput from '@components/Profile/ProfileImageInput';
 import ToggleButtonInput from '@components/common/inputs/ToggleButtonInput';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
-import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
+// import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import { Private } from '@pages/PostsNew';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
 import SelectBox from '@components/common/selects/SelectBox';
@@ -72,13 +72,13 @@ const MyPingsNew = () => {
       <PrevButtonTitleHeader title="마이핑스 만들기" onClick={() => navigate('/')} />
       <MainContentZone>
         <Form onSubmit={onSubmit}>
-          <UserProfileCard user={ud}>
+          {/* <UserProfileCard user={ud}>
             <TextToggleButtonInput
               control={control}
               name={'is_private'}
               messages={{ checked: '모두에게', unChecked: '나에게만' }}
             />
-          </UserProfileCard>
+          </UserProfileCard> */}
           <FixedLabelInput control={control} label={'제목'} name={'title'} />
           {/*<FixedLabelInput control={control} label={'카테고리'} name={'category'} />*/}
           <SelectBox

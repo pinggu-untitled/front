@@ -7,11 +7,11 @@ import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import PillButton from '@components/common/buttons/PillButton';
 import Section from '@components/common/sections/Section';
-import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
-import ProfileBox from '@components/common/profiles-related/ProfileBox';
-import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
-import FollowButton from '@components/common/profiles-related/ProfileBox/FollowButton';
-import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
+// import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
+// import ProfileBox from '@components/common/profiles-related/ProfileBox';
+// import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
+// import FollowButton from '@components/common/profiles-related/ProfileBox/FollowButton';
+// import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';
 import { BiCommentDetail } from 'react-icons/bi';
 import HoverLabel from '@components/common/labels/HoverLabel';
@@ -19,7 +19,7 @@ import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 import PreviewCard from '@components/previews/PreviewCard';
 import PreviewSection from '../../components/previews/PreviewSection/index';
 import Scrollbars from 'react-custom-scrollbars-2';
-import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
+// import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
 
 export const Base = styled.div`
   width: 100%;
@@ -230,7 +230,7 @@ const Post = () => {
               </>
             )}
           </ImageZone>
-          <ProfileBox>
+          {/* <ProfileBox>
             <ProfileBar>
               <div>
                 <ProfileImageButton
@@ -274,7 +274,7 @@ const Post = () => {
                 onClick={() => console.log('clicked')}
               />
             </ProfileActionButtons>
-          </ProfileBox>
+          </ProfileBox> */}
           <TextZone theme={theme}>
             <h3 className={'title'}>{pd?.post.title}</h3>
             <div className={'mypings'}>
