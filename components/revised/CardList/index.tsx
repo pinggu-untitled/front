@@ -15,9 +15,11 @@ interface IProps {
   children: React.ReactNode;
 }
 const CardList: FC<IProps> = ({ children }) => {
-  // const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
-
-  return <Base>{children}</Base>;
+  return (
+    // <Scrollbars universal={true}>
+    <Base>{children}</Base>
+    // </Scrollbars>
+  );
 };
 
 export default CardList;

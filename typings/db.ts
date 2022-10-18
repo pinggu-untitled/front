@@ -1,7 +1,14 @@
+export interface IMe {
+  id: number;
+  nickname: string;
+  profile_image_url: string;
+}
+
 export interface IUser {
   id: number;
   nickname: string;
   profile_image_url: string;
+  bio?: string;
 }
 
 export interface IHistory {
@@ -47,5 +54,5 @@ export interface IImage {
 }
 
 export interface IPostCard extends IPostDefault {
-  Images: IImage;
+  Images: IImage[];
 }

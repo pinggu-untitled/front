@@ -75,8 +75,8 @@ const Intro = () => {
       <Container>
         <Main>
           <h1>인증하기</h1>
-          <SocialAuthButton href={'/intro'}>카카오</SocialAuthButton>
-          <SocialAuthButton href={'/intro'}>구글</SocialAuthButton>
+          <SocialAuthButton href={'http://localhost:8080/auth/login/kakao'}>카카오</SocialAuthButton>
+          <SocialAuthButton href={'http://localhost:8080/auth/login/google'}>구글</SocialAuthButton>
         </Main>
       </Container>
     </Base>

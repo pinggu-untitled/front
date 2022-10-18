@@ -87,10 +87,16 @@ const PostCard: FC<IProps> = ({ post }) => {
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageZone>
-        <ShowTotals>
-          <span className="current">{1}</span>/3
-        </ShowTotals>
-        <PostImage src={post.Images?.src || '/public/logo.png'} />
+        {post.Images.length > 0 && (
+          <ShowTotals>
+            <span className="current">{1}</span>/{post.Images.length}
+          </ShowTotals>
+        )}
+        <PostImage
+          src={
+            post.Images?.length > 0 ? `http://localhost:8080/uploads/${post.Images[0].src}` : '/public/placeholder.png'
+          }
+        />
       </ImageZone>
       <InfoZone>
         <h2>{post.title}</h2>

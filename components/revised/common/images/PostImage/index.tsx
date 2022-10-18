@@ -6,6 +6,7 @@ export const Base = styled.div`
   height: 100px;
   border-radius: 4px;
   overflow: hidden;
+  border: 1px solid #dfdfdf;
 
   > img {
     width: 100%;
@@ -15,14 +16,12 @@ export const Base = styled.div`
 `;
 
 interface IProps {
-  src: string;
+  src: string | undefined;
 }
 const PostImage: FC<IProps> = ({ src }) => {
-  const baseUrl = 'http://localhost:8080/uploads';
-
   return (
     <Base>
-      <img src={`${baseUrl}/${src}`} alt={src} />
+      <img src={src} alt={''} />
     </Base>
   );
 };

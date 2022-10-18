@@ -1,10 +1,8 @@
 import React, { FC, memo, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { IUser } from '@typings/db';
-import PostImage from '@components/revised/common/images/PostImage';
 import ProfileImage from '@components/revised/common/images/ProfileImage';
 import { useNavigate } from 'react-router-dom';
-import ProfilePreviewBubble from '../ProfilePreviewBubble';
 import { Base, ImageZone, InfoZone } from '../PostCard';
 
 interface IProps {
@@ -19,17 +17,17 @@ export const InfoZoneModified = styled(InfoZone)`
   }
 `;
 
-const ProfileCard: FC<IProps> = ({ profile }) => {
+const FriendCard: FC<IProps> = ({ profile }) => {
   const navigate = useNavigate();
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();
   }, []);
 
   return (
-    <Base onClick={() => navigate(`/${profile.id}`)}>
-      <ImageZone>
-        <ProfileImage profile={profile} style={{ width: '70px', height: '70px' }} />
-      </ImageZone>
+    <Base onClick={() => navigate(`/${profile.nickname}`)}>
+      {/* <ImageZone> */}
+      <ProfileImage profile={profile} style={{ width: '70px', height: '70px' }} />
+      {/* </ImageZone> */}
       <InfoZoneModified>
         <h2>{profile.nickname}</h2>
         <p>
@@ -40,4 +38,4 @@ const ProfileCard: FC<IProps> = ({ profile }) => {
   );
 };
 
-export default memo(ProfileCard);
+export default memo(FriendCard);

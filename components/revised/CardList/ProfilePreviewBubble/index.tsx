@@ -38,7 +38,7 @@ const ProfilePreviewBubble: FC<IProps> = ({ profile }) => {
   return (
     <Base>
       <h4>{profile.nickname}</h4>
-      <span className="more" onClick={() => navigate(`/${profile.nickname}`)}>
+      <span className="more" onClick={() => navigate(`/${profile.id}`)}>
         프로필 보기
       </span>
     </Base>

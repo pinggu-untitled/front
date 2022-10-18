@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import AddButton from '@components/Profile/AddButton';
 import PostCard from '@components/revised/Profile/PostCard';
-import { IPostCard } from '@typings/db';
+import { IMe, IUser, IPost } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -13,82 +13,104 @@ import EditModal from '@components/revised/Profile/EditModal';
 import SelectPostCard from '@components/revised/Profile/SelectPostCard';
 import { v4 as uuid } from 'uuid';
 import { useForm } from 'react-hook-form';
+import BottomSummary from '../../components/revised/Profile/BottomSummary';
+import { useParams } from 'react-router-dom';
+
 export const Base = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+export const MainContentZone = styled.div`
+  position: absolute;
+  width: 440px;
+  top: 208px;
+  bottom: 0;
   overflow: scroll;
 `;
 
-interface ISelected {
-  [key: string]: boolean;
+export const Form = styled.form``;
+
+export interface ICheckedPost {
+  id: number;
+  title: string;
 }
 
 const ProfilePosts = () => {
-  const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
-
+  const { userId } = useParams<{ userId: string }>();
+  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: ud, mutate: mutateUd } = useSWR<IUser>(`/users/${userId}`, fetcher);
+  const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(ud ? `/users/${userId}/posts` : null, fetcher);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
   });
-
-  const [checks, setChecks] = useState<{ [key: string]: boolean }>({});
+  const [checkedPosts, setCheckedPost] = useState<ICheckedPost[]>([]);
 
   const handleModal = (modalName: string) => () => {
     setShowModals((pv) => ({ ...pv, [modalName]: !pv[modalName] }));
   };
 
-  const userSettingItems = [
-    { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
-  ];
-
-  const handleCheck = (postId: number) => (e: any) => {
-    setChecks((pv) => ({ ...pv, [e.target.value]: e.target.checked }));
+  const handleCheck = (post: ICheckedPost) => (e: any) => {
+    setCheckedPost((prev) => {
+      const existing = prev.find((pp) => pp.id === post.id);
+      return existing ? prev.filter((pp) => pp.id !== post.id) : [...prev, { id: post.id, title: post.title }];
+    });
   };
+
+  console.log(checkedPosts);
 
   const onSubmit = useCallback(
     (e: any) => {
       e.preventDefault();
-      console.log(checks);
-      const ret = Object.entries(checks).filter(([key, value]) => value !== false);
-      console.log(ret);
+      console.log(checkedPosts);
     },
-    [checks],
+    [checkedPosts],
   );
+
+  const userSettingItems = [
+    { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
+  ];
 
   if (pd === undefined) return <div>로딩중...</div>;
 
   return (
     <>
       <Base>
-        {!showModals.showEditModal && (
-          <>
+        <MainContentZone>
+          {!showModals.showEditModal && (
             <CardList>
               {pd?.slice(0, 10).map((post, i) => (
                 <PostCard key={uuid()} post={post} />
               ))}
             </CardList>
-            <SettingsButton onClick={handleModal('showSettingsModal')} />
-            <SettingsModal
-              show={showModals.showSettingsModal}
-              onCloseModal={handleModal('showSettingsModal')}
-              items={userSettingItems}
-              style={{ bottom: '80px', left: '310px' }}
-            />
-          </>
-        )}
+          )}
+        </MainContentZone>
+        <SettingsButton onClick={handleModal('showSettingsModal')} />
+        <SettingsModal
+          show={showModals.showSettingsModal}
+          onCloseModal={handleModal('showSettingsModal')}
+          items={userSettingItems}
+          style={{ bottom: '80px', left: '310px' }}
+        />
         <EditModal
-          show={true || showModals.showEditModal}
+          show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
           title={{ main: '내 게시물', count: pd?.slice(0, 10).length || 0 }}
         >
-          <form onSubmit={onSubmit}>
-            <button type="submit">삭제</button>
+          <Form onSubmit={onSubmit}>
             <CardList>
               {pd?.slice(0, 10).map((post) => (
-                <SelectPostCard key={uuid()} post={post} checks={checks} handleCheck={handleCheck(post.id)} />
+                <SelectPostCard
+                  key={uuid()}
+                  post={post}
+                  isChecked={Boolean(checkedPosts.find((pp) => pp.id === post.id))}
+                  handleCheck={handleCheck(post)}
+                />
               ))}
             </CardList>
-          </form>
+            <BottomSummary checkedPosts={checkedPosts} handleCheck={handleCheck} />
+          </Form>
         </EditModal>
       </Base>
     </>

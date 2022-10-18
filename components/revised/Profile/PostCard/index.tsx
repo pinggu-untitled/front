@@ -26,7 +26,7 @@ export const Base = styled.li`
 export const ImageZone = styled.div`
   position: relative;
   display: inline-block;
-  min-width: 100px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +38,8 @@ export const ShowTotals = styled.div`
   right: 5px;
   font-size: 13px;
   color: lightgray;
-  padding: 3px 8px 1px;
-  border-radius: 20px;
+  padding: 3px 6px 1px;
+  border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.7);
 
   > .current {
@@ -113,7 +113,11 @@ const PostCard: FC<IProps> = ({ post }) => {
         <ShowTotals>
           <span className="current">{1}</span>/3
         </ShowTotals>
-        <PostImage src={post.Images?.src || '/public/logo.png'} />
+        <PostImage
+          src={
+            post.Images?.length > 0 ? `http://localhost:8080/uploads/${post.Images[0].src}` : '/public/placeholder.png'
+          }
+        />
       </ImageZone>
       <InfoZone>
         <h2>{post.title}</h2>

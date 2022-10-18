@@ -6,6 +6,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
+  prev: string;
   toggleOptions: () => void;
 }
 
@@ -57,11 +58,11 @@ export const Button = styled.div`
   }
 `;
 
-const DetailTopNavigation: FC<IProps> = ({ toggleOptions }) => {
+const DetailTopNavigation: FC<IProps> = ({ prev, toggleOptions }) => {
   const navigate = useNavigate();
   return (
     <Base>
-      <Button onClick={() => navigate(-1)}>
+      <Button onClick={() => navigate(prev)}>
         <BsArrowLeft />
       </Button>
       <Button onClick={toggleOptions}>

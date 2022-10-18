@@ -10,7 +10,8 @@ import { IPostCard } from '../../typings/db';
 import CardList from '@components/revised/CardList';
 import PostCard from '@components/revised/CardList/PostCard';
 import ProfileCard from '@components/revised/CardList/ProfileCard';
-
+import MyPingsCard from '@components/revised/CardList/MyPingsCard';
+import { v4 as uuid } from 'uuid';
 export const Base = styled.div`
   width: 100%;
   height: 100%;
@@ -35,11 +36,15 @@ const Home = () => {
       <TopNavigation title={'홈'} />
       <MainContentZone>
         <CardList>
-          {pd?.slice(0, 3).map((post, i) => (
-            <ProfileCard profile={post.User} />
+          {pd?.slice(0, 3).map((post) => (
+            <ProfileCard key={uuid()} profile={post.User} />
           ))}
-          {pd?.slice(0, 10).map((post, i) => (
-            <PostCard key={`posts/${post.id}}`} post={post} />
+
+          {pd?.slice(0, 3).map((post) => (
+            <MyPingsCard key={uuid()} mypings={post} />
+          ))}
+          {pd?.slice(0, 10).map((post) => (
+            <PostCard key={uuid()} post={post} />
           ))}
         </CardList>
       </MainContentZone>

@@ -2,18 +2,25 @@ import React, { FC } from 'react';
 import styled from '@emotion/styled';
 import { IUser } from '@typings/db';
 import ProfileImage from '@components/revised/common/images/ProfileImage';
+
 interface IProps {
-  profile: { id: number; nickname: string; profile_image_url: string; bio?: string };
+  profile: IUser;
 }
+
 export const Base = styled.div`
-  width: 100%;
+  width: 440px;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+`;
+
+export const InfoZone = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px 0;
+  margin-left: 20px;
 
   > .nickname {
-    font-size: 17px;
+    font-size: 22px;
     font-weight: 700;
     margin-top: 16px;
   }
@@ -22,15 +29,19 @@ export const Base = styled.div`
     margin-top: 6px;
     font-size: 15px;
     font-weight: 500;
+    min-width: 200px;
+    text-overflow: ellipsis;
   }
 `;
 
 const ProfileBoard: FC<IProps> = ({ profile }) => {
   return (
     <Base>
-      <ProfileImage profile={profile} style={{ width: '100px', height: '100px' }} />
-      <span className="nickname">{profile.nickname}</span>
-      {profile.bio && <p className="bio">{profile.bio}</p>}
+      <ProfileImage profile={profile} style={{ width: '120px', height: '120px' }} />
+      <InfoZone>
+        <span className="nickname">{profile.nickname}</span>
+        {profile.bio && <p className="bio">{profile.bio.slice(0, 40)}</p>}
+      </InfoZone>
     </Base>
   );
 };
