@@ -1,5 +1,12 @@
-import React, { FC } from 'react';
+import React, { CSSProperties, FC } from 'react';
 import styled from '@emotion/styled';
+import { IImage } from '@typings/db';
+
+interface IProps {
+  src: string;
+  alt?: number | string;
+  style?: CSSProperties;
+}
 
 export const Base = styled.div`
   width: 100px;
@@ -15,13 +22,11 @@ export const Base = styled.div`
   }
 `;
 
-interface IProps {
-  src: string | undefined;
-}
-const PostImage: FC<IProps> = ({ src }) => {
+const PostImage: FC<IProps> = ({ src, alt, style }) => {
+  const baseUrl = 'http://localhost:8080/uploads';
   return (
-    <Base>
-      <img src={src} alt={''} />
+    <Base style={style}>
+      <img src={`${baseUrl}/${src}`} alt={`${alt}` || 'placeholder.png'} />
     </Base>
   );
 };

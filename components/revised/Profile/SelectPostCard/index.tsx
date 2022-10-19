@@ -2,15 +2,9 @@ import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { IPostCard } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
-import { TbDotsVertical } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
-import SettingsModal from '@components/revised/SettingsModal';
-import { BiEditAlt } from 'react-icons/bi';
 import { BsCheck } from 'react-icons/bs';
-import { AiOutlineDelete } from 'react-icons/ai';
-import { Controller } from 'react-hook-form';
 import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
-import { ICheckedPost } from '@pages/ProfilePosts';
 
 interface IProps {
   post: IPostCard;
@@ -35,7 +29,6 @@ export const DeleteAction = styled.label`
   }
 
   > .custom-checkbox {
-    display: inline-block;
     cursor: pointer;
     z-index: 3000;
     background-color: #fff;
@@ -90,7 +83,10 @@ const SelectPostCard: FC<IProps> = ({ post, isChecked, handleCheck }) => {
         <ShowTotals>
           <span className="current">{1}</span>/3
         </ShowTotals>
-        <PostImage src={'/public/logo.png'} />
+        <PostImage
+          src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
+          alt={post.Images[0]?.id}
+        />
       </ImageZone>
       <InfoZone>
         <h2>{post.title}</h2>

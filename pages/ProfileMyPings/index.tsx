@@ -30,7 +30,6 @@ const ProfileMyPings = () => {
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
   const { data: mypingsData, mutate: mutateMypingsData } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
 
-  // const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
@@ -47,8 +46,6 @@ const ProfileMyPings = () => {
       return existing ? prev.filter((pp) => pp.id !== post.id) : [...prev, { id: post.id, title: post.title }];
     });
   };
-
-  console.log(checkedPosts);
 
   const onSubmit = useCallback(
     (e: any) => {
@@ -84,7 +81,7 @@ const ProfileMyPings = () => {
         <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
-          title={{ main: '내 마이핑스', count: mypingsData?.slice(0, 10).length || 0 }}
+          title={{ maintitle: '내 마이핑스', highlight: mypingsData?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
             {/* <CardList>

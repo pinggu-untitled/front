@@ -24,7 +24,6 @@ export const Base = styled.header`
   text-align: center;
   justify-content: space-between;
   z-index: 4000;
-  cursor: pointer;
 
   > .title {
     position: absolute;
@@ -46,7 +45,6 @@ export const Button = styled.div`
   align-items: center;
   transition: 0.2s;
   cursor: pointer;
-  /* color: #777777; */
   border: none;
 
   &:hover {
@@ -54,7 +52,7 @@ export const Button = styled.div`
   }
 
   &:active {
-    border: 1px solid #dfdfdf;
+    color: gray;
   }
 `;
 

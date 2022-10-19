@@ -1,9 +1,9 @@
 import React, { FC, CSSProperties, memo } from 'react';
-import { IImage, IUser } from '@typings/db';
+import { IUser, IMe } from '@typings/db';
 import styled from '@emotion/styled';
 
 interface IProps {
-  profile: IUser;
+  profile?: IUser | IMe;
   style?: CSSProperties;
   onClick?: any;
 }
@@ -18,14 +18,14 @@ export const Base = styled.div`
   > img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
   }
 `;
 
 const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
   return (
     <Base style={style} onClick={onClick}>
-      <img src={profile.profile_image_url || '/public/placeholder.png'} alt={`${profile.nickname}`} />
+      <img src={profile?.profile_image_url || '/public/placeholder.png'} alt={`${profile?.nickname}`} />
     </Base>
   );
 };

@@ -1,14 +1,8 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
 import { IPostCard } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
-import { TbDotsVertical } from 'react-icons/tb';
-
 import { useNavigate } from 'react-router-dom';
-import SettingsModal from '@components/revised/SettingsModal';
-
-import { BiEditAlt } from 'react-icons/bi';
-import { AiOutlineDelete } from 'react-icons/ai';
 
 interface IProps {
   post: IPostCard;
@@ -17,7 +11,6 @@ export const Base = styled.li`
   position: relative;
   border-bottom: 1px solid #dfdfdf;
   padding: 10px 0;
-  position: relative;
   display: flex;
   align-items: flex-start;
   cursor: pointer;
@@ -25,7 +18,6 @@ export const Base = styled.li`
 
 export const ImageZone = styled.div`
   position: relative;
-  display: inline-block;
   width: 100px;
   display: flex;
   justify-content: center;
@@ -114,9 +106,8 @@ const PostCard: FC<IProps> = ({ post }) => {
           <span className="current">{1}</span>/3
         </ShowTotals>
         <PostImage
-          src={
-            post.Images?.length > 0 ? `http://localhost:8080/uploads/${post.Images[0].src}` : '/public/placeholder.png'
-          }
+          src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
+          alt={post.Images[0].id}
         />
       </ImageZone>
       <InfoZone>

@@ -2,15 +2,9 @@ import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { IMyPings } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
-import { TbDotsVertical } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
-import SettingsModal from '@components/revised/SettingsModal';
-import { BiEditAlt } from 'react-icons/bi';
 import { BsCheck } from 'react-icons/bs';
-import { AiOutlineDelete } from 'react-icons/ai';
-import { Controller } from 'react-hook-form';
 import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
-import { ICheckedPost } from '@pages/ProfilePosts';
 
 interface IProps {
   mypings: IMyPings;
@@ -90,7 +84,16 @@ const SelectMyPingsCard: FC<IProps> = ({ mypings, isChecked, handleCheck }) => {
         <ShowTotals>
           <span className="current">{1}</span>/3
         </ShowTotals>
-        <PostImage src={'/public/logo.png'} />
+        {/*<PostImage src={'/public/logo.png'} />*/}
+        {/*<PostImage*/}
+        {/*  image={{*/}
+        {/*    src:*/}
+        {/*      post.Images?.length > 0*/}
+        {/*        ? `http://localhost:8080/uploads/${post.Images[0].src}`*/}
+        {/*        : '/public/placeholder.png',*/}
+        {/*    id: post.Images[0].id,*/}
+        {/*  }}*/}
+        {/*/>*/}
       </ImageZone>
       <InfoZone>
         <h2>{mypings.title}</h2>

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -8,19 +8,15 @@ import { useTheme } from '@emotion/react';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 import PreviewCard from '@components/previews/PreviewCard';
 import PreviewSection from '../../components/previews/PreviewSection/index';
-import Scrollbars from 'react-custom-scrollbars-2';
 import { Base, MainContentZone } from '@pages/Home';
 import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
-import { IMe, IUser } from '@typings/db';
-
-export const ImageZone = styled.div`
-  background-color: #000;
-`;
-
-export const ImagesWrapper = styled.div`
+import { IImage, IMe, IUser } from '@typings/db';
+import PostImage from '@components/revised/common/images/PostImage';
+import { v4 as uuid } from 'uuid';
+export const ImagesContainer = styled.div`
   width: 100%;
   height: 200px;
   overflow: hidden;
@@ -28,7 +24,7 @@ export const ImagesWrapper = styled.div`
   display: grid;
   position: relative;
 
-  > img {
+  & img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -111,7 +107,7 @@ interface IForm {
   searchQueries: string;
 }
 
-const Post = () => {
+const PostDetail = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { postId } = useParams<{ postId: string }>();
@@ -119,6 +115,8 @@ const Post = () => {
   const { data: pd, mutate: mutatePostData } = useSWR(`/posts/${postId}`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
+
+  console.log(pd);
 
   const copyUrl = useCallback((e: any) => {
     copyUrlRef.current?.select();
@@ -160,57 +158,53 @@ const Post = () => {
         items={md?.id === pd?.post.User.id ? userSettingItems : viewerSettingItems}
         style={{ top: '60px', left: '310px' }}
       />
-      <Scrollbars universal={true}>
-        <MainContentZone>
-          <ImageZone>
-            {pd?.post.Images.length > 0 && (
+      <ImagesZoomModal
+        show={showModals.showImagesZoomModal}
+        onCloseModal={handleModal('showImagesZoomModal')}
+        images={pd?.post.Images}
+      />
+      <MainContentZone>
+        {pd?.post?.Images?.length >= 1 && (
+          <ImagesContainer
+            onClick={handleModal('showImagesZoomModal')}
+            style={
+              pd?.post.Images.length === 1
+                ? { height: '200px', width: '200px', margin: 'auto' }
+                : { gridTemplateColumns: 'repeat(2, 1fr)' }
+            }
+          >
+            {pd?.post?.Images.length === 1 && (
+              <PostImage
+                src={pd?.post?.Images[0].src}
+                alt={pd?.post?.Images[0].id}
+                style={{ width: '200px', height: '200px' }}
+              />
+            )}
+            {pd?.post?.Images.length === 2 &&
+              pd?.post?.Images.slice(0, 2).map((data: IImage) => (
+                <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+              ))}
+            {pd?.post?.Images.length >= 3 && (
               <>
-                <ImagesWrapper
-                  onClick={() => handleModal('showImagesZoomModal')}
-                  style={
-                    pd?.post.Images.length === 1
-                      ? { height: '200px', width: '200px', margin: 'auto' }
-                      : { gridTemplateColumns: 'repeat(2, 1fr)' }
-                  }
-                >
-                  {pd?.post?.Images.length === 1 && (
-                    <img src={`http://localhost:8080/uploads/${pd?.post?.Images[0].src}`} alt={'img'} />
-                  )}
-
-                  {pd?.post?.Images.length === 2 &&
-                    pd?.post?.Images.slice(0, 2).map((data: { src: string }) => (
-                      <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                    ))}
-
-                  {pd?.post?.Images.length >= 3 &&
-                    pd?.post?.Images.slice(0, 2).map((data: { src: string }, i: number) => {
-                      if (i === 0) {
-                        return <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />;
-                      }
-
-                      return (
-                        <More>
-                          <img src={`http://localhost:8080/uploads/${data.src}`} alt={'img'} />
-                          <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
-                        </More>
-                      );
-                    })}
-                  {pd?.post?.Images.length >= 3 && (
-                    <ImageLeftCnt>
-                      <span className="highlight">2</span>
-                      <span>/{pd?.post?.Images.length}</span>
-                    </ImageLeftCnt>
-                  )}
-                </ImagesWrapper>
-                <ImagesZoomModal
-                  show={showModals.showImagesZoomModal}
-                  onCloseModal={() => handleModal('showImagesZoomModal')}
-                  images={pd?.post.Images}
-                />
+                <ImageLeftCnt>
+                  <span className="highlight">2</span>
+                  <span>/{pd?.post?.Images.length}</span>
+                </ImageLeftCnt>
+                {pd?.post?.Images.slice(0, 2).map((data: IImage, i: number) => {
+                  return i === 0 ? (
+                    <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+                  ) : (
+                    <More>
+                      <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+                      <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
+                    </More>
+                  );
+                })}
               </>
             )}
-          </ImageZone>
-          {/* <ProfileBox>
+          </ImagesContainer>
+        )}
+        {/* <ProfileBox>
             <ProfileBar>
               <div>
                 <ProfileImageButton
@@ -255,31 +249,30 @@ const Post = () => {
               />
             </ProfileActionButtons>
           </ProfileBox> */}
-          <TextZone theme={theme}>
-            <h3 className={'title'}>{pd?.post.title}</h3>
-            <div className={'mypings'}>
-              <span>
-                <Link to={`/${pd?.post.id}`}>마이핑스</Link>
-              </span>
-              <span> · {pd?.post.created_at}</span>
-            </div>
-            <p className={'content'}>{pd?.post.content}</p>
-            <p className={'meta'}>조회수 {pd?.post.hits}</p>
-          </TextZone>
-          <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.id}/myPings`}>
-            {displayEven([1, 2, 3]).map((data, i) => (
-              <PreviewCard key={i} data={data} />
-            ))}
-          </PreviewSection>
-          <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.id}/posts`}>
-            {displayEven([1, 2, 3]).map((data, i) => (
-              <PreviewCard key={i} data={data} />
-            ))}
-          </PreviewSection>
-        </MainContentZone>
-      </Scrollbars>
+        <TextZone theme={theme}>
+          <h3 className={'title'}>{pd?.post.title}</h3>
+          <div className={'mypings'}>
+            <span>
+              <Link to={`/mypings/${pd?.post.id}`}>마이핑스</Link>
+            </span>
+            <span> · {pd?.post.created_at}</span>
+          </div>
+          <p className={'content'}>{pd?.post.content}</p>
+          <p className={'meta'}>조회수 {pd?.post.hits}</p>
+        </TextZone>
+        <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.id}/myPings`}>
+          {displayEven([1, 2, 3]).map((data, i) => (
+            <PreviewCard key={i} data={data} />
+          ))}
+        </PreviewSection>
+        <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.id}/posts`}>
+          {displayEven([1, 2, 3]).map((data, i) => (
+            <PreviewCard key={i} data={data} />
+          ))}
+        </PreviewSection>
+      </MainContentZone>
     </Base>
   );
 };
 
-export default Post;
+export default PostDetail;

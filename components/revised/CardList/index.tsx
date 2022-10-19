@@ -4,11 +4,13 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import useSWR from 'swr';
 import { IPostCard } from '@typings/db';
 import fetcher from '@utils/fetcher';
-import PostCard from './PostCard';
+import PostCard from '../Home/PostCard';
 
 export const Base = styled.ul`
   padding: 0 20px;
   width: 100%;
+  height: 100%;
+  overflow: scroll;
 `;
 
 interface IProps {

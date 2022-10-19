@@ -14,7 +14,7 @@ const Chatrooms = loadable(() => import('@pages/Chatrooms'));
 const Settings = loadable(() => import('@pages/Settings'));
 const More = loadable(() => import('@pages/More'));
 const Results = loadable(() => import('@pages/Results'));
-const Posts = loadable(() => import('@pages/Posts'));
+const PostsDetail = loadable(() => import('@pages/PostsDetail'));
 const PostsNew = loadable(() => import('@pages/PostsNew'));
 const Intro = loadable(() => import('@pages/Intro'));
 const Introduce = loadable(() => import('@pages/Introduce'));
@@ -41,7 +41,7 @@ const App = () => {
         <Route path={'/introduce'} element={<Introduce />} />
         <Route path={'/settings'} element={<Settings />} />
         <Route path={'/more'} element={<More />} />
-        <Route path={'/posts/:postId'} element={<Posts />} />
+        <Route path={'/posts/:postId'} element={<PostsDetail />} />
         <Route path={'/posts/new'} element={<PostsNew />} />
         <Route path={'/posts/:postId/edit'} element={<PostsEdit />} />
       </Routes>

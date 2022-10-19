@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
-import AddButton from '@components/Profile/AddButton';
 import PostCard from '@components/revised/Profile/PostCard';
 import { IMe, IUser, IPost } from '@typings/db';
 import CardList from '@components/revised/CardList';
@@ -12,9 +11,10 @@ import { FiScissors } from 'react-icons/fi';
 import EditModal from '@components/revised/Profile/EditModal';
 import SelectPostCard from '@components/revised/Profile/SelectPostCard';
 import { v4 as uuid } from 'uuid';
-import { useForm } from 'react-hook-form';
 import BottomSummary from '../../components/revised/Profile/BottomSummary';
 import { useParams } from 'react-router-dom';
+import useModals from '@utils/useModals';
+import isIdExisting from '@utils/isIdExisting';
 
 export const Base = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ export const MainContentZone = styled.div`
   width: 440px;
   top: 208px;
   bottom: 0;
-  overflow: scroll;
+  overflow-y: scroll;
 `;
 
 export const Form = styled.form``;
@@ -41,24 +41,15 @@ const ProfilePosts = () => {
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser>(`/users/${userId}`, fetcher);
   const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(ud ? `/users/${userId}/posts` : null, fetcher);
-  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
-    showSettingsModal: false,
-    showEditModal: false,
-  });
+  const [showModals, handleModal] = useModals('showSettingsModal', 'showEditModal');
   const [checkedPosts, setCheckedPost] = useState<ICheckedPost[]>([]);
-
-  const handleModal = (modalName: string) => () => {
-    setShowModals((pv) => ({ ...pv, [modalName]: !pv[modalName] }));
-  };
 
   const handleCheck = (post: ICheckedPost) => (e: any) => {
     setCheckedPost((prev) => {
-      const existing = prev.find((pp) => pp.id === post.id);
+      const existing = isIdExisting(prev, post);
       return existing ? prev.filter((pp) => pp.id !== post.id) : [...prev, { id: post.id, title: post.title }];
     });
   };
-
-  console.log(checkedPosts);
 
   const onSubmit = useCallback(
     (e: any) => {
@@ -80,7 +71,7 @@ const ProfilePosts = () => {
         <MainContentZone>
           {!showModals.showEditModal && (
             <CardList>
-              {pd?.slice(0, 10).map((post, i) => (
+              {pd?.map((post, i) => (
                 <PostCard key={uuid()} post={post} />
               ))}
             </CardList>
@@ -96,7 +87,7 @@ const ProfilePosts = () => {
         <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
-          title={{ main: '내 게시물', count: pd?.slice(0, 10).length || 0 }}
+          title={{ maintitle: '내 게시물', highlight: pd?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
             <CardList>
@@ -104,7 +95,7 @@ const ProfilePosts = () => {
                 <SelectPostCard
                   key={uuid()}
                   post={post}
-                  isChecked={Boolean(checkedPosts.find((pp) => pp.id === post.id))}
+                  isChecked={isIdExisting(checkedPosts, post)}
                   handleCheck={handleCheck(post)}
                 />
               ))}

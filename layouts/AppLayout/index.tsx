@@ -6,6 +6,7 @@ import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
 import Map from '@components/Map/index';
+import SideNavigation from "@components/revised/common/navigations/SideNavigation";
 
 interface IProps {
   children: React.ReactNode;
@@ -74,7 +75,8 @@ const AppLayout: FC<IProps> = ({ children }) => {
           <div>{children}</div>
         ) : (
           <>
-            <MainNavigation onToggle={onToggle} />
+            {/*<MainNavigation onToggle={onToggle} />*/}
+            <SideNavigation />
             <MainPage show={showPage}>{children}</MainPage>
             <MapZone>
               <Map />

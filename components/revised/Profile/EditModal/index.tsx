@@ -1,30 +1,16 @@
 import React, { FC } from 'react';
-import FullScreenModal from '@components/revised/common/modals/FullScreenModal';
 import styled from '@emotion/styled';
-import TitleNavigation from '@components/revised/Profile/EditModal/TitleNavigation';
-import CardList from '@components/revised/CardList';
+import { Button } from '@components/revised/common/navigations/DetailTopNavigation';
+import { Navigation } from '@components/revised/common/navigations/TitleNavigation';
+import { Base } from '../../SearchModal';
+import { BsArrowLeft } from 'react-icons/bs';
+
 interface IProps {
   show: boolean;
   onCloseModal: () => void;
-  title: { main: string; count: number };
+  title: { maintitle: string; highlight: number };
   children: React.ReactNode;
 }
-
-export const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 68px;
-  width: 440px;
-  height: 100vh;
-  z-index: 4000;
-  background-color: #fff;
-
-  & .content {
-    padding-top: 70px;
-    background-color: red;
-    width: 100%;
-  }
-`;
 
 export const HighLight = styled.span`
   font-size: 18px;
@@ -38,16 +24,20 @@ export const MainContent = styled.div`
   overflow: scroll;
 `;
 
-const EditModal: FC<IProps> = ({ show, onCloseModal, title: { main, count }, children }) => {
+const EditModal: FC<IProps> = ({ show, onCloseModal, title: { maintitle, highlight }, children }) => {
+  if (!show) return null;
   return (
-    <FullScreenModal show={show} onCloseModal={onCloseModal}>
-      <Wrapper>
-        <TitleNavigation>
-          {main} <HighLight>({count})</HighLight>
-        </TitleNavigation>
-        <MainContent>{children}</MainContent>
-      </Wrapper>
-    </FullScreenModal>
+    <Base>
+      <Navigation>
+        <Button onClick={onCloseModal}>
+          <BsArrowLeft />
+        </Button>
+        <h1>
+          {maintitle} <HighLight>({highlight})</HighLight>
+        </h1>
+      </Navigation>
+      <MainContent>{children}</MainContent>
+    </Base>
   );
 };
 
