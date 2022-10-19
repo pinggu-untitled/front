@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 interface IProps {
   profile: IUser;
   style?: CSSProperties;
+  onClick?: any;
 }
 
 export const Base = styled.div`
@@ -17,14 +18,14 @@ export const Base = styled.div`
   > img {
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: contain;
   }
 `;
 
-const ProfileImage: FC<IProps> = ({ profile, style }) => {
+const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
   return (
-    <Base style={style}>
-      <img src={profile.profile_image_url || '/public/placeholder.png'} alt={`${profile.id}`} />
+    <Base style={style} onClick={onClick}>
+      <img src={profile.profile_image_url || '/public/placeholder.png'} alt={`${profile.nickname}`} />
     </Base>
   );
 };

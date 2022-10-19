@@ -4,7 +4,7 @@ import { IPostCard } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import SettingsModal from '@components/revised/SettingsModal';
 import { Base, ShowTotals, ImageZone, InfoZone, AuthorZone } from '@components/revised/Profile/PostCard';
-import ProfileImage from '@components/revised/common/images/ProfileImage';
+import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
 
 interface IProps {

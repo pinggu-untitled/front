@@ -1,35 +1,20 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
-import { Link, useNavigate, useParams, Navigate } from 'react-router-dom';
+import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
-import PillButton from '@components/common/buttons/PillButton';
-import Section from '@components/common/sections/Section';
-// import ProfileActionButtons from '@components/common/profiles-related/ProfileBox/ProfileActionButtons';
-// import ProfileBox from '@components/common/profiles-related/ProfileBox';
-// import ProfileImageButton from '@components/common/profiles-related/ProfileImageButton';
-// import FollowButton from '@components/common/profiles-related/ProfileBox/FollowButton';
-// import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
-import { HiLocationMarker, HiOutlineLocationMarker, HiHeart, HiOutlineHeart } from 'react-icons/hi';
-import { BiCommentDetail } from 'react-icons/bi';
-import HoverLabel from '@components/common/labels/HoverLabel';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 import PreviewCard from '@components/previews/PreviewCard';
 import PreviewSection from '../../components/previews/PreviewSection/index';
 import Scrollbars from 'react-custom-scrollbars-2';
-// import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
-
-export const Base = styled.div`
-  width: 100%;
-  height: 100vh;
-`;
-
-export const MainContentZone = styled.div`
-  margin-top: 73px;
-  width: 440px;
-`;
+import { Base, MainContentZone } from '@pages/Home';
+import SettingsModal from '@components/revised/SettingsModal';
+import useModals from '@utils/useModals';
+import { BiEditAlt } from 'react-icons/bi';
+import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
+import { IMe, IUser } from '@typings/db';
 
 export const ImageZone = styled.div`
   background-color: #000;
@@ -75,23 +60,6 @@ export const More = styled.div`
   }
 `;
 
-export const ProfileBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 8px 0;
-  > div {
-    display: flex;
-    align-items: center;
-  }
-  & .nickname {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 10px;
-  }
-`;
-
 export const TextZone = styled.div<{ theme: any }>`
   width: 100%;
   padding: 20px;
@@ -122,20 +90,6 @@ export const TextZone = styled.div<{ theme: any }>`
   }
 `;
 
-export const ContentWrapper = styled.div`
-  & svg {
-    font-size: 22px;
-  }
-
-  > .counts {
-    font-size: 14px;
-    display: inline-block;
-    margin-left: 5px;
-    transform: translateY(-5px);
-    font-weight: 600;
-  }
-`;
-
 export const ImageLeftCnt = styled.div`
   padding: 4px 10px 3px;
   font-size: 14px;
@@ -161,25 +115,51 @@ const Post = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { postId } = useParams<{ postId: string }>();
+  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: pd, mutate: mutatePostData } = useSWR(`/posts/${postId}`, fetcher);
-  const [following, setFollowing] = useState(false);
-  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showImagesZoomModal: false });
-  const handleModal = useCallback((modalName: string) => {
-    setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
+  const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
+  const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
+
+  const copyUrl = useCallback((e: any) => {
+    copyUrlRef.current?.select();
+    document.execCommand('copy');
+    e.target.focus();
   }, []);
 
-  console.log('>>>', pd);
-
-  if (pd?.post?.is_private) return <Navigate replace to="/" />;
-
-  const makeEven = useCallback((data: any[]) => {
+  const displayEven = (data: any[]): any[] => {
     const len = data.length;
     return len % 2 === 0 ? data : data.slice(0, len - 1);
-  }, []);
+  };
+
+  const userSettingItems = [
+    { content: { icon: <BiEditAlt />, title: '편집하기' }, onClick: () => console.log('good') },
+    { content: { icon: <AiOutlineDelete />, title: '삭제하기' }, onClick: () => console.log('good') },
+  ];
+
+  const viewerSettingItems = [
+    {
+      content: {
+        icon: <AiOutlineLink />,
+        title: '링크 복사',
+        rest: (
+          <form>
+            <textarea ref={copyUrlRef} value={window.location.href} />
+          </form>
+        ),
+      },
+      onClick: copyUrl,
+    },
+  ];
 
   return (
     <Base>
-      <DetailTopNavigation onClick={() => navigate('/')} />
+      <DetailTopNavigation prev={'/'} toggleOptions={handleModal('showSettingsModal')} />
+      <SettingsModal
+        show={showModals.showSettingsModal}
+        onCloseModal={handleModal('showSettingsModal')}
+        items={md?.id === pd?.post.User.id ? userSettingItems : viewerSettingItems}
+        style={{ top: '60px', left: '310px' }}
+      />
       <Scrollbars universal={true}>
         <MainContentZone>
           <ImageZone>
@@ -279,20 +259,20 @@ const Post = () => {
             <h3 className={'title'}>{pd?.post.title}</h3>
             <div className={'mypings'}>
               <span>
-                <Link to={`/users/${pd?.post.nickname}`}>마이핑스</Link>
+                <Link to={`/${pd?.post.id}`}>마이핑스</Link>
               </span>
               <span> · {pd?.post.created_at}</span>
             </div>
             <p className={'content'}>{pd?.post.content}</p>
             <p className={'meta'}>조회수 {pd?.post.hits}</p>
           </TextZone>
-          <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.nickname}/myPings`}>
-            {makeEven([1, 2, 3]).map((data, i) => (
+          <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.id}/myPings`}>
+            {displayEven([1, 2, 3]).map((data, i) => (
               <PreviewCard key={i} data={data} />
             ))}
           </PreviewSection>
-          <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.nickname}/posts`}>
-            {makeEven([1, 2, 3]).map((data, i) => (
+          <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.id}/posts`}>
+            {displayEven([1, 2, 3]).map((data, i) => (
               <PreviewCard key={i} data={data} />
             ))}
           </PreviewSection>

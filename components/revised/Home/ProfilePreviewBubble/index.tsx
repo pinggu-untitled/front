@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
 import { IPostCard, IUser } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
-import ProfileImage from '@components/revised/common/images/ProfileImage';
+import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
