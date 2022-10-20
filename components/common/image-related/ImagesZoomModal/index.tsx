@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 import FullScreenModal from '@components/common/modals/FullScreenModal';
 import styled from '@emotion/styled';
 import { IoCloseOutline } from 'react-icons/io5';
-
+import { IImage } from '@typings/db';
+import { v4 as uuid } from 'uuid';
 interface IProps {
   show: boolean;
   onCloseModal: () => void;
-  images: { src: string }[];
+  images?: IImage[];
 }
 
 export const ModalContent = styled.div`
@@ -42,7 +43,6 @@ export const CloseButton = styled.div`
 `;
 
 const ImagesZoomModal: FC<IProps> = ({ show, onCloseModal, images }) => {
-  console.log(images);
   return (
     <FullScreenModal show={show} style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}>
       <CloseButton onClick={onCloseModal}>
@@ -50,7 +50,7 @@ const ImagesZoomModal: FC<IProps> = ({ show, onCloseModal, images }) => {
       </CloseButton>
       <ModalContent>
         {images?.map((img, i) => (
-          <img key={i} src={`http://localhost:8080/uploads/${img.src}`} alt="/" />
+          <img key={uuid()} src={`http://localhost:8080/uploads/${img.src}`} alt={`${img.id}`} />
         ))}
       </ModalContent>
     </FullScreenModal>

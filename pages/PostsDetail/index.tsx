@@ -13,10 +13,11 @@ import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
-import { IImage, IMe, IUser } from '@typings/db';
+import { IImage, IMe, IPost, IUser } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
+
 export const ImagesContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -87,37 +88,14 @@ export const TextZone = styled.div<{ theme: any }>`
   }
 `;
 
-export const ImageLeftCnt = styled.div`
-  padding: 4px 10px 3px;
-  font-size: 14px;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 20px;
-  position: absolute;
-  color: rgba(0, 0, 0, 0.8);
-  top: 10px;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  > .highlight {
-    color: #fff;
-  }
-`;
-
-interface IForm {
-  searchQueries: string;
-}
-
 const PostDetail = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { postId } = useParams<{ postId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: pd, mutate: mutatePostData } = useSWR(`/posts/${postId}`, fetcher);
+  const { data: pd, mutate: mutatePostData } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
-
-  console.log(pd);
 
   const copyUrl = useCallback((e: any) => {
     copyUrlRef.current?.select();
@@ -158,47 +136,47 @@ const PostDetail = () => {
       <SettingsModal
         show={showModals.showSettingsModal}
         onCloseModal={handleModal('showSettingsModal')}
-        items={md?.id === pd?.post.User.id ? userSettingItems : viewerSettingItems}
+        items={md?.id === pd?.User.id ? userSettingItems : viewerSettingItems}
         style={{ top: '60px', left: '310px' }}
       />
       <ImagesZoomModal
         show={showModals.showImagesZoomModal}
         onCloseModal={handleModal('showImagesZoomModal')}
-        images={pd?.post.Images}
+        images={pd?.Images}
       />
       <MainContentZone>
-        {pd?.post?.Images?.length >= 1 && (
+        {pd?.Images && pd?.Images.length > 0 && (
           <ImagesContainer
             onClick={handleModal('showImagesZoomModal')}
             style={
-              pd?.post.Images.length === 1
+              pd?.Images?.length === 1
                 ? { display: 'flex', justifyContent: 'center', backgroundColor: '#191919' }
-                : pd?.post.Images.length >= 2
+                : pd?.Images?.length >= 2
                 ? { gridTemplateColumns: 'repeat(2, 1fr)' }
                 : {}
             }
           >
-            {pd?.post?.Images.length === 1 && (
+            {pd?.Images.length === 1 && (
               <PostImage
-                src={pd?.post?.Images[0].src}
-                alt={pd?.post?.Images[0].id}
+                src={pd?.Images[0].src}
+                alt={pd?.Images[0].id}
                 style={{ width: '200px', height: '200px', borderRadius: 0 }}
               />
             )}
-            {pd?.post?.Images.length === 2 &&
-              pd?.post?.Images.slice(0, 2).map((data: IImage) => (
+            {pd?.Images.length === 2 &&
+              pd?.Images.slice(0, 2).map((data: IImage) => (
                 <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
               ))}
-            {pd?.post?.Images.length >= 3 && (
+            {pd?.Images.length >= 3 && (
               <>
-                <TotalCount current={2} total={pd?.post?.Images?.length} />
-                {pd?.post?.Images.slice(0, 2).map((data: IImage, i: number) => {
+                <TotalCount current={2} total={pd?.Images?.length} />
+                {pd?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
                     <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
                   ) : (
                     <More>
                       <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
-                      <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
+                      <div className="button">{pd?.Images.length - 2}개 더보기</div>
                     </More>
                   );
                 })}
@@ -210,10 +188,10 @@ const PostDetail = () => {
             <ProfileBar>
               <div>
                 <ProfileImageButton
-                  src={pd?.post?.User.profile_image_url || '/public/placeholder.png'}
-                  nickname={pd?.post?.nickname}
+                  src={pd??.User.profile_image_url || '/public/placeholder.png'}
+                  nickname={pd??.nickname}
                 />
-                <span className={'nickname'}>{pd?.post?.User.nickname || '사용자 닉네임'}</span>
+                <span className={'nickname'}>{pd??.User.nickname || '사용자 닉네임'}</span>
                 <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
               </div>
               <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
@@ -252,22 +230,22 @@ const PostDetail = () => {
             </ProfileActionButtons>
           </ProfileBox> */}
         <TextZone theme={theme}>
-          <h3 className={'title'}>{pd?.post.title}</h3>
+          <h3 className={'title'}>{pd?.title}</h3>
           <div className={'mypings'}>
             <span>
-              <Link to={`/mypings/${pd?.post.id}`}>마이핑스</Link>
+              <Link to={`/mypings/${pd?.id}`}>마이핑스</Link>
             </span>
-            <span> · {pd?.post.created_at}</span>
+            <span> · {pd?.created_at}</span>
           </div>
-          <p className={'content'}>{pd?.post.content}</p>
-          <p className={'meta'}>조회수 {pd?.post.hits}</p>
+          <p className={'content'}>{pd?.content}</p>
+          <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        <PreviewSection title={`${pd?.post.User.nickname}의 마이핑스`} url={`/${pd?.post.User.id}/myPings`}>
+        <PreviewSection title={`${pd?.User.nickname}의 마이핑스`} url={`/${pd?.User.id}/myPings`}>
           {displayEven([1, 2, 3]).map((data, i) => (
             <PreviewCard key={i} data={data} />
           ))}
         </PreviewSection>
-        <PreviewSection title={`${pd?.post.User.nickname}의 게시물`} url={`/${pd?.post.User.id}/posts`}>
+        <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}/posts`}>
           {displayEven([1, 2, 3]).map((data, i) => (
             <PreviewCard key={i} data={data} />
           ))}
