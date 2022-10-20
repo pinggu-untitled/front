@@ -7,7 +7,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
 import Map from '@components/Map/index';
 import SideNavigation from '@components/revised/common/navigations/SideNavigation';
-import { MapProvider } from '@contexts/map-context';
+import { MapProvider } from '@contexts/MapContext';
 
 interface IProps {
   children: React.ReactNode;
