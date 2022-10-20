@@ -1,13 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
-// import TopNavigation from '@components/common/navigations/TopNavigation';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { IMe, IPost } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import PostCard from '@components/revised/Home/PostCard';
-import ProfileCard from '@components/revised/Home/ProfileCard';
-import MyPingsCard from '@components/revised/Home/MyPingsCard';
 import { v4 as uuid } from 'uuid';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
 import { useNavigate } from 'react-router-dom';

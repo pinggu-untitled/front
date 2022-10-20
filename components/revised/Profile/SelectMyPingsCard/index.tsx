@@ -1,8 +1,7 @@
 import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { IMyPings } from '@typings/db';
-import PostImage from '@components/revised/common/images/PostImage';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
 import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
 
@@ -74,16 +73,19 @@ export const EditAction = styled.div`
 
 const SelectMyPingsCard: FC<IProps> = ({ mypings, isChecked, handleCheck }) => {
   const navigate = useNavigate();
+  const handleNavigate = (path: string) => () => navigate(path);
+  const { userId, mypingsId } = useParams<{ userId: string; mypingsId: string }>();
   const stopPropagation = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
 
   return (
-    <Base onClick={() => navigate(`/mypings/${mypings.id}`)}>
+    <Base onClick={handleNavigate(`/${userId}/mypings/${mypings.id}`)}>
       <ImageZone>
         <ShowTotals>
           <span className="current">{1}</span>/3
         </ShowTotals>
+        {/*<TotalCount current={} total={}/>*/}
         {/*<PostImage src={'/public/logo.png'} />*/}
         {/*<PostImage*/}
         {/*  image={{*/}

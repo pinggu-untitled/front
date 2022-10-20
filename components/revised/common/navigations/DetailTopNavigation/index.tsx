@@ -6,7 +6,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  prev: string;
+  prev: string | any;
   toggleOptions: () => void;
 }
 

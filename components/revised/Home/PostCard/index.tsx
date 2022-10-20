@@ -5,6 +5,7 @@ import PostImage from '@components/revised/common/images/PostImage';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import { useNavigate } from 'react-router-dom';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
+import TotalCount from '@components/revised/Home/TotalCount';
 
 interface IProps {
   post: IPost;
@@ -86,11 +87,7 @@ const PostCard: FC<IProps> = ({ post }) => {
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageZone>
-        {post.Images?.length > 0 && (
-          <ShowTotals>
-            <span className="current">{1}</span>/{post.Images?.length}
-          </ShowTotals>
-        )}
+        {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
         <PostImage
           src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
           alt={post?.Images[0]?.id}

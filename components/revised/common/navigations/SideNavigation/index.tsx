@@ -42,7 +42,7 @@ export const Logo = styled.div`
 
 const SideNavigation = () => {
   const navigate = useNavigate();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
   const [showModals, setShowModals] = useState<{ [key: string]: any }>({ showSettingsModal: false });
   const handleModal = (modalName: string) => () => {
     setShowModals((prev) => ({ ...prev, [modalName]: !prev[modalName] }));

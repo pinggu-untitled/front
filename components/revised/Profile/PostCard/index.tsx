@@ -1,12 +1,14 @@
 import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
-import { IPostCard } from '@typings/db';
+import { IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { useNavigate } from 'react-router-dom';
+import TotalCount from '@components/revised/Home/TotalCount';
 
 interface IProps {
-  post: IPostCard;
+  post: IPost;
 }
+
 export const Base = styled.li`
   position: relative;
   border-bottom: 1px solid #dfdfdf;
@@ -62,7 +64,7 @@ export const AuthorZone = styled.div`
   > .hidden {
     position: absolute;
     right: 36px;
-    top: 0px;
+    top: 0;
     opacity: 0;
     visibility: hidden;
     transition: 0.2s;
@@ -76,35 +78,13 @@ export const AuthorZone = styled.div`
   }
 `;
 
-export const SettingsButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding-left: 10px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  color: gray;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-
-  &:active {
-    opacity: 0.6;
-  }
-`;
-
 const PostCard: FC<IProps> = ({ post }) => {
   const navigate = useNavigate();
 
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageZone>
-        <ShowTotals>
-          <span className="current">{1}</span>/3
-        </ShowTotals>
+        <TotalCount current={1} total={3} />
         <PostImage
           src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
           alt={post.Images[0].id}

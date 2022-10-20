@@ -1,13 +1,14 @@
 import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import { IPostCard } from '@typings/db';
+import { IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { useNavigate } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
 import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
+import TotalCount from '@components/revised/Home/TotalCount';
 
 interface IProps {
-  post: IPostCard;
+  post: IPost;
   isChecked: boolean;
   handleCheck: any;
 }
@@ -83,6 +84,7 @@ const SelectPostCard: FC<IProps> = ({ post, isChecked, handleCheck }) => {
         <ShowTotals>
           <span className="current">{1}</span>/3
         </ShowTotals>
+        {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
         <PostImage
           src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
           alt={post.Images[0]?.id}

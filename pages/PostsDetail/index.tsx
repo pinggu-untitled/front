@@ -16,6 +16,7 @@ import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
 import { IImage, IMe, IUser } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
+import TotalCount from '@components/revised/Home/TotalCount';
 export const ImagesContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -149,6 +150,8 @@ const PostDetail = () => {
     },
   ];
 
+  const postImageStyle = { width: '100%', height: '100%', borderRadius: 0 };
+
   return (
     <Base>
       <DetailTopNavigation prev={'/'} toggleOptions={handleModal('showSettingsModal')} />
@@ -169,33 +172,32 @@ const PostDetail = () => {
             onClick={handleModal('showImagesZoomModal')}
             style={
               pd?.post.Images.length === 1
-                ? { height: '200px', width: '200px', margin: 'auto' }
-                : { gridTemplateColumns: 'repeat(2, 1fr)' }
+                ? { display: 'flex', justifyContent: 'center', backgroundColor: '#191919' }
+                : pd?.post.Images.length >= 2
+                ? { gridTemplateColumns: 'repeat(2, 1fr)' }
+                : {}
             }
           >
             {pd?.post?.Images.length === 1 && (
               <PostImage
                 src={pd?.post?.Images[0].src}
                 alt={pd?.post?.Images[0].id}
-                style={{ width: '200px', height: '200px' }}
+                style={{ width: '200px', height: '200px', borderRadius: 0 }}
               />
             )}
             {pd?.post?.Images.length === 2 &&
               pd?.post?.Images.slice(0, 2).map((data: IImage) => (
-                <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+                <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
               ))}
             {pd?.post?.Images.length >= 3 && (
               <>
-                <ImageLeftCnt>
-                  <span className="highlight">2</span>
-                  <span>/{pd?.post?.Images.length}</span>
-                </ImageLeftCnt>
+                <TotalCount current={2} total={pd?.post?.Images?.length} />
                 {pd?.post?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
-                    <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+                    <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
                   ) : (
                     <More>
-                      <PostImage key={uuid()} src={data.src} alt={data.id} style={{ width: '100%', height: '100%' }} />
+                      <PostImage key={uuid()} src={data.src} alt={data.id} style={postImageStyle} />
                       <div className="button">{pd?.post?.Images.length - 2}개 더보기</div>
                     </More>
                   );

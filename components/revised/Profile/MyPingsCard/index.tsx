@@ -1,13 +1,11 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
-import { IMyPings, IPostCard } from '@typings/db';
-import PostImage from '@components/revised/common/images/PostImage';
-import { TbDotsVertical } from 'react-icons/tb';
-import { useNavigate } from 'react-router-dom';
-import SettingsModal from '@components/revised/SettingsModal';
-import { BiEditAlt } from 'react-icons/bi';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { IMyPings } from '@typings/db';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Base, ShowTotals, InfoZone } from '@components/revised/Profile/PostCard';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
+import TotalCount from '@components/revised/Home/TotalCount';
 
 interface IProps {
   mypings: IMyPings;
@@ -15,7 +13,6 @@ interface IProps {
 
 export const MyPingsImage = styled.div`
   position: relative;
-  display: inline-block;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,14 +28,19 @@ export const MyPingsImage = styled.div`
 
 const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const navigate = useNavigate();
+  const { userId } = useParams<{ userId: string }>();
+  // const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings>(`/users/${userId}/mypings`, fetcher);
+  const { data: pd, mutate: mutateMypings } = useSWR<any>(`/users/${userId}/mypings/${mypings.id}/posts`, fetcher);
+
+  const handleNavigate = (path: string) => () => navigate(path);
+
+  console.log(pd);
 
   return (
-    <Base onClick={() => navigate(`/mypings/${mypings.id}`)}>
+    <Base onClick={handleNavigate(`/${userId}/mypings/${mypings.id}`)}>
       <MyPingsImage>
         {mypings.title.slice(0, 1).toUpperCase()}
-        <ShowTotals>
-          <span className="current">+ {110}</span>
-        </ShowTotals>
+        {pd?.length && <TotalCount current={`+ ${pd?.length}`} />}
       </MyPingsImage>
       <InfoZone>
         <h2>{mypings.title}</h2>

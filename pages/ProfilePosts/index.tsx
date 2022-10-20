@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
-import PostCard from '@components/revised/Profile/PostCard';
 import { IMe, IUser, IPost } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
@@ -15,6 +14,7 @@ import BottomSummary from '../../components/revised/Profile/BottomSummary';
 import { useParams } from 'react-router-dom';
 import useModals from '@utils/useModals';
 import isIdExisting from '@utils/isIdExisting';
+import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 
 export const Base = styled.div`
   width: 100%;
@@ -40,10 +40,12 @@ const ProfilePosts = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser>(`/users/${userId}`, fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(ud ? `/users/${userId}/posts` : null, fetcher);
+  const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(`/users/${userId}/posts`, fetcher);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEditModal');
   const [checkedPosts, setCheckedPost] = useState<ICheckedPost[]>([]);
 
+  console.log(ud);
+  console.log(pd);
   const handleCheck = (post: ICheckedPost) => (e: any) => {
     setCheckedPost((prev) => {
       const existing = isIdExisting(prev, post);
@@ -69,15 +71,17 @@ const ProfilePosts = () => {
     <>
       <Base>
         <MainContentZone>
-          {!showModals.showEditModal && (
-            <CardList>
-              {pd?.map((post, i) => (
-                <PostCard key={uuid()} post={post} />
-              ))}
-            </CardList>
-          )}
+          <EmptyMessage message={'아직 회원님이 작성한 게시물이 없어요.'} />
+          {/* TODO */}
+          {/*{!showModals.showEditModal && pd?.length > 0 && (*/}
+          {/*  <CardList>*/}
+          {/*    {pd?.map((post, i) => (*/}
+          {/*      <PostCard key={uuid()} post={post} />*/}
+          {/*    ))}*/}
+          {/*  </CardList>*/}
+          {/*)}*/}
         </MainContentZone>
-        <SettingsButton onClick={handleModal('showSettingsModal')} />
+        {pd?.length > 0 && <SettingsButton onClick={handleModal('showSettingsModal')} />}
         <SettingsModal
           show={showModals.showSettingsModal}
           onCloseModal={handleModal('showSettingsModal')}

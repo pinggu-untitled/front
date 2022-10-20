@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-import { IPostCard } from '@typings/db';
+import { IPost } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import SettingsModal from '@components/revised/SettingsModal';
 import { Base, ShowTotals, ImageZone, InfoZone, AuthorZone } from '@components/revised/Profile/PostCard';
@@ -8,12 +8,11 @@ import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
 
 interface IProps {
-  mypings: IPostCard;
+  mypings: IPost;
 }
 
 export const MyPingsImage = styled.div`
   position: relative;
-  display: inline-block;
   display: flex;
   justify-content: center;
   align-items: center;

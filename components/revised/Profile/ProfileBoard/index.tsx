@@ -49,8 +49,8 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${md?.id}/followings`, fetcher);
 
-  const handleFollow = (userId: number) => (e: any) =>
-    mutateFollow(isIdExisting(followingsData, profile) ? 'following' : 'follower')(userId)(e);
+  const handleFollow = (userId: number, mutateFn: any) => (e: any) =>
+    mutateFollow(isIdExisting(followingsData, profile) ? 'following' : 'follower')(userId, mutateFn)(e);
 
   return (
     <Base>
@@ -61,7 +61,7 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
           {Number(userId) !== md?.id && (
             <FollowActionButton
               isFollowing={isIdExisting(followingsData, profile)}
-              onClick={handleFollow(profile.id)}
+              onClick={handleFollow(profile.id, mutateFollowings)}
               style={{ position: 'relative' }}
             />
           )}

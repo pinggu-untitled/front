@@ -18,6 +18,7 @@ import MyPingsCard from '@components/revised/Profile/MyPingsCard';
 import { Base, MainContentZone, Form } from '../ProfilePosts';
 import { useParams } from 'react-router-dom';
 import { IMyPings } from '../../typings/db';
+import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 
 export interface ICheckedPost {
   id: number;
@@ -28,7 +29,7 @@ const ProfileMyPings = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const { data: mypingsData, mutate: mutateMypingsData } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
 
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
@@ -63,12 +64,14 @@ const ProfileMyPings = () => {
     <>
       <Base>
         <MainContentZone>
-          {!showModals.showEditModal && (
+          {mypings?.length ? (
             <CardList>
-              {mypingsData?.slice(0, 10).map((ping, i) => (
+              {mypings?.slice(0, 10).map((ping, i) => (
                 <MyPingsCard key={uuid()} mypings={ping} />
               ))}
             </CardList>
+          ) : (
+            <EmptyMessage message={'아직 회원님이 만든 마이핑스가 없어요.'} />
           )}
         </MainContentZone>
         <SettingsButton onClick={handleModal('showSettingsModal')} />
@@ -81,11 +84,11 @@ const ProfileMyPings = () => {
         <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
-          title={{ maintitle: '내 마이핑스', highlight: mypingsData?.slice(0, 10).length || 0 }}
+          title={{ maintitle: '내 마이핑스', highlight: mypings?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
             {/* <CardList>
-              {mypingsData?.slice(0, 10).map((ping) => (
+              {mypings?.slice(0, 10).map((ping) => (
                 <SelectPostCard
                   key={uuid()}
                   post={ping}
