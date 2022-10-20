@@ -8,7 +8,7 @@ export const createMap = (container: HTMLElement | null, options: kakao.maps.Map
   map.setZoomable(false);
   myPositionMarker = new kakao.maps.Marker({ position: options.center });
   myPositionMarker.setMap(map);
-  myPositionMarker.setDraggable(true);
+  // myPositionMarker.setDraggable(true);
 
   map.addListener('click', moveMyPositionMarker);
 };
@@ -22,7 +22,7 @@ export const moveMyPositionMarker = ({ latLng }: { latLng: kakao.maps.LatLng }) 
 export const getMap = () => map;
 
 /* 지도 중심 좌표 변경하기 */
-export const setMapCenter = (lat: number, lng: number) => {
+export const setMapCenter = (map: kakao.maps.Map, lat: number, lng: number) => {
   console.log('AAA');
   const latLng = new kakao.maps.LatLng(lat, lng);
   map.setCenter(latLng);

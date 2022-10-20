@@ -6,7 +6,8 @@ import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
 import Map from '@components/Map/index';
-import SideNavigation from "@components/revised/common/navigations/SideNavigation";
+import SideNavigation from '@components/revised/common/navigations/SideNavigation';
+import { MapProvider } from '@contexts/map-context';
 
 interface IProps {
   children: React.ReactNode;
@@ -74,17 +75,18 @@ const AppLayout: FC<IProps> = ({ children }) => {
         {['/intro', '/introduce'].includes(location.pathname) ? (
           <div>{children}</div>
         ) : (
-          <>
-            {/*<MainNavigation onToggle={onToggle} />*/}
-            <SideNavigation />
-            <MainPage show={showPage}>{children}</MainPage>
-            <MapZone>
-              <Map />
-            </MapZone>
-            <SlideButton show={showPage} onClick={onToggle}>
-              {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
-            </SlideButton>
-          </>
+          <MapProvider>
+            <>
+              <SideNavigation />
+              <MainPage show={showPage}>{children}</MainPage>
+              <MapZone>
+                <Map />
+              </MapZone>
+              <SlideButton show={showPage} onClick={onToggle}>
+                {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
+              </SlideButton>
+            </>
+          </MapProvider>
         )}
       </Layout>
     </ThemeProvider>
