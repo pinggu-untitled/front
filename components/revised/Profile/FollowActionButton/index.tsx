@@ -14,7 +14,7 @@ export const Base = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  position: absolute;
+  //position: absolute;
 `;
 
 const FollowActionButton: FC<IProps> = ({ isFollowing, onClick, style }) => {

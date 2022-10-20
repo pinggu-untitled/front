@@ -19,6 +19,7 @@ import { Base, MainContentZone, Form } from '../ProfilePosts';
 import { useParams } from 'react-router-dom';
 import { IMyPings } from '../../typings/db';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
+import SelectMyPingsCard from '@components/revised/Profile/SelectMyPingsCard';
 
 export interface ICheckedPost {
   id: number;
@@ -74,7 +75,9 @@ const ProfileMyPings = () => {
             <EmptyMessage message={'아직 회원님이 만든 마이핑스가 없어요.'} />
           )}
         </MainContentZone>
-        {mypings && mypings.length > 0 && <SettingsButton onClick={handleModal('showSettingsModal')} />}
+        {mypings && mypings.length > 0 && md?.id === Number(userId) && (
+          <SettingsButton onClick={handleModal('showSettingsModal')} />
+        )}
         <SettingsModal
           show={showModals.showSettingsModal}
           onCloseModal={handleModal('showSettingsModal')}
@@ -87,16 +90,16 @@ const ProfileMyPings = () => {
           title={{ maintitle: '내 마이핑스', highlight: mypings?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
-            {/* <CardList>
+            <CardList style={{ marginBottom: '90px' }}>
               {mypings?.slice(0, 10).map((ping) => (
-                <SelectPostCard
+                <SelectMyPingsCard
                   key={uuid()}
-                  post={ping}
+                  mypings={ping}
                   isChecked={Boolean(checkedPosts.find((pp) => pp.id === ping.id))}
                   handleCheck={handleCheck(ping)}
                 />
               ))}
-            </CardList> */}
+            </CardList>
             <BottomSummary checkedPosts={checkedPosts} handleCheck={handleCheck} />
           </Form>
         </EditModal>

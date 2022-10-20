@@ -13,7 +13,10 @@ interface IProps {
   handleCheck: any;
 }
 
-export const ActionZone = styled.div``;
+export const ActionZone = styled.div`
+  height: 100%;
+  background-color: red;
+`;
 
 export const DeleteAction = styled.label`
   position: absolute;
@@ -34,8 +37,8 @@ export const DeleteAction = styled.label`
     z-index: 3000;
     background-color: #fff;
     font-size: 32px;
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -59,7 +62,7 @@ export const EditAction = styled.div`
   font-size: 12px;
   font-weight: 600;
   padding: 0 12px;
-  height: 36px;
+  height: 30px;
   display: flex;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
@@ -80,20 +83,22 @@ const SelectPostCard: FC<IProps> = ({ post, isChecked, handleCheck }) => {
 
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
-      <ImageZone>
-        <ShowTotals>
-          <span className="current">{1}</span>/3
-        </ShowTotals>
-        {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
-        <PostImage
-          src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
-          alt={post.Images[0]?.id}
-        />
-      </ImageZone>
-      <InfoZone>
-        <h2>{post.title}</h2>
-        <p>문래동 · {post.created_at}</p>
-      </InfoZone>
+      <div className={'info'}>
+        <ImageZone>
+          <ShowTotals>
+            <span className="current">{1}</span>/3
+          </ShowTotals>
+          {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
+          <PostImage
+            src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
+            alt={post.Images[0]?.id}
+          />
+        </ImageZone>
+        <InfoZone>
+          <h2>{post.title}</h2>
+          <p>문래동 · {post.created_at}</p>
+        </InfoZone>
+      </div>
       <ActionZone onClick={stopPropagation}>
         <DeleteAction>
           <input type="checkbox" value={post.id} onChange={handleCheck} checked={isChecked} />

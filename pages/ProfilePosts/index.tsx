@@ -25,7 +25,7 @@ export const Base = styled.div`
 export const MainContentZone = styled.div`
   position: absolute;
   width: 440px;
-  top: 208px;
+  top: 206px;
   bottom: 0;
   overflow-y: scroll;
 `;
@@ -71,7 +71,6 @@ const ProfilePosts = () => {
     <>
       <Base>
         <MainContentZone>
-          {/* TODO */}
           {pd && pd?.length > 0 ? (
             <CardList>
               {pd?.map((post, i) => (
@@ -82,7 +81,9 @@ const ProfilePosts = () => {
             <EmptyMessage message={'아직 회원님이 작성한 게시물이 없어요.'} />
           )}
         </MainContentZone>
-        {pd && pd?.length > 0 && <SettingsButton onClick={handleModal('showSettingsModal')} />}
+        {pd && pd?.length > 0 && md?.id === Number(userId) && (
+          <SettingsButton onClick={handleModal('showSettingsModal')} />
+        )}
         <SettingsModal
           show={showModals.showSettingsModal}
           onCloseModal={handleModal('showSettingsModal')}
@@ -95,7 +96,7 @@ const ProfilePosts = () => {
           title={{ maintitle: '내 게시물', highlight: pd?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
-            <CardList>
+            <CardList style={{ marginBottom: '90px' }}>
               {pd?.slice(0, 10).map((post) => (
                 <SelectPostCard
                   key={uuid()}

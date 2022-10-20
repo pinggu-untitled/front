@@ -59,10 +59,6 @@ const ProfileFriends = () => {
     setShowModals((pv) => ({ ...pv, [modalName]: !pv[modalName] }));
   };
 
-  const userSettingItems = [
-    { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
-  ];
-
   return (
     <>
       <Base>
@@ -92,13 +88,6 @@ const ProfileFriends = () => {
             </CardList>
           )}
         </MainContentZone>
-        <SettingsButton onClick={handleModal('showSettingsModal')} />
-        <SettingsModal
-          show={showModals.showSettingsModal}
-          onCloseModal={handleModal('showSettingsModal')}
-          items={userSettingItems}
-          style={{ bottom: '80px', left: '310px' }}
-        />
       </Base>
     </>
   );

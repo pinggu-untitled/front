@@ -15,16 +15,21 @@ interface IProps {
 
 export const Base = styled.li`
   position: relative;
-  border-bottom: 1px solid #dfdfdf;
+  //border-bottom: 1px solid #dfdfdf;
   padding: 10px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
+  justify-content: space-between;
 
-  > .nickname {
-    font-size: 16px;
-    font-weight: 700;
-    margin-left: 10px;
+  > .left {
+    display: flex;
+    align-items: center;
+    > .nickname {
+      font-size: 16px;
+      font-weight: 700;
+      margin-left: 10px;
+    }
   }
 `;
 
@@ -36,8 +41,11 @@ const FriendCard: FC<IProps> = ({ profile, isFollowing, handleFollow }) => {
 
   return (
     <Base onClick={handleNavigate(`/${profile.id}`)}>
-      <ProfileImage profile={profile} style={{ width: '50px', height: '50px' }} />
-      <span className={'nickname'}>{profile.nickname}</span>
+      <div className={'left'}>
+        <ProfileImage profile={profile} style={{ width: '50px', height: '50px' }} />
+        <span className={'nickname'}>{profile.nickname}</span>
+      </div>
+
       {Number(userId) === md?.id && (
         <FollowActionButton
           isFollowing={isFollowing}

@@ -18,6 +18,7 @@ import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
 import displayEven from '@utils/displayEven';
+import ProfileSummaryBar from '@components/revised/PostsDetail/ProfileSummaryBar';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -183,6 +184,7 @@ const PostDetail = () => {
             )}
           </ImagesContainer>
         )}
+        {pd?.User && <ProfileSummaryBar profile={pd?.User} />}
         {/* <ProfileBox>
             <ProfileBar>
               <div>
