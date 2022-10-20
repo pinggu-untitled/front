@@ -2,12 +2,9 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { IPost } from '@typings/db';
-import { AiOutlineEye } from 'react-icons/ai';
-import { MdPeopleOutline } from 'react-icons/md';
-import { IPostCard } from '@typings/db';
 
 interface IProps {
-  data: IPostCard;
+  data: IPost;
 }
 
 export const Base = styled.ul`

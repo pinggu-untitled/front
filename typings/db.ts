@@ -31,7 +31,7 @@ export interface IResult {
   myPings: [];
 }
 
-export interface IPostDefault {
+export interface IPost {
   id: number;
   title: string;
   content: string;
@@ -42,9 +42,6 @@ export interface IPostDefault {
   updated_at: string;
   created_at: string;
   User: IUser;
-}
-
-export interface IPost extends IPostDefault {
   Images: IImage[];
 }
 
@@ -53,14 +50,10 @@ export interface IImage {
   src: string;
 }
 
-export interface IPostCard extends IPostDefault {
-  Images: IImage[];
-}
-
 export interface IMyPings {
   id: number;
   title: string;
   category: number;
-  user: IUser;
   is_private: boolean;
+  User: IUser;
 }

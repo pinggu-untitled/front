@@ -1,25 +1,23 @@
-import React, { FC } from 'react';
+import React, { CSSProperties, FC } from 'react';
 import styled from '@emotion/styled';
-import { Scrollbars } from 'react-custom-scrollbars-2';
-import useSWR from 'swr';
-import { IPostCard } from '@typings/db';
-import fetcher from '@utils/fetcher';
-import PostCard from './PostCard';
 
 export const Base = styled.ul`
   padding: 0 20px;
   width: 100%;
+  height: 100%;
+  overflow: scroll;
+
+  > li:not(:last-of-type) {
+    border-bottom: 1px solid #dfdfdf;
+  }
 `;
 
 interface IProps {
   children: React.ReactNode;
+  style?: CSSProperties;
 }
-const CardList: FC<IProps> = ({ children }) => {
-  return (
-    // <Scrollbars universal={true}>
-    <Base>{children}</Base>
-    // </Scrollbars>
-  );
+const CardList: FC<IProps> = ({ children, style }) => {
+  return <Base style={style}>{children}</Base>;
 };
 
 export default CardList;

@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 import styled from '@emotion/styled';
 
 export interface IItem {
-  content: { icon: React.ReactNode; title: string; rest?: React.ReactDOM };
+  content: { icon: React.ReactNode; title: string; rest?: React.ReactNode };
   onClick: any;
-  children?: React.ReactNode;
 }
 
 export const Base = styled.button`
@@ -15,6 +14,7 @@ export const Base = styled.button`
   cursor: pointer;
   border: none;
   background-color: transparent;
+  position: relative;
 
   > .wrapper {
     padding: 8px 16px;
@@ -38,15 +38,29 @@ export const Base = styled.button`
 
   > .hidden {
     position: absolute;
-    width: 0;
-    height: 0;
+    top: 0;
     bottom: 0;
     left: 0;
+    right: 0;
+    z-index: 3000;
     opacity: 0;
+
+    > a,
+    div,
+    form,
+    span {
+      position: absolute;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      z-index: 3000;
+    }
   }
 `;
 
-const SettingItem: FC<IItem> = ({ content: { icon, title, rest }, onClick, children }) => {
+const SettingItem: FC<IItem> = ({ content: { icon, title, rest }, onClick }) => {
   return (
     <Base onClick={onClick}>
       <div className="wrapper">

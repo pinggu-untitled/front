@@ -12,7 +12,7 @@ import Header from '@components/Intros/Header';
 
 export const Base = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
 `;
 
 export const Container = styled.div`
@@ -30,7 +30,7 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   & h1 {
-    font-size: 20px;
+    font-size: 22px;
     margin-bottom: 20px;
   }
 `;
@@ -48,35 +48,21 @@ const SocialAuthButton = styled.a`
   box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 `;
 
-interface IForm {
-  email: string;
-  password: string;
-}
 const Intro = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm<IForm>({ defaultValues: { email: '', password: '' } });
-  const { data: userData, mutate } = useSWR('/users/me', fetcher);
-  const onSubmit = useCallback((data: IForm) => {
-    axios
-      .post('/users/login', data)
-      .then((res) => {
-        console.log(res.data);
-        mutate();
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const baseUrl = 'http://localhost:8080';
+  const { data: md, mutate: mutateMd } = useSWR('/users/me', fetcher);
 
-  // if (userData === undefined) return <div>로딩중...</div>;
-  // if (userData) navigate('/');
+  if (md) navigate('/');
 
   return (
     <Base>
       <Header url={'/introduce'} name={'소개하기'} />
       <Container>
         <Main>
-          <h1>인증하기</h1>
-          <SocialAuthButton href={'http://localhost:8080/auth/login/kakao'}>카카오</SocialAuthButton>
-          <SocialAuthButton href={'http://localhost:8080/auth/login/google'}>구글</SocialAuthButton>
+          <h1>로그인</h1>
+          <SocialAuthButton href={`${baseUrl}/auth/login/kakao`}>카카오</SocialAuthButton>
+          <SocialAuthButton href={`${baseUrl}/auth/login/google`}>구글</SocialAuthButton>
         </Main>
       </Container>
     </Base>

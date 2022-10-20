@@ -67,7 +67,7 @@ const ImagePreview: FC<IProps> = ({ src, onClose }) => {
       <ImagesZoomModal
         show={showModals.showImagesZoomModal}
         onCloseModal={() => handleModal('showImagesZoomModal')}
-        images={[{ src: '/public/logo.png' }, { src: '/public/1.png' }]}
+        images={[{ id: 1, src }]}
       />
     </>
   );

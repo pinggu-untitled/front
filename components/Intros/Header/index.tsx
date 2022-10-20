@@ -16,8 +16,9 @@ export const Base = styled.header`
   justify-content: space-between;
 `;
 export const Logo = styled.span`
-  font-family: 'Orbitron', sans-serif;
+  //font-family: 'Orbitron', sans-serif;
   font-size: 30px;
+  font-weight: 700;
 `;
 export const ToggleButton = styled.div`
   background-color: #000;

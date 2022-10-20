@@ -1,8 +1,6 @@
 import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
-import { IPostCard, IUser } from '@typings/db';
-import PostImage from '@components/revised/common/images/PostImage';
-import ProfileImage from '@components/revised/common/images/ProfileImage';
+import { IUser } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
@@ -10,7 +8,6 @@ interface IProps {
 }
 export const Base = styled.div`
   position: relative;
-  /* width: 120px; */
   padding: 5px 10px;
   background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
@@ -35,6 +32,7 @@ export const Base = styled.div`
 const ProfilePreviewBubble: FC<IProps> = ({ profile }) => {
   const navigate = useNavigate();
 
+  console.log(profile);
   return (
     <Base>
       <h4>{profile.nickname}</h4>

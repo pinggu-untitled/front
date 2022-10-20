@@ -13,7 +13,7 @@ export const Base = styled.div<{ col: number }>`
   padding: 0 50px;
   border-top: 1px solid #dfdfdf;
   border-bottom: 1px solid #dfdfdf;
-  & button:not(:last-of-type) > a > span {
+  & button:not(:last-of-type) > span {
     border-right: 1px solid #dfdfdf;
   }
 `;

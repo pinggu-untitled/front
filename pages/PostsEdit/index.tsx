@@ -5,13 +5,10 @@ import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHea
 import { useNavigate, useParams } from 'react-router-dom';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
 import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
-import SquareButton from '@components/common/buttons/SquareButton';
 import ImageInputList from '@components/Posts/ImageInputList';
 import axios from 'axios';
-// import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
 import ToolBox from '@components/Posts/ToolBox';
 import ToolButton from '@components/Posts/ToolBox/ToolButton';
@@ -149,7 +146,6 @@ const PostsEdit = () => {
   );
 
   console.log('pd', pd);
-  // {src: '2022/10/5
   return (
     <Base>
       {showOptions.showSearchLocation ? (

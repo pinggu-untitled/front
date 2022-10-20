@@ -6,8 +6,6 @@ import MenuList from '@components/common/lists/MenuList';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
-import fetcher from '@utils/fetcher';
 import { HiOutlineLogout } from 'react-icons/hi';
 
 interface IProps {
@@ -24,7 +22,11 @@ export const ModalContent = styled.div`
 `;
 const UserMenu = ({ show, onCloseModal }: IProps) => {
   const navigate = useNavigate();
-  const onLogout = useCallback(() => {}, []);
+  const onLogout = useCallback(() => {
+    axios.get("/auth/logout", {withCredentials: true})
+      .then((res ) => console.log(res.data))
+      .catch(err => console.error(err))
+  }, []);
 
   return (
     <FullScreenModal show={show} onCloseModal={onCloseModal}>

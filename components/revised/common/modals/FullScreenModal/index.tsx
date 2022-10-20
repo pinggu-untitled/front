@@ -12,7 +12,7 @@ export const Base = styled.div`
   bottom: 0;
   right: 0;
   left: 0;
-  z-index: 4000;
+  z-index: 9000;
 `;
 
 const FullScreenModal: FC<IProps> = ({ show, onCloseModal, children }) => {

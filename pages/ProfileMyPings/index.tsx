@@ -18,6 +18,8 @@ import MyPingsCard from '@components/revised/Profile/MyPingsCard';
 import { Base, MainContentZone, Form } from '../ProfilePosts';
 import { useParams } from 'react-router-dom';
 import { IMyPings } from '../../typings/db';
+import EmptyMessage from '@components/revised/Profile/EmptyMessage';
+import SelectMyPingsCard from '@components/revised/Profile/SelectMyPingsCard';
 
 export interface ICheckedPost {
   id: number;
@@ -28,9 +30,8 @@ const ProfileMyPings = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const { data: mypingsData, mutate: mutateMypingsData } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
 
-  // const { data: pd, mutate: mutatePd } = useSWR<IPostCard[] | null>(`/posts/all`, fetcher);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
@@ -48,8 +49,6 @@ const ProfileMyPings = () => {
     });
   };
 
-  console.log(checkedPosts);
-
   const onSubmit = useCallback(
     (e: any) => {
       e.preventDefault();
@@ -66,15 +65,19 @@ const ProfileMyPings = () => {
     <>
       <Base>
         <MainContentZone>
-          {!showModals.showEditModal && (
+          {mypings && mypings?.length > 0 ? (
             <CardList>
-              {mypingsData?.slice(0, 10).map((ping, i) => (
+              {mypings?.slice(0, 10).map((ping, i) => (
                 <MyPingsCard key={uuid()} mypings={ping} />
               ))}
             </CardList>
+          ) : (
+            <EmptyMessage message={'아직 회원님이 만든 마이핑스가 없어요.'} />
           )}
         </MainContentZone>
-        <SettingsButton onClick={handleModal('showSettingsModal')} />
+        {mypings && mypings.length > 0 && md?.id === Number(userId) && (
+          <SettingsButton onClick={handleModal('showSettingsModal')} />
+        )}
         <SettingsModal
           show={showModals.showSettingsModal}
           onCloseModal={handleModal('showSettingsModal')}
@@ -84,19 +87,19 @@ const ProfileMyPings = () => {
         <EditModal
           show={showModals.showEditModal}
           onCloseModal={handleModal('showEditModal')}
-          title={{ main: '내 마이핑스', count: mypingsData?.slice(0, 10).length || 0 }}
+          title={{ maintitle: '내 마이핑스', highlight: mypings?.slice(0, 10).length || 0 }}
         >
           <Form onSubmit={onSubmit}>
-            {/* <CardList>
-              {mypingsData?.slice(0, 10).map((ping) => (
-                <SelectPostCard
+            <CardList style={{ marginBottom: '90px' }}>
+              {mypings?.slice(0, 10).map((ping) => (
+                <SelectMyPingsCard
                   key={uuid()}
-                  post={ping}
+                  mypings={ping}
                   isChecked={Boolean(checkedPosts.find((pp) => pp.id === ping.id))}
                   handleCheck={handleCheck(ping)}
                 />
               ))}
-            </CardList> */}
+            </CardList>
             <BottomSummary checkedPosts={checkedPosts} handleCheck={handleCheck} />
           </Form>
         </EditModal>

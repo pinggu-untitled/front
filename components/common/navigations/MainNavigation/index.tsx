@@ -89,7 +89,7 @@ const MainNavigation: FC<IProps> = ({ onToggle }) => {
             contents={{ icons: { filled: <IoChatbubbles />, outlined: <IoChatbubblesOutline /> }, title: '채팅' }}
           />
           <NavItem
-            url={'/:nickname'}
+            url={`/${md?.id}`}
             contents={{ icons: { filled: <HiUser />, outlined: <HiOutlineUser /> }, title: '마이페이지' }}
           />
           <NavItem
