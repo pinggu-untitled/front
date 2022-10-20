@@ -19,7 +19,7 @@ export const MainContentZone = styled.div`
   width: 440px;
   top: 73px;
   bottom: 0;
-  overflow: scroll;
+  //overflow: scroll;
 `;
 
 interface IForm {
@@ -30,8 +30,8 @@ const Home = () => {
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(`/posts`, fetcher);
 
-  if (!md) navigate('/intro');
-  if (!pd) return <div>로딩중...</div>;
+  if (md === undefined) navigate('/intro');
+
   return (
     <Base>
       <TopNavigation title={'홈'} />
