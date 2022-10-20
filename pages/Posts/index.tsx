@@ -17,7 +17,7 @@ import { BiCommentDetail } from 'react-icons/bi';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 import PreviewCard from '@components/previews/PreviewCard';
-import PreviewSection from '../../components/previews/PreviewSection/index';
+import PreviewSection from '@components/previews/PreviewSection';
 import Scrollbars from 'react-custom-scrollbars-2';
 // import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
 import { setMapCenter } from '@utils/pMap';
