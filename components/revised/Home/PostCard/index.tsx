@@ -89,12 +89,14 @@ const PostCard: FC<IProps> = ({ post }) => {
       <ImageZone>
         {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
         <PostImage
-          src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
+          src={post.Images?.length > 0 ? post.Images[0].src : undefined}
           alt={post?.Images[0]?.id}
+          style={{ border: '1px solid #dfdfdf' }}
         />
       </ImageZone>
       <InfoZone>
         <h2>{post.title}</h2>
+
         <p>문래동 · {post.created_at}</p>
       </InfoZone>
       <AuthorZone>

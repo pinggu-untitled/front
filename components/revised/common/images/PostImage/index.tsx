@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { IImage } from '@typings/db';
 
 interface IProps {
-  src: string;
+  src?: string;
   alt?: number | string;
   style?: CSSProperties;
 }
@@ -26,7 +26,7 @@ const PostImage: FC<IProps> = ({ src, alt, style }) => {
   const baseUrl = 'http://localhost:8080/uploads';
   return (
     <Base style={style}>
-      <img src={`${baseUrl}/${src}`} alt={`${alt}` || 'placeholder.png'} />
+      <img src={src ? `${baseUrl}/${src}` : 'public/placeholder.png'} alt={`${alt}` || 'placeholder.png'} />
     </Base>
   );
 };

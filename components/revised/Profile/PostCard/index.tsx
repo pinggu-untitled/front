@@ -85,10 +85,7 @@ const PostCard: FC<IProps> = ({ post }) => {
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageZone>
         <TotalCount current={1} total={3} />
-        <PostImage
-          src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
-          alt={post.Images[0].id}
-        />
+        <PostImage src={post.Images?.length > 0 ? post.Images[0].src : undefined} alt={post.Images[0].id} />
       </ImageZone>
       <InfoZone>
         <h2>{post.title}</h2>
