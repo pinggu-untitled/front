@@ -52,6 +52,7 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
   const handleFollow = (userId: number, mutateFn: any) => (e: any) =>
     mutateFollow(isIdExisting(followingsData, profile) ? 'following' : 'follower')(userId, mutateFn)(e);
 
+  console.log(profile);
   return (
     <Base>
       <ProfileImage profile={profile} style={{ width: '120px', height: '120px' }} />

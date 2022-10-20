@@ -64,7 +64,7 @@ const ProfileMyPings = () => {
     <>
       <Base>
         <MainContentZone>
-          {mypings?.length ? (
+          {mypings && mypings?.length > 0 ? (
             <CardList>
               {mypings?.slice(0, 10).map((ping, i) => (
                 <MyPingsCard key={uuid()} mypings={ping} />
@@ -74,7 +74,7 @@ const ProfileMyPings = () => {
             <EmptyMessage message={'아직 회원님이 만든 마이핑스가 없어요.'} />
           )}
         </MainContentZone>
-        <SettingsButton onClick={handleModal('showSettingsModal')} />
+        {mypings && mypings.length > 0 && <SettingsButton onClick={handleModal('showSettingsModal')} />}
         <SettingsModal
           show={showModals.showSettingsModal}
           onCloseModal={handleModal('showSettingsModal')}

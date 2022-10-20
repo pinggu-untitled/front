@@ -13,10 +13,11 @@ import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
-import { IImage, IMe, IPost, IUser } from '@typings/db';
+import { IImage, IMe, IMyPings, IPost, IUser } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
+import displayEven from '@utils/displayEven';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -93,19 +94,17 @@ const PostDetail = () => {
   const theme = useTheme();
   const { postId } = useParams<{ postId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: pd, mutate: mutatePostData } = useSWR<IPost>(`/posts/${postId}`, fetcher);
+  const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
+  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings`, fetcher);
+  // const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings/:mypingsId/post`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
 
-  const copyUrl = useCallback((e: any) => {
+  console.log(pd);
+  const copyUrl = (e: any) => {
     copyUrlRef.current?.select();
     document.execCommand('copy');
     e.target.focus();
-  }, []);
-
-  const displayEven = (data: any[]): any[] => {
-    const len = data.length;
-    return len % 2 === 0 ? data : data.slice(0, len - 1);
   };
 
   const userSettingItems = [
@@ -128,7 +127,7 @@ const PostDetail = () => {
     },
   ];
 
-  const postImageStyle = { width: '100%', height: '100%', borderRadius: 0 };
+  const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
   return (
     <Base>
@@ -160,7 +159,7 @@ const PostDetail = () => {
               <PostImage
                 src={pd?.Images[0].src}
                 alt={pd?.Images[0].id}
-                style={{ width: '200px', height: '200px', borderRadius: 0 }}
+                style={{ width: '200px', height: '200px', borderRadius: 0, border: 'none' }}
               />
             )}
             {pd?.Images.length === 2 &&

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import TotalCount from '@components/revised/Home/TotalCount';
 
 interface IProps {
-  post: IPost;
+  post?: IPost;
 }
 
 export const Base = styled.li`
@@ -80,16 +80,16 @@ export const AuthorZone = styled.div`
 
 const PostCard: FC<IProps> = ({ post }) => {
   const navigate = useNavigate();
-
+  const handleNavigate = (path: string) => () => navigate(path);
   return (
-    <Base onClick={() => navigate(`/posts/${post.id}`)}>
+    <Base onClick={handleNavigate(`/posts/${post?.id}`)}>
       <ImageZone>
-        <TotalCount current={1} total={3} />
-        <PostImage src={post.Images?.length > 0 ? post.Images[0].src : undefined} alt={post.Images[0].id} />
+        <TotalCount current={1} total={1} />
+        {/*<PostImage src={post?.Images?.length > 0 ? post?.Images[0].src : undefined} alt={post?.Images[0].id} />*/}
       </ImageZone>
       <InfoZone>
-        <h2>{post.title}</h2>
-        <p>문래동 · {post.created_at}</p>
+        <h2>{post?.title}</h2>
+        <p>문래동 · {post?.created_at}</p>
       </InfoZone>
     </Base>
   );

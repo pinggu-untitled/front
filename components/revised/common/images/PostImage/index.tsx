@@ -13,7 +13,7 @@ export const Base = styled.div`
   height: 100px;
   border-radius: 4px;
   overflow: hidden;
-  //border: 1px solid #dfdfdf;
+  border: 1px solid #dfdfdf;
 
   > img {
     width: 100%;
