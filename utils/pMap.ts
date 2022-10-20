@@ -23,8 +23,7 @@ export const getMap = () => map;
 
 /* 지도 중심 좌표 변경하기 */
 export const setMapCenter = (lat: number, lng: number) => {
+  console.log('AAA');
   const latLng = new kakao.maps.LatLng(lat, lng);
   map.setCenter(latLng);
 };
-
-

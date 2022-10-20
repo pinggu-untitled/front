@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams, Navigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ import PreviewCard from '@components/previews/PreviewCard';
 import PreviewSection from '../../components/previews/PreviewSection/index';
 import Scrollbars from 'react-custom-scrollbars-2';
 // import ActionButton from '@components/common/profiles-related/ProfileBox/ProfileActionButtons/ActionButton';
+import { setMapCenter } from '@utils/pMap';
 
 export const Base = styled.div`
   width: 100%;
@@ -169,6 +170,9 @@ const Post = () => {
   }, []);
 
   console.log('>>>', pd);
+  if (pd) {
+    setMapCenter(Number(pd.latitude), Number(pd.longitude));
+  }
 
   if (pd?.post?.is_private) return <Navigate replace to="/" />;
 
