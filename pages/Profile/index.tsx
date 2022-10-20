@@ -3,9 +3,9 @@ import { useNavigate, Outlet, useParams } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { BiGrid } from 'react-icons/bi';
 import { MdOutlineBookmarkBorder } from 'react-icons/md';
-import { HiOutlineUsers } from 'react-icons/hi';
 import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
 import SettingsModal from '@components/revised/SettingsModal';
+import { HiOutlineUsers } from 'react-icons/hi';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
 import ProfileBoard from '@components/revised/Profile/ProfileBoard';
@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
 import { Base, MainContentZone } from '@pages/Home';
 import useModals from '@utils/useModals';
+import handleNavigate from '@utils/handleNavigate';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -70,14 +71,24 @@ const Profile = () => {
       <MainContentZone>
         {ud && <ProfileBoard profile={ud} />}
         <TapList count={3}>
-          <TapItem icon={<BiGrid />} name={'게시물'} url={`/${userId}`} match={'/:userId'} />
+          <TapItem
+            icon={<BiGrid />}
+            name={'게시물'}
+            onClick={handleNavigate(navigate, `/${userId}`)}
+            match={'/:userId'}
+          />
           <TapItem
             icon={<MdOutlineBookmarkBorder />}
             name={'마이핑스'}
-            url={`/${userId}/mypings`}
+            onClick={handleNavigate(navigate, `/${userId}/mypings`)}
             match={'/:userId/mypings'}
           />
-          <TapItem icon={<HiOutlineUsers />} name={'친구'} url={`/${userId}/friends`} match={'/:userId/friends'} />
+          <TapItem
+            icon={<HiOutlineUsers />}
+            name={'친구'}
+            onClick={handleNavigate(navigate, `/${userId}/friends`)}
+            match={'/:userId/friends'}
+          />
         </TapList>
         <Outlet />
       </MainContentZone>

@@ -7,18 +7,22 @@ import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 import PreviewCard from '@components/previews/PreviewCard';
-import PreviewSection from '../../components/previews/PreviewSection/index';
+import PreviewSection from '../../components/revised/PostsDetail/PreviewSection/index';
 import { Base, MainContentZone } from '@pages/Home';
 import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
-import { BiEditAlt } from 'react-icons/bi';
-import { AiOutlineDelete, AiOutlineLink } from 'react-icons/ai';
-import { IImage, IMe, IMyPings, IPost, IUser } from '@typings/db';
+import { BiCommentDetail, BiEditAlt } from 'react-icons/bi';
+import { AiOutlineDelete, AiOutlineLike, AiOutlineLink } from 'react-icons/ai';
+import { IImage, IMe, IMyPings, IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
 import displayEven from '@utils/displayEven';
 import ProfileSummaryBar from '@components/revised/PostsDetail/ProfileSummaryBar';
+import TapItem from '@components/revised/Profile/TapList/TapItem';
+import { HiOutlineLocationMarker, HiOutlineUsers } from 'react-icons/hi';
+import TapList from '@components/revised/Profile/TapList';
+import HoverLabel from '@components/common/labels/HoverLabel';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -97,7 +101,7 @@ const PostDetail = () => {
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings`, fetcher);
-  // const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings/:mypingsId/post`, fetcher);
+  const { data: userPd, mutate: mutateUserPd } = useSWR<IPost[]>(`/users/${pd?.User.id}/posts`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
 
@@ -185,51 +189,17 @@ const PostDetail = () => {
           </ImagesContainer>
         )}
         {pd?.User && <ProfileSummaryBar profile={pd?.User} />}
-        {/* <ProfileBox>
-            <ProfileBar>
-              <div>
-                <ProfileImageButton
-                  src={pd??.User.profile_image_url || '/public/placeholder.png'}
-                  nickname={pd??.nickname}
-                />
-                <span className={'nickname'}>{pd??.User.nickname || '사용자 닉네임'}</span>
-                <PillButton content={'채팅'} onClick={() => navigate(`/chatrooms`)} />
-              </div>
-              <FollowButton isClicked={following} onClick={() => setFollowing((p) => !p)} />
-            </ProfileBar>
-            <ProfileActionButtons>
-              <ActionButton
-                content={
-                  <HoverLabel label={'좋아요'} style={{ top: '28px' }}>
-                    <ContentWrapper>
-                      <AiOutlineLike />
-                      <span className={'counts'}>{pd?.likers?.length}</span>
-                    </ContentWrapper>
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
-              />
-              <ActionButton
-                content={
-                  <HoverLabel label={'위치 찾기'} style={{ top: '28px' }}>
-                    <HiOutlineLocationMarker />
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
-              />
-              <ActionButton
-                content={
-                  <HoverLabel label={'댓글'} style={{ top: '28px' }}>
-                    <ContentWrapper>
-                      <BiCommentDetail />
-                      <span className={'counts'}>{pd?.comments?.length || 10}</span>
-                    </ContentWrapper>
-                  </HoverLabel>
-                }
-                onClick={() => console.log('clicked')}
-              />
-            </ProfileActionButtons>
-          </ProfileBox> */}
+        <TapList count={3}>
+          <HoverLabel label={'좋아요'} style={{ top: '34px' }}>
+            <TapItem icon={<AiOutlineLike />} onClick={() => {}} match={'/:userId'} />
+          </HoverLabel>
+          <HoverLabel label={'위치'} style={{ top: '34px' }}>
+            <TapItem icon={<HiOutlineLocationMarker />} onClick={() => {}} match={'/:userId/mypings'} />
+          </HoverLabel>
+          <HoverLabel label={'댓글'} style={{ top: '34px' }}>
+            <TapItem icon={<BiCommentDetail />} onClick={() => {}} match={'/:userId/friends'} />
+          </HoverLabel>
+        </TapList>
         <TextZone theme={theme}>
           <h3 className={'title'}>{pd?.title}</h3>
           <div className={'mypings'}>
@@ -241,15 +211,13 @@ const PostDetail = () => {
           <p className={'content'}>{pd?.content}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        <PreviewSection title={`${pd?.User.nickname}의 마이핑스`} url={`/${pd?.User.id}/myPings`}>
-          {displayEven([1, 2, 3]).map((data, i) => (
-            <PreviewCard key={i} data={data} />
-          ))}
-        </PreviewSection>
-        <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}/posts`}>
-          {displayEven([1, 2, 3]).map((data, i) => (
-            <PreviewCard key={i} data={data} />
-          ))}
+        {/*<PreviewSection title={`${pd?.User.nickname}의 마이핑스`} url={`/${pd?.User.id}/mypings`}>*/}
+        {/*  {displayEven([1, 2, 3]).map((data, i) => (*/}
+        {/*    <PreviewCard key={i} post={data} />*/}
+        {/*  ))}*/}
+        {/*</PreviewSection>*/}
+        <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
+          {userPd && displayEven(userPd).map((post, i) => <PreviewCard key={i} post={post} />)}
         </PreviewSection>
       </MainContentZone>
     </Base>
