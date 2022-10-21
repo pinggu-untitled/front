@@ -65,7 +65,7 @@ const PostCard: FC<IProps> = ({ post }) => {
         <InfoZone>
           <h2>
             {post.title}
-            {post.is_private && (
+            {post.is_private === 1 && (
               <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
             )}
           </h2>
