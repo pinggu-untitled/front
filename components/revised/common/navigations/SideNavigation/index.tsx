@@ -14,8 +14,8 @@ import {
   IoEllipsisHorizontalSharp,
   IoChatbubble,
 } from 'react-icons/io5';
-import { BsThreeDots } from 'react-icons/bs';
 import ProfileAvatar from '@components/revised/common/images/ProfileAvatar';
+import handleNavigate from '@utils/handleNavigate';
 export const Base = styled.nav`
   position: fixed;
   top: 0;
@@ -38,6 +38,7 @@ export const Logo = styled.div`
   align-items: center;
   font-size: 18px;
   font-weight: 700;
+  cursor: pointer;
 `;
 
 const SideNavigation = () => {
@@ -47,25 +48,24 @@ const SideNavigation = () => {
   const handleModal = (modalName: string) => () => {
     setShowModals((prev) => ({ ...prev, [modalName]: !prev[modalName] }));
   };
-  const handleNavigate = (route: string) => () => navigate(route);
 
   const loggedInUserItems = [
     {
       content: { icon: <AiOutlineUser />, title: '마이페이지' },
-      onClick: handleNavigate(`/${md?.id}`),
+      onClick: handleNavigate(navigate, `/${md?.id}`),
     },
     {
       content: { icon: <IoIosLogOut />, title: '로그아웃', rest: <a href={'http://localhost:8080/auth/logout'}></a> },
       onClick: () => {
         handleModal('showSettingsModal')();
-        handleNavigate('/intro')();
+        handleNavigate(navigate, '/intro')();
       },
     },
   ];
   const notLoggedInUserItems = [
     {
       content: { icon: <IoIosLogIn />, title: '로그인' },
-      onClick: handleNavigate('/intro'),
+      onClick: handleNavigate(navigate, '/intro'),
     },
   ];
 
@@ -87,7 +87,7 @@ const SideNavigation = () => {
   return (
     <>
       <Base>
-        <Logo>핑구</Logo>
+        <Logo onClick={handleNavigate(navigate, '/')}>핑구</Logo>
         <NavItemList items={navItems} />
         <ProfileAvatar
           profile={md}

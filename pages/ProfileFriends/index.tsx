@@ -4,9 +4,6 @@ import { IUser, IMe } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import SettingsButton from '@components/revised/Profile/SettingsButton';
-import SettingsModal from '@components/revised/SettingsModal';
-import { FiScissors } from 'react-icons/fi';
 import { v4 as uuid } from 'uuid';
 import { Base, MainContentZone } from '../ProfilePosts';
 import FriendCard from '@components/revised/Profile/FriendCard';
@@ -14,11 +11,7 @@ import { useParams } from 'react-router-dom';
 import mutateFollow from '@utils/mutateFollow';
 import isIdExisting from '@utils/isIdExisting';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
-
-export interface ICheckedPost {
-  id: number;
-  title: string;
-}
+import useModals from '@utils/useModals';
 
 export const SortButtonZone = styled.div`
   display: flex;
@@ -38,8 +31,6 @@ export const Button = styled.div<{ active: boolean }>`
   cursor: pointer;
 `;
 
-export const EmptyMessageZone = styled.div``;
-
 export type TFollow = 'follower' | 'following';
 
 const ProfileFriends = () => {
@@ -49,28 +40,21 @@ const ProfileFriends = () => {
   const [follow, setFollow] = useState<TFollow>('following');
   const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${userId}/followings`, fetcher);
   const { data: followersData, mutate: mutateFollowers } = useSWR<IUser[]>(`/users/${userId}/followers`, fetcher);
+
   const toggleFollow = (type: TFollow) => () => setFollow(type);
-
-  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
-    showSettingsModal: false,
-  });
-
-  const handleModal = (modalName: string) => () => {
-    setShowModals((pv) => ({ ...pv, [modalName]: !pv[modalName] }));
-  };
 
   return (
     <>
       <Base>
-        <MainContentZone>
-          <SortButtonZone>
-            <Button active={follow === 'following'} onClick={toggleFollow('following')}>
-              팔로잉
-            </Button>
-            <Button active={follow === 'follower'} onClick={toggleFollow('follower')}>
-              팔로워
-            </Button>
-          </SortButtonZone>
+        <SortButtonZone>
+          <Button active={follow === 'following'} onClick={toggleFollow('following')}>
+            팔로잉
+          </Button>
+          <Button active={follow === 'follower'} onClick={toggleFollow('follower')}>
+            팔로워
+          </Button>
+        </SortButtonZone>
+        <MainContentZone style={{ top: '270px' }}>
           {follow === 'following' && !followingsData?.length ? (
             <EmptyMessage message={'아직 회원님이 팔로잉하는 유저가 없어요.'} />
           ) : follow === 'follower' && !followersData?.length ? (
