@@ -29,7 +29,7 @@ export const MyPingsImage = styled.div`
   color: gray;
 `;
 
-const MyPingsCard: FC<IProps> = ({ mypingse }) => {
+const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const navigate = useNavigate();
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();
