@@ -54,9 +54,10 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
   const [following, setFollowing] = useState<boolean | null>(null);
   useEffect(() => {
     setFollowing((prev) => {
-      return myFollowingsData && isIdExisting(myFollowingsData, profile) ? true : false;
+      if (prev !== null) return myFollowingsData && isIdExisting(myFollowingsData, profile) ? true : false;
+      return prev;
     });
-  }, [profile, setFollowing]);
+  }, []);
 
   if (myFollowingsData === undefined) <div>로딩중...</div>;
 
@@ -66,9 +67,9 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
       <InfoZone>
         <div className="nickname">
           {profile.nickname}
-          {myFollowingsData && Number(userId) !== md?.id && (
+          {myFollowingsData && Number(userId) !== md?.id && following !== null && (
             <FollowActionButton
-              isFollowing={isIdExisting(myFollowingsData, profile)}
+              isFollowing={following}
               onClick={(e) => {
                 e.stopPropagation();
                 mutateFollow(setFollowing, Number(userId));
