@@ -27,9 +27,10 @@ const unFollowFn = (userId: number, mutateFn: any) => {
     .catch((err) => console.error(err));
 };
 
-const mutateFollow = (target: TFollow) => (userId: number, mutateFn: any) => (e: any) => {
+type TTarget = 'follow' | 'unFollow';
+const mutateFollow = (target: TTarget) => (userId: number, mutateFn: any) => (e: any) => {
   stopPropagation(e);
-  target === 'following' ? unFollowFn(userId, mutateFn) : followFn(userId, mutateFn);
+  target === 'unFollow' ? unFollowFn(userId, mutateFn) : followFn(userId, mutateFn);
 };
 
 export default mutateFollow;

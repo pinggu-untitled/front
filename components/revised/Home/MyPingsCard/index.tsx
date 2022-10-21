@@ -3,12 +3,15 @@ import styled from '@emotion/styled';
 import { IPost } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import SettingsModal from '@components/revised/SettingsModal';
-import { Base, ShowTotals, ImageZone, InfoZone, AuthorZone } from '@components/revised/Profile/PostCard';
+import { Base } from '@components/revised/Profile/PostCard';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
+import TotalCount from '@components/revised/Home/TotalCount';
+import { AuthorZone, ImageZone, InfoZone } from '@components/revised/Home/PostCard';
 
 interface IProps {
   mypings: IPost;
+  isMine: boolean;
 }
 
 export const MyPingsImage = styled.div`
@@ -36,9 +39,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
       <ImageZone>
         <MyPingsImage>
           {mypings.title.slice(0, 1).toUpperCase()}
-          <ShowTotals>
-            <span className="current">+ {110}</span>
-          </ShowTotals>
+          <TotalCount current={'+ 100'} />
         </MyPingsImage>
       </ImageZone>
       <InfoZone>

@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import { IMyPings } from '../../typings/db';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 import SelectMyPingsCard from '@components/revised/Profile/SelectMyPingsCard';
+import readable from '@utils/readable';
 
 export interface ICheckedPost {
   id: number;
@@ -61,13 +62,15 @@ const ProfileMyPings = () => {
     { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
   ];
 
+  if (!mypings) return <div>로딩중...</div>;
+
   return (
     <>
       <Base>
         <MainContentZone>
-          {mypings && mypings?.length > 0 ? (
+          {md && mypings && mypings?.length > 0 ? (
             <CardList>
-              {mypings?.slice(0, 10).map((ping, i) => (
+              {readable(md)(mypings)?.map((ping, i) => (
                 <MyPingsCard key={uuid()} mypings={ping} />
               ))}
             </CardList>

@@ -1,14 +1,16 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { IMyPings, IPost } from '@typings/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
-import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
+import { InfoZone } from '@components/revised/Home/PostCard';
+import { Base } from '../PostCard';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import TotalCount from '@components/revised/Home/TotalCount';
 import { MyPingsImage } from '@components/revised/Profile/MyPingsCard';
 import { DeleteAction, EditAction } from '../SelectPostCard';
+import PillBox from '@components/revised/PillBox';
 
 interface IProps {
   mypings: IMyPings;
@@ -38,7 +40,10 @@ const SelectMyPingsCard: FC<IProps> = ({ mypings, isChecked, handleCheck }) => {
           {pd && pd?.length > 0 && <TotalCount current={`+ ${pd?.length}`} />}
         </MyPingsImage>
         <InfoZone>
-          <h2>{mypings.title}</h2>
+          <h2>
+            {mypings.title}
+            <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
+          </h2>
         </InfoZone>
       </div>
       <ActionZone onClick={stopPropagation}>

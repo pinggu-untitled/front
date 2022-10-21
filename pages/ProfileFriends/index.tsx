@@ -37,38 +37,46 @@ const ProfileFriends = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const [follow, setFollow] = useState<TFollow>('following');
+  const [tap, setTap] = useState<TFollow>('following');
   const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${userId}/followings`, fetcher);
   const { data: followersData, mutate: mutateFollowers } = useSWR<IUser[]>(`/users/${userId}/followers`, fetcher);
+  const { data: myFollowingData, mutate: mutateMyFollowingData } = useSWR<IUser[]>(
+    `/users/${md?.id}/followings`,
+    fetcher,
+  );
 
-  const toggleFollow = (type: TFollow) => () => setFollow(type);
+  const toggleFollow = (type: TFollow) => () => setTap(type);
 
   return (
     <>
       <Base>
         <SortButtonZone>
-          <Button active={follow === 'following'} onClick={toggleFollow('following')}>
+          <Button active={tap === 'following'} onClick={toggleFollow('following')}>
             팔로잉
           </Button>
-          <Button active={follow === 'follower'} onClick={toggleFollow('follower')}>
+          <Button active={tap === 'follower'} onClick={toggleFollow('follower')}>
             팔로워
           </Button>
         </SortButtonZone>
         <MainContentZone style={{ top: '270px' }}>
-          {follow === 'following' && !followingsData?.length ? (
+          {tap === 'following' && !followingsData?.length ? (
             <EmptyMessage message={'아직 회원님이 팔로잉하는 유저가 없어요.'} />
-          ) : follow === 'follower' && !followersData?.length ? (
+          ) : tap === 'follower' && !followersData?.length ? (
             <EmptyMessage message={'아직 회원님을 팔로우하는 유저가 없어요.'} />
           ) : (
             <CardList>
-              {(follow === 'following' ? followingsData : followersData)?.map((user, i) => (
-                <FriendCard
-                  key={uuid()}
-                  profile={user}
-                  isFollowing={isIdExisting(followingsData, user)}
-                  handleFollow={mutateFollow(isIdExisting(followingsData, user) ? 'following' : 'follower')}
-                />
-              ))}
+              {md &&
+                myFollowingData &&
+                (tap === 'following' ? followingsData : followersData)
+                  ?.filter((user) => user.id !== md?.id)
+                  ?.map((user, i) => (
+                    <FriendCard
+                      key={uuid()}
+                      user={user}
+                      isFollowing={isIdExisting(myFollowingData, user)}
+                      handleFollow={mutateFollow(isIdExisting(myFollowingData, user) ? 'unFollow' : 'follow')}
+                    />
+                  ))}
             </CardList>
           )}
         </MainContentZone>

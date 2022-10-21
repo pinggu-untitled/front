@@ -24,6 +24,8 @@ import { HiOutlineLocationMarker, HiOutlineUsers } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import { useMap } from '@contexts/MapContext';
+import compose from '@utils/compose';
+import readable from '@utils/readable';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -87,6 +89,7 @@ export const TextZone = styled.div<{ theme: any }>`
     font-size: 16px;
     margin: 20px 0;
     max-height: 400px;
+    overflow: scroll;
   }
 
   & .meta {
@@ -138,6 +141,7 @@ const PostDetail = () => {
 
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
+  const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
   return (
     <Base>
       <DetailTopNavigation prev={'/'} toggleOptions={handleModal('showSettingsModal')} />
@@ -152,7 +156,7 @@ const PostDetail = () => {
         onCloseModal={handleModal('showImagesZoomModal')}
         images={pd?.Images}
       />
-      <MainContentZone>
+      <MainContentZone style={{ overflow: 'scroll' }}>
         {pd?.Images && pd?.Images.length > 0 && (
           <ImagesContainer
             onClick={handleModal('showImagesZoomModal')}
@@ -215,13 +219,16 @@ const PostDetail = () => {
           <p className={'content'}>{pd?.content}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        {/*<PreviewSection title={`${pd?.User.nickname}의 마이핑스`} url={`/${pd?.User.id}/mypings`}>*/}
-        {/*  {displayEven([1, 2, 3]).map((data, i) => (*/}
-        {/*    <PreviewCard key={i} post={data} />*/}
-        {/*  ))}*/}
-        {/*</PreviewSection>*/}
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
-          {userPd && displayEven(userPd).map((post, i) => <PreviewCard key={i} post={post} />)}
+          {md &&
+            userPd &&
+            compose(
+              readable(md),
+              exceptCurrentPost,
+              displayEven,
+            )(userPd)
+              .slice(0, 6)
+              ?.map((post, i) => <PreviewCard key={i} post={post} />)}
         </PreviewSection>
       </MainContentZone>
     </Base>

@@ -8,14 +8,13 @@ import fetcher from '@utils/fetcher';
 import FollowActionButton from '../FollowActionButton';
 
 interface IProps {
-  profile: IUser;
+  user: IUser;
   isFollowing: boolean;
   handleFollow: (userId: number, mutateFn: any) => (e: any) => void;
 }
 
 export const Base = styled.li`
   position: relative;
-  //border-bottom: 1px solid #dfdfdf;
   padding: 10px 0;
   display: flex;
   align-items: center;
@@ -33,26 +32,26 @@ export const Base = styled.li`
   }
 `;
 
-const FriendCard: FC<IProps> = ({ profile, isFollowing, handleFollow }) => {
+const FriendCard: FC<IProps> = ({ user, isFollowing, handleFollow }) => {
   const navigate = useNavigate();
   const handleNavigate = (path: string) => () => navigate(path);
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
 
   return (
-    <Base onClick={handleNavigate(`/${profile.id}`)}>
+    <Base onClick={handleNavigate(`/${user.id}`)}>
       <div className={'left'}>
-        <ProfileImage profile={profile} style={{ width: '50px', height: '50px' }} />
-        <span className={'nickname'}>{profile.nickname}</span>
+        <ProfileImage profile={user} style={{ width: '50px', height: '50px' }} />
+        <span className={'nickname'}>{user.nickname}</span>
       </div>
 
-      {Number(userId) === md?.id && (
-        <FollowActionButton
-          isFollowing={isFollowing}
-          onClick={handleFollow(profile.id, mutateMd)}
-          style={{ right: '10px' }}
-        />
-      )}
+      {/*{Number(userId) === md?.id && (*/}
+      <FollowActionButton
+        isFollowing={isFollowing}
+        onClick={handleFollow(user.id, mutateMd)}
+        style={{ right: '10px' }}
+      />
+      {/*)}*/}
     </Base>
   );
 };

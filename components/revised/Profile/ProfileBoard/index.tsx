@@ -47,22 +47,29 @@ export const InfoZone = styled.div`
 const ProfileBoard: FC<IProps> = ({ profile }) => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${md?.id}/followings`, fetcher);
+  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
+    `/users/${md?.id}/followings`,
+    fetcher,
+  );
 
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) =>
-    mutateFollow(isIdExisting(followingsData, profile) ? 'following' : 'follower')(userId, mutateFn)(e);
+  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
+    if (myFollowingsData) {
+      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
+    }
+  };
 
-  console.log(profile);
+  if (myFollowingsData === undefined) <div>로딩중...</div>;
+
   return (
     <Base>
       <ProfileImage profile={profile} style={{ width: '120px', height: '120px' }} />
       <InfoZone>
         <div className="nickname">
           {profile.nickname}
-          {Number(userId) !== md?.id && (
+          {myFollowingsData && Number(userId) !== md?.id && (
             <FollowActionButton
-              isFollowing={isIdExisting(followingsData, profile)}
-              onClick={handleFollow(profile.id, mutateFollowings)}
+              isFollowing={isIdExisting(myFollowingsData, profile)}
+              onClick={handleFollow(profile.id, mutateMyFollowings)}
               style={{ position: 'relative' }}
             />
           )}
