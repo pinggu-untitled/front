@@ -75,7 +75,7 @@ const ProfileFriends = () => {
                       key={uuid()}
                       user={user}
                       isFollowing={isIdExisting(myFollowingData, user)}
-                      handleFollow={mutateFollow(isIdExisting(myFollowingData, user) ? 'unFollow' : 'follow')}
+                      // handleFollow={mutateFollow(isIdExisting(myFollowingData, user) ? 'unFollow' : 'follow')}
                       // rerender={rerender}
                     />
                   ))}

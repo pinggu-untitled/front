@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { IMe, IPost, IUser } from '@typings/db';
 import styled from '@emotion/styled';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
@@ -45,12 +45,12 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
     `/users/${md?.id}/followings`,
     fetcher,
   );
-
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
-    if (myFollowingsData) {
-      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
-    }
-  };
+  const [following, setFollowing] = useState<boolean | null>(null);
+  useEffect(() => {
+    setFollowing((prev) => {
+      return myFollowingsData && isIdExisting(myFollowingsData, profile) ? true : false;
+    });
+  }, [profile, setFollowing]);
 
   return (
     <Base>
@@ -65,10 +65,14 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       {md?.id === pd?.User.id ? (
         <PillBox text={'내 게시물'} />
       ) : (
-        myFollowingsData && (
+        myFollowingsData &&
+        pd && (
           <FollowActionButton
             isFollowing={isIdExisting(myFollowingsData, profile)}
-            onClick={handleFollow(profile.id, mutateMyFollowings)}
+            onClick={(e) => {
+              e.stopPropagation();
+              mutateFollow(setFollowing, pd?.User.id);
+            }}
             style={{ position: 'relative' }}
           />
         )

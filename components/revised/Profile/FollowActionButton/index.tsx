@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { CSSProperties, FC, useState } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
 
@@ -19,6 +19,11 @@ export const Base = styled.button`
 `;
 
 const FollowActionButton: FC<IProps> = ({ isFollowing, onClick, style }) => {
+  const [following, setFollowing] = useState<boolean>(isFollowing);
+  // const handleClick = (e: any) => {
+  //   onClick(e);
+  //   // setFollowing((prev) => !prev);
+  // };
   return (
     <Base style={style} onClick={onClick}>
       {isFollowing ? '팔로우 취소' : '팔로우'}

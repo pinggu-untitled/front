@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { IMe, IUser } from '@typings/db';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
@@ -51,12 +51,12 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
     `/users/${md?.id}/followings`,
     fetcher,
   );
-
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
-    if (myFollowingsData) {
-      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
-    }
-  };
+  const [following, setFollowing] = useState<boolean | null>(null);
+  useEffect(() => {
+    setFollowing((prev) => {
+      return myFollowingsData && isIdExisting(myFollowingsData, profile) ? true : false;
+    });
+  }, [profile, setFollowing]);
 
   if (myFollowingsData === undefined) <div>로딩중...</div>;
 
@@ -69,7 +69,10 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
           {myFollowingsData && Number(userId) !== md?.id && (
             <FollowActionButton
               isFollowing={isIdExisting(myFollowingsData, profile)}
-              onClick={handleFollow(profile.id, mutateMyFollowings)}
+              onClick={(e) => {
+                e.stopPropagation();
+                mutateFollow(setFollowing, Number(userId));
+              }}
               style={{ position: 'relative' }}
             />
           )}
