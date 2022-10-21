@@ -15,6 +15,7 @@ render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
+    ,
   </React.StrictMode>,
   document.querySelector('#app'),
 );

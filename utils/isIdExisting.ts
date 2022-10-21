@@ -4,7 +4,7 @@ interface IElement {
 }
 
 const isIdExisting = (arr: IElement[] | undefined, element: IElement): boolean => {
-  return Boolean(arr?.find((el) => el.id === element.id));
+  return Boolean(arr?.find((ele) => element.id === ele.id));
 };
 
 export default isIdExisting;
