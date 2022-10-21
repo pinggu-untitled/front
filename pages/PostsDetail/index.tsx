@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useTheme } from '@emotion/react';
 import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
-import PreviewCard from '@components/previews/PreviewCard';
+import PreviewCard from '@components/revised/PostsDetail/PreviewSection/PreviewCard';
 import PreviewSection from '../../components/revised/PostsDetail/PreviewSection/index';
 import { Base, MainContentZone } from '@pages/Home';
 import SettingsModal from '@components/revised/SettingsModal';

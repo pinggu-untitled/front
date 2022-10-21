@@ -32,7 +32,6 @@ export const Base = styled.div`
 const ProfilePreviewBubble: FC<IProps> = ({ profile }) => {
   const navigate = useNavigate();
 
-  console.log(profile);
   return (
     <Base>
       <h4>{profile.nickname}</h4>
