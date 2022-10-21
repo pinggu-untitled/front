@@ -1,5 +1,6 @@
 import React, { CSSProperties, FC } from 'react';
 import styled from '@emotion/styled';
+import axios from 'axios';
 
 interface IProps {
   isFollowing: boolean;

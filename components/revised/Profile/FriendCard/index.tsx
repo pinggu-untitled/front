@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { Dispatch, FC, memo } from 'react';
 import styled from '@emotion/styled';
 import { IMe, IUser } from '@typings/db';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
@@ -11,6 +11,7 @@ interface IProps {
   user: IUser;
   isFollowing: boolean;
   handleFollow: (userId: number, mutateFn: any) => (e: any) => void;
+  rerender?: Dispatch<React.SetStateAction<any>>;
 }
 
 export const Base = styled.li`
@@ -32,7 +33,7 @@ export const Base = styled.li`
   }
 `;
 
-const FriendCard: FC<IProps> = ({ user, isFollowing, handleFollow }) => {
+const FriendCard: FC<IProps> = ({ user, isFollowing, handleFollow, rerender }) => {
   const navigate = useNavigate();
   const handleNavigate = (path: string) => () => navigate(path);
   const { userId } = useParams<{ userId: string }>();
@@ -45,13 +46,16 @@ const FriendCard: FC<IProps> = ({ user, isFollowing, handleFollow }) => {
         <span className={'nickname'}>{user.nickname}</span>
       </div>
 
-      {/*{Number(userId) === md?.id && (*/}
-      <FollowActionButton
-        isFollowing={isFollowing}
-        onClick={handleFollow(user.id, mutateMd)}
-        style={{ right: '10px' }}
-      />
-      {/*)}*/}
+      {user.id !== md?.id && (
+        <FollowActionButton
+          isFollowing={isFollowing}
+          onClick={(e) => {
+            handleFollow(user.id, mutateMd)(e);
+            // rerender(undefined);
+          }}
+          style={{ right: '10px' }}
+        />
+      )}
     </Base>
   );
 };

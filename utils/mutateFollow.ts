@@ -12,7 +12,7 @@ const followFn = (userId: number, mutateFn: any) => {
     .post(`/follow/${userId}`)
     .then((res) => {
       console.log(res.data);
-      mutateFn(false, false);
+      mutateFn(false);
     })
     .catch((err) => console.error(err));
 };
@@ -22,7 +22,7 @@ const unFollowFn = (userId: number, mutateFn: any) => {
     .delete(`/follow/${userId}`)
     .then((res) => {
       console.log(res.data);
-      mutateFn(false, false);
+      mutateFn(false);
     })
     .catch((err) => console.error(err));
 };

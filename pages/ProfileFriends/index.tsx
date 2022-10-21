@@ -34,6 +34,7 @@ export const Button = styled.div<{ active: boolean }>`
 export type TFollow = 'follower' | 'following';
 
 const ProfileFriends = () => {
+  const [, rerender] = useState();
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
@@ -68,13 +69,14 @@ const ProfileFriends = () => {
               {md &&
                 myFollowingData &&
                 (tap === 'following' ? followingsData : followersData)
-                  ?.filter((user) => user.id !== md?.id)
+                  // ?.filter((user) => user.id !== md?.id)
                   ?.map((user, i) => (
                     <FriendCard
                       key={uuid()}
                       user={user}
                       isFollowing={isIdExisting(myFollowingData, user)}
                       handleFollow={mutateFollow(isIdExisting(myFollowingData, user) ? 'unFollow' : 'follow')}
+                      // rerender={rerender}
                     />
                   ))}
             </CardList>
