@@ -38,12 +38,16 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       setMyMarker((prev) => {
         const newMyMarker = new kakao.maps.Marker({ position });
         newMyMarker.setMap(newMap);
+        newMap.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
+          newMyMarker.setPosition(latLng);
+        });
         return newMyMarker;
       });
       setPostMarker((prev) => {
         const newPostMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0) });
         return newPostMarker;
       });
+
       return newMap;
     });
   };
