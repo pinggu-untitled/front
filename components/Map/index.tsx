@@ -1,8 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
-import { createMap } from '../../utils/pMap';
+import { useMap } from '@contexts/MapContext';
 const { kakao } = window as any;
 
 const Map = () => {
+  const { initializeMap } = useMap();
   /* geolocation을 이용해 현재 위치를 얻음 */
   useEffect(() => {
     navigator?.geolocation.getCurrentPosition(onSuccess, onError);
@@ -11,13 +12,9 @@ const Map = () => {
   /* 현재 위치를 지도의 중심 좌표로 설정 */
   const onSuccess = useCallback(({ coords: { latitude, longitude } }) => {
     const container = document.getElementById('myMap');
-    const locPosition = new kakao.maps.LatLng(latitude, longitude);
-    const options = {
-      center: locPosition,
-      level: 3,
-      disableDoubleClickZoom: true, // 더블클릭으로 지도 확대 막기
-    };
-    createMap(container, options);
+    if (initializeMap && container) {
+      initializeMap(container, latitude, longitude);
+    }
   }, []);
 
   /* 현재 위치를 가져오지 못한 경우 */

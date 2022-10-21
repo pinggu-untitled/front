@@ -1,43 +1,47 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { createContext, useContext, useState } from 'react';
+import { updateNonNullChain } from 'typescript';
 const { kakao } = window;
 
 interface IMapContext {
-  createMap: ((container: HTMLElement, latitude: number, longitude: number) => void) | null;
-  createMyMarker: ((latitude: number, longitude: number) => void) | null;
+  map: kakao.maps.Map | null;
+  myMarker: kakao.maps.Marker | null;
+  initializeMap: ((container: HTMLElement, latitude: number, longitude: number) => void) | null;
 }
 
 const MapContext = createContext<IMapContext>({
-  createMap: null,
-  createMyMarker: null,
+  map: null,
+  myMarker: null,
+  initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
 });
-let map: kakao.maps.Map;
-let myMarker;
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
-  // const [map, setMap] = useState();
-  // const [myMarker, setMyMarker] = useState();
+  const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState();
   const [postMarker, setPostMarker] = useState();
   const [subMarker, setSubMarker] = useState();
 
-  const createMap = (container: HTMLElement, latitude: number, longitude: number) => {
+  const initializeMap = (container: HTMLElement, latitude: number, longitude: number) => {
     const position = new kakao.maps.LatLng(latitude, longitude);
     const options = {
       center: position,
       level: 3,
       disableDoubleClickZoom: true,
     };
-    map = new kakao.maps.Map(container, options);
-    map.setZoomable(false);
-  };
-  const createMyMarker = (latitude: number, longitude: number) => {
-    const position = new kakao.maps.LatLng(latitude, longitude);
-    myMarker = new kakao.maps.Marker({ position });
-    myMarker.setMap(map);
+    setMap((prev) => {
+      const newMap = new kakao.maps.Map(container, options);
+      newMap.setZoomable(false);
+      setMyMarker((prev) => {
+        const newMyMarker = new kakao.maps.Marker({ position });
+        newMyMarker.setMap(newMap);
+        return newMyMarker;
+      });
+      return newMap;
+    });
   };
 
-  return <MapContext.Provider value={{ createMap, createMyMarker }}>{children}</MapContext.Provider>;
+  return <MapContext.Provider value={{ map, myMarker, initializeMap }}>{children}</MapContext.Provider>;
 };
 
 export const useMap = () => useContext(MapContext);
