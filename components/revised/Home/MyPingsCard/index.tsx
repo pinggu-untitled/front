@@ -11,6 +11,7 @@ import { AuthorZone, ImageZone, InfoZone } from '@components/revised/Home/PostCa
 
 interface IProps {
   mypings: IPost;
+  isMine: boolean;
 }
 
 export const MyPingsImage = styled.div`
@@ -28,7 +29,7 @@ export const MyPingsImage = styled.div`
   color: gray;
 `;
 
-const MyPingsCard: FC<IProps> = ({ mypings }) => {
+const MyPingsCard: FC<IProps> = ({ mypingse }) => {
   const navigate = useNavigate();
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();

@@ -18,7 +18,7 @@ interface IProps {
 
 export const Base = styled.div`
   width: 100%;
-  position: relative;
+  position: sticky;
   padding: 6px 20px;
   display: flex;
   align-items: center;
@@ -41,10 +41,16 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
   const { postId } = useParams<{ postId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
   const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
-  const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${md?.id}/followings`, fetcher);
+  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
+    `/users/${md?.id}/followings`,
+    fetcher,
+  );
 
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) =>
-    mutateFollow(isIdExisting(followingsData, profile) ? 'following' : 'follower')(userId, mutateFn)(e);
+  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
+    if (myFollowingsData) {
+      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
+    }
+  };
 
   return (
     <Base>
@@ -59,11 +65,13 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       {md?.id === pd?.User.id ? (
         <PillBox text={'내 게시물'} />
       ) : (
-        <FollowActionButton
-          isFollowing={isIdExisting(followingsData, profile)}
-          onClick={handleFollow(profile.id, mutateFollowings)}
-          style={{ position: 'relative' }}
-        />
+        myFollowingsData && (
+          <FollowActionButton
+            isFollowing={isIdExisting(myFollowingsData, profile)}
+            onClick={handleFollow(profile.id, mutateMyFollowings)}
+            style={{ position: 'relative' }}
+          />
+        )
       )}
     </Base>
   );

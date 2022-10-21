@@ -8,6 +8,7 @@ import PostCard from '@components/revised/Home/PostCard';
 import { v4 as uuid } from 'uuid';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
 import { useNavigate } from 'react-router-dom';
+import readable from '@utils/readable';
 
 export const Base = styled.div`
   width: 100%;
@@ -43,7 +44,7 @@ const Home = () => {
       <MainContentZone>
         {md && pd && (
           <CardList>
-            {publicOnly(pd)?.map((post) => (
+            {readable(md)(pd)?.map((post) => (
               <PostCard key={uuid()} post={post} isMine={isMyPost(post)} />
             ))}
           </CardList>

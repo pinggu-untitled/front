@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
 import TotalCount from '@components/revised/Home/TotalCount';
 import PillBox from '@components/revised/PillBox';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 interface IProps {
   post: IPost;
@@ -89,7 +91,7 @@ const PostCard: FC<IProps> = ({ post, isMine }) => {
       <InfoZone>
         <h2>
           {post.title}
-          {isMine && (
+          {post.is_private === 1 && isMine && (
             <PillBox text={'나의 비밀글'} style={{ fontSize: '10px', padding: '2px 6px 0', marginLeft: '5px' }} />
           )}
         </h2>

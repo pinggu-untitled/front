@@ -89,6 +89,7 @@ export const TextZone = styled.div<{ theme: any }>`
     font-size: 16px;
     margin: 20px 0;
     max-height: 400px;
+    overflow: scroll;
   }
 
   & .meta {
@@ -155,7 +156,7 @@ const PostDetail = () => {
         onCloseModal={handleModal('showImagesZoomModal')}
         images={pd?.Images}
       />
-      <MainContentZone>
+      <MainContentZone style={{ overflow: 'scroll' }}>
         {pd?.Images && pd?.Images.length > 0 && (
           <ImagesContainer
             onClick={handleModal('showImagesZoomModal')}
@@ -218,11 +219,6 @@ const PostDetail = () => {
           <p className={'content'}>{pd?.content}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        {/*<PreviewSection title={`${pd?.User.nickname}의 마이핑스`} url={`/${pd?.User.id}/mypings`}>*/}
-        {/*  {displayEven([1, 2, 3]).map((data, i) => (*/}
-        {/*    <PreviewCard key={i} post={data} />*/}
-        {/*  ))}*/}
-        {/*</PreviewSection>*/}
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
           {md &&
             userPd &&
