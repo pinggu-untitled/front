@@ -15,7 +15,6 @@ interface IProps {
 
 export const Base = styled.li`
   position: relative;
-  //border-bottom: 1px solid #dfdfdf;
   padding: 10px 0;
   display: flex;
   align-items: center;

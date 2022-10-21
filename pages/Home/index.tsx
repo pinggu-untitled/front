@@ -31,14 +31,20 @@ const Home = () => {
 
   if (md === undefined) navigate('/intro');
 
+  const isMyPost = (post: IPost) => {
+    return post.User.id === md?.id;
+  };
+  const publicOnly = (posts: IPost[]): IPost[] =>
+    posts.filter((post) => [0, false].includes(post.is_private) || isMyPost(post));
+
   return (
     <Base>
       <TopNavigation title={'홈'} />
       <MainContentZone>
-        {pd && (
+        {md && pd && (
           <CardList>
-            {pd?.map((post) => (
-              <PostCard key={uuid()} post={post} />
+            {publicOnly(pd)?.map((post) => (
+              <PostCard key={uuid()} post={post} isMine={isMyPost(post)} />
             ))}
           </CardList>
         )}

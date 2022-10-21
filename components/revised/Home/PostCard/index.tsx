@@ -1,14 +1,16 @@
 import React, { FC, memo, useCallback } from 'react';
 import styled from '@emotion/styled';
-import { IPost } from '@typings/db';
+import { IMe, IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
 import { useNavigate } from 'react-router-dom';
 import ProfilePreviewBubble from '../ProfilePreviewBubble';
 import TotalCount from '@components/revised/Home/TotalCount';
+import PillBox from '@components/revised/PillBox';
 
 interface IProps {
   post: IPost;
+  isMine: boolean;
 }
 export const Base = styled.li`
   border-bottom: 1px solid #dfdfdf;
@@ -27,30 +29,19 @@ export const ImageZone = styled.div`
   align-items: center;
 `;
 
-export const ShowTotals = styled.div`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 13px;
-  color: lightgray;
-  padding: 3px 8px 1px;
-  border-radius: 20px;
-  background-color: rgba(0, 0, 0, 0.7);
-
-  > .current {
-    color: #fff;
-  }
-`;
-
 export const InfoZone = styled.div`
   margin-left: 10px;
   padding: 5px 0;
 
   > h2 {
     font-size: 16px;
+    line-height: 18px;
+    display: flex;
+    align-items: flex-end;
   }
 
   > p {
+    margin-top: 5px;
     font-size: 13px;
     color: gray;
   }
@@ -78,8 +69,9 @@ export const AuthorZone = styled.div`
     }
   }
 `;
-const PostCard: FC<IProps> = ({ post }) => {
+const PostCard: FC<IProps> = ({ post, isMine }) => {
   const navigate = useNavigate();
+
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();
   }, []);
@@ -95,8 +87,12 @@ const PostCard: FC<IProps> = ({ post }) => {
         />
       </ImageZone>
       <InfoZone>
-        <h2>{post.title}</h2>
-
+        <h2>
+          {post.title}
+          {isMine && (
+            <PillBox text={'나의 비밀글'} style={{ fontSize: '10px', padding: '2px 6px 0', marginLeft: '5px' }} />
+          )}
+        </h2>
         <p>문래동 · {post.created_at}</p>
       </InfoZone>
       <AuthorZone>

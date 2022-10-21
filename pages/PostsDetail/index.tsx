@@ -24,6 +24,8 @@ import { HiOutlineLocationMarker, HiOutlineUsers } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import { useMap } from '@contexts/MapContext';
+import compose from '@utils/compose';
+import readable from '@utils/readable';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -138,6 +140,7 @@ const PostDetail = () => {
 
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
+  const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
   return (
     <Base>
       <DetailTopNavigation prev={'/'} toggleOptions={handleModal('showSettingsModal')} />
@@ -221,7 +224,15 @@ const PostDetail = () => {
         {/*  ))}*/}
         {/*</PreviewSection>*/}
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
-          {userPd && displayEven(userPd).map((post, i) => <PreviewCard key={i} post={post} />)}
+          {md &&
+            userPd &&
+            compose(
+              readable(md),
+              exceptCurrentPost,
+              displayEven,
+            )(userPd)
+              .slice(0, 6)
+              ?.map((post, i) => <PreviewCard key={i} post={post} />)}
         </PreviewSection>
       </MainContentZone>
     </Base>

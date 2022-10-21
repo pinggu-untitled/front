@@ -16,6 +16,7 @@ import useModals from '@utils/useModals';
 import isIdExisting from '@utils/isIdExisting';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 import PostCard from '@components/revised/Profile/PostCard';
+import readable from '@utils/readable';
 
 export const Base = styled.div`
   width: 100%;
@@ -45,7 +46,6 @@ const ProfilePosts = () => {
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEditModal');
   const [checkedPosts, setCheckedPost] = useState<ICheckedPost[]>([]);
 
-  console.log(pd);
   const handleCheck = (post: ICheckedPost) => (e: any) => {
     setCheckedPost((prev) => {
       const existing = isIdExisting(prev, post);
@@ -71,9 +71,9 @@ const ProfilePosts = () => {
     <>
       <Base>
         <MainContentZone>
-          {pd && pd?.length > 0 ? (
+          {md && pd && pd?.length > 0 ? (
             <CardList>
-              {pd?.map((post, i) => (
+              {readable(md)(pd)?.map((post, i) => (
                 <PostCard key={uuid()} post={post} />
               ))}
             </CardList>

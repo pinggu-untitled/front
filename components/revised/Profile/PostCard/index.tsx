@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
-import { IMe, IPost } from '@typings/db';
+import { IMe, IMyPings, IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { useNavigate } from 'react-router-dom';
 import TotalCount from '@components/revised/Home/TotalCount';
@@ -8,6 +8,8 @@ import ModifyActionButtons from '@components/revised/Profile/ModifyActionButtons
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import handleNavigate from '@utils/handleNavigate';
+import PillBox from '@components/revised/PillBox';
+import { ImageZone, InfoZone } from '@components/revised/Home/PostCard';
 interface IProps {
   post: IPost;
 }
@@ -16,10 +18,8 @@ export const Base = styled.li`
   position: relative;
   display: flex;
   flex-direction: column;
-  //justify-content: space-between;
   align-items: flex-start;
   cursor: pointer;
-  //border: 1px solid #dfdfdf;
   border-radius: 4px;
   padding: 10px 0;
 
@@ -30,66 +30,6 @@ export const Base = styled.li`
 
   > form {
     width: 100%;
-  }
-`;
-
-export const ImageZone = styled.div`
-  position: relative;
-  width: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const ShowTotals = styled.div`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 13px;
-  color: lightgray;
-  padding: 3px 6px 1px;
-  border-radius: 12px;
-  background-color: rgba(0, 0, 0, 0.7);
-
-  > .current {
-    color: #fff;
-  }
-`;
-
-export const InfoZone = styled.div`
-  margin-left: 10px;
-  padding: 5px 0;
-
-  > h2 {
-    font-size: 16px;
-  }
-
-  > p {
-    font-size: 13px;
-    color: gray;
-  }
-`;
-
-export const AuthorZone = styled.div`
-  position: absolute;
-  bottom: 10px;
-  right: 0;
-  display: inline-block;
-
-  > .hidden {
-    position: absolute;
-    right: 36px;
-    top: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.2s;
-  }
-
-  &:hover {
-    .hidden {
-      opacity: 1;
-      visibility: visible;
-    }
   }
 `;
 
@@ -123,8 +63,13 @@ const PostCard: FC<IProps> = ({ post }) => {
           <PostImage />
         </ImageZone>
         <InfoZone>
-          <h2>{post?.title}</h2>
-          <p>문래동 · {post?.created_at}</p>
+          <h2>
+            {post.title}
+            {post.is_private && (
+              <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
+            )}
+          </h2>
+          <p>문래동 · {post.created_at}</p>
         </InfoZone>
       </div>
       {md?.id === post?.User.id && (

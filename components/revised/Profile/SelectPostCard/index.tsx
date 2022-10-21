@@ -4,8 +4,10 @@ import { IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { useNavigate } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
-import { Base, ImageZone, ShowTotals, InfoZone } from '../PostCard';
+import { ImageZone, InfoZone } from '@components/revised/Home/PostCard';
+import { Base } from '../PostCard';
 import TotalCount from '@components/revised/Home/TotalCount';
+import PillBox from '@components/revised/PillBox';
 
 interface IProps {
   post: IPost;
@@ -85,9 +87,7 @@ const SelectPostCard: FC<IProps> = ({ post, isChecked, handleCheck }) => {
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <div className={'info'}>
         <ImageZone>
-          <ShowTotals>
-            <span className="current">{1}</span>/3
-          </ShowTotals>
+          <TotalCount current={1} total={3} />
           {post.Images?.length > 0 && <TotalCount current={1} total={post.Images?.length} />}
           <PostImage
             src={post.Images?.length > 0 ? post.Images[0].src : '/public/placeholder.png'}
@@ -95,7 +95,10 @@ const SelectPostCard: FC<IProps> = ({ post, isChecked, handleCheck }) => {
           />
         </ImageZone>
         <InfoZone>
-          <h2>{post.title}</h2>
+          <h2>
+            {post.title}
+            <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
+          </h2>
           <p>문래동 · {post.created_at}</p>
         </InfoZone>
       </div>

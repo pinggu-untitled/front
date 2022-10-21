@@ -1,37 +1,37 @@
-export interface IMe {
+interface IMe {
   id: number;
   nickname: string;
   profile_image_url: string;
 }
 
-export interface IUser {
+interface IUser {
   id: number;
   nickname: string;
   profile_image_url: string;
   bio?: string;
 }
 
-export interface IHistory {
+interface IHistory {
   id: number;
   content: string;
 }
 
-export interface IHashtag {
+interface IHashtag {
   id: number;
   content: string;
 }
 
-export interface IMention {
+interface IMention {
   id: number;
 }
 
-export interface IResult {
+interface IResult {
   users: [];
   posts: [];
   myPings: [];
 }
 
-export interface IPost {
+interface IPost {
   id: number;
   title: string;
   content: string;
@@ -45,15 +45,17 @@ export interface IPost {
   Images: IImage[];
 }
 
-export interface IImage {
+interface IImage {
   id: number;
   src: string;
 }
 
-export interface IMyPings {
+interface IMyPings {
   id: number;
   title: string;
   category: number;
-  is_private: boolean;
+  is_private: boolean | number;
   User: IUser;
 }
+
+export { IMe, IUser, IImage, IPost, IMyPings, IHashtag, IResult, IMention, IHistory };

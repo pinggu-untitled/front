@@ -21,6 +21,8 @@ export const ImageWrapper = styled.div`
   height: 120px;
   border: 1px solid #dfdfdf;
   border-radius: 4px;
+  overflow: hidden;
+  background-color: #191919;
   > img {
     width: 100%;
     height: 100%;
