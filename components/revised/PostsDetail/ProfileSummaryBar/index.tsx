@@ -45,6 +45,7 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
     `/users/${md?.id}/followings`,
     fetcher,
   );
+<<<<<<< HEAD
 
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
 
@@ -53,6 +54,14 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
   }, []);
+=======
+  const [following, setFollowing] = useState<boolean | null>(null);
+  useEffect(() => {
+    setFollowing((prev) => {
+      return myFollowingsData && isIdExisting(myFollowingsData, profile) ? true : false;
+    });
+  }, [profile, setFollowing]);
+>>>>>>> b280f8d1721b202e18721de1b6b6add9f06ca73b
 
   return (
     <Base>
@@ -67,11 +76,25 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       {md?.id === pd?.User.id ? (
         <PillBox text={'내 게시물'} />
       ) : (
+<<<<<<< HEAD
         <FollowActionButton
           isFollowing={isFollowing}
           onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
           style={{ right: '10px' }}
         />
+=======
+        myFollowingsData &&
+        pd && (
+          <FollowActionButton
+            isFollowing={isIdExisting(myFollowingsData, profile)}
+            onClick={(e) => {
+              e.stopPropagation();
+              mutateFollow(setFollowing, pd?.User.id);
+            }}
+            style={{ position: 'relative' }}
+          />
+        )
+>>>>>>> b280f8d1721b202e18721de1b6b6add9f06ca73b
       )}
     </Base>
   );
