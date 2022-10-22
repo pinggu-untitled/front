@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { IMe, IPost, IUser } from '@typings/db';
 import styled from '@emotion/styled';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
@@ -9,8 +9,8 @@ import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import mutateFollow from '@utils/mutateFollow';
 import isIdExisting from '@utils/isIdExisting';
-import { InfoZone } from '@components/revised/Profile/ProfileBoard';
 import PillBox from '@components/revised/PillBox';
+import { FollowState } from '@components/revised/Profile/FriendCard';
 
 interface IProps {
   profile: IUser;
@@ -46,11 +46,13 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
     fetcher,
   );
 
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
+  const [isFollowing, setIsFollowing] = useState<FollowState>(null);
+
+  useEffect(() => {
     if (myFollowingsData) {
-      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
+      setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
-  };
+  }, []);
 
   return (
     <Base>
@@ -65,40 +67,14 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       {md?.id === pd?.User.id ? (
         <PillBox text={'내 게시물'} />
       ) : (
-        myFollowingsData && (
-          <FollowActionButton
-            isFollowing={isIdExisting(myFollowingsData, profile)}
-            onClick={handleFollow(profile.id, mutateMyFollowings)}
-            style={{ position: 'relative' }}
-          />
-        )
+        <FollowActionButton
+          isFollowing={isFollowing}
+          onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
+          style={{ right: '10px' }}
+        />
       )}
     </Base>
   );
 };
 
 export default ProfileSummaryBar;
-
-// console.log(profile);
-// return (
-//   <Base>
-//     <ProfileImage profile={profile} style={{ width: '120px', height: '120px' }} />
-//     <InfoZone>
-//       <div className="nickname">
-//         {profile.nickname}
-//         {Number(userId) !== md?.id && (
-//           <FollowActionButton
-//             isFollowing={isIdExisting(followingsData, profile)}
-//             onClick={handleFollow(profile.id, mutateFollowings)}
-//             style={{ position: 'relative' }}
-//           />
-//         )}
-//       </div>
-//       {profile.bio && (
-//         <p className="bio">
-//           {profile.bio.slice(0, 100)} {profile.bio.length >= 100 ? '...' : null}
-//         </p>
-//       )}
-//     </InfoZone>
-//   </Base>
-// );

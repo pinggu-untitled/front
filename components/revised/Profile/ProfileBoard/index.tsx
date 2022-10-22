@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { IMe, IUser } from '@typings/db';
 import ProfileImage from '@components/revised/common/images/ProfileAvatar';
@@ -8,6 +8,7 @@ import fetcher from '@utils/fetcher';
 import mutateFollow from '@utils/mutateFollow';
 import { useParams } from 'react-router-dom';
 import isIdExisting from '@utils/isIdExisting';
+import { FollowState } from '@components/revised/Profile/FriendCard';
 
 interface IProps {
   profile: IUser;
@@ -51,14 +52,13 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
     `/users/${md?.id}/followings`,
     fetcher,
   );
+  const [isFollowing, setIsFollowing] = useState<FollowState>(null);
 
-  const handleFollow = (userId: number, mutateFn: any) => (e: any) => {
+  useEffect(() => {
     if (myFollowingsData) {
-      mutateFollow(isIdExisting(myFollowingsData, profile) ? 'unFollow' : 'follow')(userId, mutateFn)(e);
+      setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
-  };
-
-  if (myFollowingsData === undefined) <div>로딩중...</div>;
+  }, []);
 
   return (
     <Base>
@@ -66,11 +66,11 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
       <InfoZone>
         <div className="nickname">
           {profile.nickname}
-          {myFollowingsData && Number(userId) !== md?.id && (
+          {Number(userId) !== md?.id && (
             <FollowActionButton
-              isFollowing={isIdExisting(myFollowingsData, profile)}
-              onClick={handleFollow(profile.id, mutateMyFollowings)}
-              style={{ position: 'relative' }}
+              isFollowing={isFollowing}
+              onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
+              style={{ right: '10px' }}
             />
           )}
         </div>

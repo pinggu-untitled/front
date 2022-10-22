@@ -1,11 +1,12 @@
 import React, { CSSProperties, FC } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
+import { FollowState } from '@components/revised/Profile/FriendCard';
 
 interface IProps {
-  isFollowing: boolean;
+  isFollowing: FollowState;
   style?: CSSProperties;
-  onClick: (e: any) => void;
+  onClick: any;
 }
 
 export const Base = styled.button`
@@ -16,11 +17,20 @@ export const Base = styled.button`
   background-color: transparent;
   cursor: pointer;
   //position: absolute;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const FollowActionButton: FC<IProps> = ({ isFollowing, onClick, style }) => {
+  const clickAction = (e: any) => {
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
-    <Base style={style} onClick={onClick}>
+    <Base style={style} onClick={clickAction}>
       {isFollowing ? '팔로우 취소' : '팔로우'}
     </Base>
   );

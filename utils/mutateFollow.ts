@@ -1,36 +1,28 @@
+import React from 'react';
 import axios from 'axios';
-import { TFollow } from '@pages/ProfileFriends';
-import useSWR from 'swr';
-import fetcher from '@utils/fetcher';
+import { Dispatch } from 'react';
+import { FollowState } from '@components/revised/Profile/FriendCard';
 
-const stopPropagation = (e: any) => {
-  e.stopPropagation();
-};
-
-const followFn = (userId: number, mutateFn: any) => {
-  axios
-    .post(`/follow/${userId}`)
-    .then((res) => {
-      console.log(res.data);
-      mutateFn(false);
-    })
-    .catch((err) => console.error(err));
-};
-
-const unFollowFn = (userId: number, mutateFn: any) => {
+const unFollowFn = (setIsFollowing: Dispatch<React.SetStateAction<FollowState>>, userId: number) => {
   axios
     .delete(`/follow/${userId}`)
     .then((res) => {
-      console.log(res.data);
-      mutateFn(false);
+      console.log('unfollow>>>', res.data);
+      setIsFollowing(false);
     })
-    .catch((err) => console.error(err));
+    .catch((error) => console.error(error));
+};
+const followFn = (setIsFollowing: Dispatch<React.SetStateAction<FollowState>>, userId: number) => {
+  axios.post(`/follow/${userId}`).then((res) => {
+    console.log('follow>>>', res.data);
+    setIsFollowing(true);
+  });
 };
 
-type TTarget = 'follow' | 'unFollow';
-const mutateFollow = (target: TTarget) => (userId: number, mutateFn: any) => (e: any) => {
-  stopPropagation(e);
-  target === 'unFollow' ? unFollowFn(userId, mutateFn) : followFn(userId, mutateFn);
-};
+const mutateFollow =
+  (isFollowing: FollowState, setIsFollowing: Dispatch<React.SetStateAction<FollowState>>, userId: number) =>
+  (e: any) => {
+    isFollowing ? unFollowFn(setIsFollowing, userId) : followFn(setIsFollowing, userId);
+  };
 
 export default mutateFollow;

@@ -68,17 +68,9 @@ const ProfileFriends = () => {
             <CardList>
               {md &&
                 myFollowingData &&
-                (tap === 'following' ? followingsData : followersData)
-                  // ?.filter((user) => user.id !== md?.id)
-                  ?.map((user, i) => (
-                    <FriendCard
-                      key={uuid()}
-                      user={user}
-                      isFollowing={isIdExisting(myFollowingData, user)}
-                      handleFollow={mutateFollow(isIdExisting(myFollowingData, user) ? 'unFollow' : 'follow')}
-                      // rerender={rerender}
-                    />
-                  ))}
+                (tap === 'following' ? followingsData : followersData)?.map((user, i) => (
+                  <FriendCard key={uuid()} profile={user} />
+                ))}
             </CardList>
           )}
         </MainContentZone>
