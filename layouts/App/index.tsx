@@ -43,9 +43,9 @@ const App = () => {
         <Route path={'/introduce'} element={<Introduce />} />
         <Route path={'/settings'} element={<Settings />} />
         <Route path={'/more'} element={<More />} />
+        <Route path={'/posts/:postId/edit'} element={<PostsEdit />} />
         <Route path={'/posts/:postId'} element={<PostsDetail />} />
         <Route path={'/posts/new'} element={<PostsNew />} />
-        <Route path={'/posts/:postId/edit'} element={<PostsEdit />} />
       </Routes>
     </AppLayout>
   );

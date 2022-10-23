@@ -10,6 +10,7 @@ import isIdExisting from '@utils/isIdExisting';
 import axios from 'axios';
 import mutateFollow from '@utils/mutateFollow';
 import followFetcher from '@utils/followFetcher';
+import handleNavigate from '@utils/handleNavigate';
 
 interface IProps {
   profile: IUser;
@@ -37,17 +38,8 @@ export type FollowState = boolean | null;
 
 const FriendCard: FC<IProps> = ({ profile }) => {
   const navigate = useNavigate();
-  const handleNavigate = (path: string) => () => navigate(path);
-  const { userId } = useParams<{ userId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
-
-  // const followFetcher = (url: string) => {
-  //   return axios.get(url).then((res) => {
-  //     setIsFollowing((prev) => isIdExisting(res.data, profile));
-  //     return res.data;
-  //   });
-  // };
 
   const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
     `/users/${md?.id}/followings`,
@@ -61,9 +53,7 @@ const FriendCard: FC<IProps> = ({ profile }) => {
   }, []);
 
   return (
-    // <Base onClick={handleNavigate(`/${profile.id}`)}>
-
-    <Base>
+    <Base onClick={handleNavigate(navigate, `/${profile.id}`)}>
       <div className={'left'}>
         <ProfileImage profile={profile} style={{ width: '50px', height: '50px' }} />
         <span className={'nickname'}>{profile.nickname}</span>

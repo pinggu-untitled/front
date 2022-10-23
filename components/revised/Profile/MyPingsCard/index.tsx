@@ -10,6 +10,7 @@ import TotalCount from '@components/revised/Home/TotalCount';
 import ModifyActionButtons from '@components/revised/Profile/ModifyActionButtons';
 import handleNavigate from '@utils/handleNavigate';
 import PillBox from '@components/revised/PillBox';
+import axios from 'axios';
 
 interface IProps {
   mypings: IMyPings;
@@ -31,7 +32,7 @@ export const MyPingsImage = styled.div`
 `;
 
 const MyPingsCard: FC<IProps> = ({ mypings }) => {
-  const navigate = useNavigate();
+  const navigator = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: pd, mutate: mutateMypings } = useSWR<any>(`/users/${userId}/mypings/${mypings.id}/posts`, fetcher);
@@ -39,20 +40,24 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const onSubmit = (e: any) => {
     e.preventDefault();
   };
-  const onEdit = (id: number) => () => {
-    console.log(id);
-    handleNavigate(navigate, `/mypings/${mypings?.id}/edit`)();
+  const onEdit = (id: number) => (e: any) => {
+    navigator(`/mypings/${mypings?.id}/edit`);
   };
 
-  const onDelete = (id: number) => () => {
-    console.log(id);
+  const onDelete = (id: number) => (e: any) => {
+    axios
+      .delete(`/mypings/${mypings.id}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => console.error(err));
   };
 
   if (!mypings) return <div>로딩중...</div>;
 
   return (
     <Base
-      onClick={handleNavigate(navigate, `/${userId}/mypings/${mypings.id}`)}
+      onClick={handleNavigate(navigator, `/${userId}/mypings/${mypings.id}`)}
       style={md?.id === Number(userId) ? { paddingBottom: 0, border: 'none' } : {}}
     >
       <div className={'info'}>
@@ -71,7 +76,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
       </div>
       {md?.id === userId && (
         <form onSubmit={onSubmit}>
-          <ModifyActionButtons id={mypings?.id} onEdit={onEdit} onDelete={onDelete} />
+          <ModifyActionButtons onEdit={onEdit} onDelete={onDelete} />
         </form>
       )}
     </Base>

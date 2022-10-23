@@ -1,6 +1,5 @@
 import React, { CSSProperties, FC, useState } from 'react';
 import styled from '@emotion/styled';
-import axios from 'axios';
 import { FollowState } from '@components/revised/Profile/FriendCard';
 
 interface IProps {
@@ -16,11 +15,7 @@ export const Base = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  //position: absolute;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  margin-left: 20px;
 `;
 
 const FollowActionButton: FC<IProps> = ({ isFollowing, onClick, style }) => {

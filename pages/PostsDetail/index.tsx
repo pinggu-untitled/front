@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -20,12 +20,14 @@ import TotalCount from '@components/revised/Home/TotalCount';
 import displayEven from '@utils/displayEven';
 import ProfileSummaryBar from '@components/revised/PostsDetail/ProfileSummaryBar';
 import TapItem from '@components/revised/Profile/TapList/TapItem';
-import { HiOutlineLocationMarker, HiOutlineUsers } from 'react-icons/hi';
+import { HiOutlineLocationMarker } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import { useMap } from '@contexts/MapContext';
 import compose from '@utils/compose';
 import readable from '@utils/readable';
+import handleNavigate from '@utils/handleNavigate';
+import axios from 'axios';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -99,13 +101,13 @@ export const TextZone = styled.div<{ theme: any }>`
 `;
 
 const PostDetail = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
+  const navigator = useNavigate();
   const { postId } = useParams<{ postId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
-  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings`, fetcher);
-  const { data: userPd, mutate: mutateUserPd } = useSWR<IPost[]>(`/users/${pd?.User.id}/posts`, fetcher);
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
+  const { data: mypings } = useSWR<IMyPings[]>(`/users/${pd?.User.id}/mypings`, fetcher);
+  const { data: userPd } = useSWR<IPost[]>(`/users/${pd?.User.id}/posts`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
   const { moveCenterToPost } = useMap();
@@ -119,9 +121,21 @@ const PostDetail = () => {
     e.target.focus();
   };
 
+  const onDelete = (postId?: string) => () => {
+    axios
+      .delete(`/posts/${postId}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => console.error(err));
+  };
+
   const userSettingItems = [
-    { content: { icon: <BiEditAlt />, title: '편집하기' }, onClick: () => console.log('good') },
-    { content: { icon: <AiOutlineDelete />, title: '삭제하기' }, onClick: () => console.log('good') },
+    {
+      content: { icon: <BiEditAlt />, title: '편집하기' },
+      onClick: handleNavigate(navigator, `/posts/${postId}/edit`),
+    },
+    { content: { icon: <AiOutlineDelete />, title: '삭제하기' }, onClick: onDelete(postId) },
   ];
 
   const viewerSettingItems = [

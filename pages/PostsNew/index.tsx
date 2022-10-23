@@ -5,22 +5,21 @@ import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHea
 import { useNavigate } from 'react-router-dom';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
 import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
-import SquareButton from '@components/common/buttons/SquareButton';
-import ImageInputList from '@components/Posts/ImageInputList';
+import ImageInputList from '@components/revised/PostsNewEdit/ImageInputList';
 import axios from 'axios';
-// import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
-import ToolBox from '@components/Posts/ToolBox';
-import ToolButton from '@components/Posts/ToolBox/ToolButton';
+import ToolBox from '@components/revised/PostsNewEdit/ToolBox';
+import ToolButton from '@components/revised/PostsNewEdit/ToolBox/ToolButton';
 import { BsImages } from 'react-icons/bs';
 import { HiLocationMarker } from 'react-icons/hi';
 import HoverLabel from '@components/common/labels/HoverLabel';
 import SearchInput from '@components/common/inputs/SearchInput';
-import SearchLocationForm from '@components/Posts/SearchLocationForm';
+import SearchLocationForm from '@components/revised/PostsNewEdit/SearchLocationForm';
 import { Redirect } from 'react-router';
+import makeFormData from '@utils/makeFormData';
 export const Base = styled.div`
   width: 100%;
 `;
@@ -95,19 +94,8 @@ const PostsNew = () => {
 
   const { title, images, longitude, latitude } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
-
-  const makeFormData = useCallback((name: string, files: any[]) => {
-    const formData = new FormData();
-    for (let file of files) {
-      formData.append(name, file);
-    }
-
-    return formData;
-  }, []);
-
   const onSubmit = handleSubmit(
     useCallback(async (data: IForm) => {
-      // if (!isSubmitAvailable) return;
       let filenames;
       if (data.images.length > 0) {
         filenames = await axios
@@ -115,8 +103,9 @@ const PostsNew = () => {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => res.data);
+        console.log(filenames);
       }
-
+      console.log(filenames);
       const findMatches = (data: string, reg: RegExp, mapFn: (v: string, i: number) => void) => {
         const temp = data?.match(reg) ?? [];
         return temp.map(mapFn);
@@ -139,7 +128,7 @@ const PostsNew = () => {
           return res.data;
         });
 
-      console.log(newPost);
+      console.log('newPost', newPost);
       if (newPost) navigate('/');
     }, []),
   );

@@ -1,22 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
-import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
 import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
-import ImageInputList from '@components/Posts/ImageInputList';
+import ImageInputList from '@components/revised/PostsNewEdit/ImageInputList';
 import axios from 'axios';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
-import ToolBox from '@components/Posts/ToolBox';
-import ToolButton from '@components/Posts/ToolBox/ToolButton';
+import ToolBox from '@components/revised/PostsNewEdit/ToolBox';
+import ToolButton from '@components/revised/PostsNewEdit/ToolBox/ToolButton';
 import { BsImages } from 'react-icons/bs';
 import { HiLocationMarker } from 'react-icons/hi';
 import HoverLabel from '@components/common/labels/HoverLabel';
-import SearchInput from '@components/common/inputs/SearchInput';
-import SearchLocationForm from '@components/Posts/SearchLocationForm';
+import SearchLocationForm from '@components/revised/PostsNewEdit/SearchLocationForm';
+import { IMe, IPost } from '@typings/db';
+import TitleNavigation from '@components/revised/common/navigations/TitleNavigation';
+import makeFormData from '@utils/makeFormData';
+import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
+import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBar';
 export const Base = styled.div`
   width: 100%;
 `;
@@ -39,21 +42,11 @@ export const Form = styled.form`
   }
 `;
 
-export const Private = styled.label`
-  display: flex;
-  align-items: center;
-
-  > span {
-    font-size: 14px;
-    margin-right: 5px;
-  }
-`;
-
 interface IForm {
   title: string;
   content: string;
-  is_private: boolean;
-  images: string[];
+  is_private: boolean | number;
+  images: any;
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
@@ -61,11 +54,10 @@ interface IForm {
 }
 
 const PostsEdit = () => {
-  const navigate = useNavigate();
+  const navigator = useNavigate();
   const { postId } = useParams<{ postId: string }>();
-  const { data: ud, mutate: mutateUd } = useSWR(`/users/me`, fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR(`/posts/${postId}`, fetcher);
-
+  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const {
     control,
     handleSubmit,
@@ -74,34 +66,21 @@ const PostsEdit = () => {
     setValue,
   } = useForm<IForm>({
     defaultValues: {
-      title: '',
-      content: '',
-      images: [],
-      is_private: pd?.post.is_private === 1,
-      longitude: '',
-      latitude: '',
+      title: pd?.title || '',
+      content: pd?.content || '',
+      images: pd?.Images.map((img) => img.src) || [],
+      is_private: pd?.is_private || 0,
+      longitude: pd?.longitude || '',
+      latitude: pd?.latitude || '',
       hashtags: [],
       mentions: [],
     },
   });
 
-  useEffect(() => {
-    if (pd) {
-      setValue('title', pd?.post.title);
-      setValue('content', pd?.post.content);
-      setValue('is_private', pd?.post.is_private === 1);
-      setValue('longitude', pd?.post.longitude);
-      setValue('latitude', pd?.post.latitude);
-      setValue('hashtags', pd?.post.Hashtags);
-      setValue('mentions', pd?.post.Mentions);
-      setShowOptions((p) => ({ ...p, showImages: pd?.post?.Images.length > 0 }));
-    }
-  }, [pd]);
-
   const { title, images, longitude, latitude } = watch();
-
+  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
-    showImages: false,
+    showImages: true,
     showSearchLocation: false,
   });
 
@@ -109,22 +88,9 @@ const PostsEdit = () => {
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   }, []);
 
-  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
-
-  const makeFormData = useCallback((name: string, files: any[]) => {
-    const formData = new FormData();
-    files.forEach((file) => {
-      if (file instanceof File) formData.append(name, file);
-    });
-
-    return formData;
-  }, []);
-
   const onSubmit = handleSubmit(
     useCallback(async (data: IForm) => {
-      // if (!isSubmitAvailable) return;
-      let filenames;
-
+      let filenames = [];
       if (data.images.length >= 1) {
         filenames = await axios
           .post('/posts/images', makeFormData('images', data.images), {
@@ -133,29 +99,59 @@ const PostsEdit = () => {
           .then((res) => res.data);
       }
 
-      const prevs = data.images.filter((img: any) => !(img instanceof File)).map((v: any) => v.src);
-      console.log('final', [...prevs, ...filenames]);
-      const editedPost = await axios
-        .patch('/posts', {
-          ...data,
-          images: [...prevs, ...filenames] || [],
-        })
-        .then((res) => res.data);
-      console.log(editedPost);
+      const findMatches = (data: string, reg: RegExp, mapFn: (v: string, i: number) => void) => {
+        const temp = data?.match(reg) ?? [];
+        return temp.map(mapFn);
+      };
+
+      const hashtags = findMatches(data.content, /#[^\s#]+/g, (tag, i) => {
+        tag.slice(1);
+        return { content: tag };
+      });
+
+      const mentions = findMatches(data.content, /@[^\s@]+/g, (mt, i) => {
+        mt.slice(1);
+        return { receiver: 1 };
+      });
+
+      const temp = { ...data, hashtags, mentions, images: filenames || [] };
+
+      console.log('temp', temp);
+
+      const editedPost = await axios.patch('/posts', temp).then((res) => {
+        return res.data;
+      });
+
+      console.log('finlaly', editedPost);
+      // if (newPost) navigate('/');
     }, []),
   );
 
-  console.log('pd', pd);
+  useEffect(() => {
+    if (pd) {
+      setValue('title', pd?.title || '');
+      setValue('content', pd?.content || '');
+      setValue('is_private', pd?.is_private === 1 || 0);
+      setValue('longitude', pd?.longitude || '');
+      setValue('latitude', pd?.latitude || '');
+      setValue('images', pd?.Images.map((img) => img.src) || []);
+      setShowOptions((p) => ({ ...p, showImages: pd?.Images.length > 0 }));
+    }
+  }, []);
+
+  //   if (pd?.User.id !== md?.id) navigator('/');
+  if (pd === undefined) return <div>로딩중...</div>;
+
   return (
     <Base>
       {showOptions.showSearchLocation ? (
         <>
-          <PrevButtonTitleHeader
-            title="위치 찾기"
-            onClick={() => {
-              navigate('/posts/new');
+          <TitleNavigation
+            onClickPrev={() => {
+              navigator('/posts/new');
               toggleOption('showSearchLocation');
             }}
+            title={'위치 찾기'}
           />
           <MainContentZone>
             <SearchLocationForm />
@@ -163,31 +159,32 @@ const PostsEdit = () => {
         </>
       ) : (
         <>
-          <PrevButtonTitleHeader title="게시물 편집하기" onClick={() => navigate(`/posts/${postId}`)} />
+          <TitleNavigation onClickPrev={() => navigator(-1)} title={'게시물 편집하기'} />
           <MainContentZone>
             <Form onSubmit={onSubmit}>
-              {/* <UserProfileCard user={ud}>
+              <ProfileSummaryBar>
                 <TextToggleButtonInput
                   control={control}
                   name={'is_private'}
                   messages={{ checked: '나에게만', unChecked: '모두에게' }}
                 />
-              </UserProfileCard> */}
+              </ProfileSummaryBar>
+
+              {/* </UserProfileCard> */}
               <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
               <FixedLabelTextarea
                 control={control}
                 label={'게시글 내용'}
                 name={'content'}
                 onSubmit={onSubmit}
-                placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
+                placeholder={`게시글 내용을 작성해주세요.`}
               />
-
               {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton
                     icon={<BsImages />}
-                    colors={{ font: '#44bd63', background: images.length >= 1 && '#e3f0d4' }}
+                    colors={{ font: '#44bd63', background: images?.length >= 1 && '#e3f0d4' }}
                     onClick={() => toggleOption('showImages')}
                   />
                 </HoverLabel>
@@ -209,5 +206,3 @@ const PostsEdit = () => {
 };
 
 export default PostsEdit;
-
-//  더 필요한 것: 마이핑스, 위치 수정, is_private 수정, mention/hashtag 추가하고 submit, 포스트(3), 겟(2)

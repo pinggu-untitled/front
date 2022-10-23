@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
 import { Button } from '@components/revised/common/navigations/DetailTopNavigation';
-import { Navigation } from '@components/revised/common/navigations/TitleNavigation';
+import TitleNavigation, { Navigation } from '@components/revised/common/navigations/TitleNavigation';
 import { Base } from '../../SearchModal';
 import { BsArrowLeft } from 'react-icons/bs';
 
@@ -28,14 +28,14 @@ const EditModal: FC<IProps> = ({ show, onCloseModal, title: { maintitle, highlig
   if (!show) return null;
   return (
     <Base>
-      <Navigation>
-        <Button onClick={onCloseModal}>
-          <BsArrowLeft />
-        </Button>
-        <h1>
-          {maintitle} <HighLight>({highlight})</HighLight>
-        </h1>
-      </Navigation>
+      <TitleNavigation
+        onClickPrev={onCloseModal}
+        title={
+          <>
+            {maintitle} <HighLight>({highlight})</HighLight>
+          </>
+        }
+      />
       <MainContent>{children}</MainContent>
     </Base>
   );

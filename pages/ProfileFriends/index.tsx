@@ -8,17 +8,14 @@ import { v4 as uuid } from 'uuid';
 import { Base, MainContentZone } from '../ProfilePosts';
 import FriendCard from '@components/revised/Profile/FriendCard';
 import { useParams } from 'react-router-dom';
-import mutateFollow from '@utils/mutateFollow';
-import isIdExisting from '@utils/isIdExisting';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
-import useModals from '@utils/useModals';
 
 export const SortButtonZone = styled.div`
   display: flex;
   padding: 10px 20px;
 `;
 
-export const Button = styled.div<{ active: boolean }>`
+export const Tap = styled.div<{ active: boolean }>`
   height: 36px;
   display: flex;
   justify-content: center;
@@ -52,12 +49,12 @@ const ProfileFriends = () => {
     <>
       <Base>
         <SortButtonZone>
-          <Button active={tap === 'following'} onClick={toggleFollow('following')}>
+          <Tap active={tap === 'following'} onClick={toggleFollow('following')}>
             팔로잉
-          </Button>
-          <Button active={tap === 'follower'} onClick={toggleFollow('follower')}>
+          </Tap>
+          <Tap active={tap === 'follower'} onClick={toggleFollow('follower')}>
             팔로워
-          </Button>
+          </Tap>
         </SortButtonZone>
         <MainContentZone style={{ top: '270px' }}>
           {tap === 'following' && !followingsData?.length ? (

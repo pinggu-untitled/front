@@ -34,7 +34,7 @@ export const MessageZone = styled.div<{ active: boolean }>`
     position: absolute;
     font-size: 12px;
     font-weight: 600;
-    transform: ${({ active }) => (!active ? 'translate(26px, 1px)' : 'translate(4px,1px)')};
+    transform: ${({ active }) => (!active ? 'translate(26px, 1px)' : 'translate(6px,1px)')};
   }
 `;
 
@@ -43,7 +43,7 @@ export const SlidingBall = styled.div<{ active: boolean }>`
   height: 23px;
   border-radius: 50%;
   background-color: #fff;
-  transform: ${({ active }) => active && 'translateX(49px)'};
+  transform: ${({ active }) => active && 'translateX(53px)'};
   transition: 0.2s;
 `;
 

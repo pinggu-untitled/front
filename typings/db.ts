@@ -8,7 +8,7 @@ interface IUser {
   id: number;
   nickname: string;
   profile_image_url: string;
-  bio?: string;
+  bio: string;
 }
 
 interface IHistory {

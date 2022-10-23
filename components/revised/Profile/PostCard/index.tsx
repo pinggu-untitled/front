@@ -37,16 +37,14 @@ const PostCard: FC<IProps> = ({ post }) => {
   const navigate = useNavigate();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
 
-  console.log(post);
   const onSubmit = (e: any) => {
     e.preventDefault();
   };
-  const onEdit = (id: number) => () => {
-    console.log(id);
+  const onEdit = (id: number) => (e: any) => {
     handleNavigate(navigate, `/posts/${post?.id}/edit`)();
   };
 
-  const onDelete = (id: number) => () => {
+  const onDelete = (id: number) => (e: any) => {
     console.log(id);
   };
 
@@ -72,9 +70,9 @@ const PostCard: FC<IProps> = ({ post }) => {
           <p>문래동 · {post.created_at}</p>
         </InfoZone>
       </div>
-      {md?.id === post?.User.id && (
+      {post && md?.id === post?.User.id && (
         <form onSubmit={onSubmit}>
-          <ModifyActionButtons id={post?.id} onEdit={onEdit} onDelete={onDelete} />
+          <ModifyActionButtons onEdit={onEdit(post.User.id)} onDelete={onDelete(post.User.id)} />
         </form>
       )}
     </Base>

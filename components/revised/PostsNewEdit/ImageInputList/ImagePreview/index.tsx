@@ -22,11 +22,6 @@ export const Base = styled.div`
     height: 100%;
     object-fit: fill;
   }
-
-  &:hover {
-    //background-color: rbga(255, 255, 255, 1);
-    background-color: red;
-  }
 `;
 
 export const CloseButton = styled.div`
@@ -38,6 +33,11 @@ export const CloseButton = styled.div`
   font-size: 20px;
   border-radius: 50%;
   cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   & .icon {
     font-size: 20px;
@@ -45,30 +45,19 @@ export const CloseButton = styled.div`
 `;
 
 const ImagePreview: FC<IProps> = ({ src, onClose }) => {
-  const stopPropagation = useCallback((e: any) => {
+  const handleClose = (e: any) => {
     e.stopPropagation();
-  }, []);
-
-  const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({ showImagesZoomModal: false });
-  const handleModal = useCallback((modalName: string) => {
-    setShowModals((p) => ({ ...p, [modalName]: !p[modalName] }));
-  }, []);
+    onClose();
+  };
 
   return (
     <>
-      <Base onClick={() => handleModal('showImagesZoomModal')}>
-        <img src={src} />
-        <div onClick={stopPropagation}>
-          <CloseButton onClick={onClose}>
-            <IoIosClose />
-          </CloseButton>
-        </div>
+      <Base>
+        <img src={src} alt={'upload-image-preview'} />
+        <CloseButton onClick={handleClose}>
+          <IoIosClose />
+        </CloseButton>
       </Base>
-      <ImagesZoomModal
-        show={showModals.showImagesZoomModal}
-        onCloseModal={() => handleModal('showImagesZoomModal')}
-        images={[{ id: 1, src }]}
-      />
     </>
   );
 };

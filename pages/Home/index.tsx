@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -7,8 +7,9 @@ import CardList from '@components/revised/CardList';
 import PostCard from '@components/revised/Home/PostCard';
 import { v4 as uuid } from 'uuid';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import readable from '@utils/readable';
+import { Redirect } from 'react-router';
 
 export const Base = styled.div`
   width: 100%;
@@ -26,17 +27,17 @@ interface IForm {
   searchQueries: string;
 }
 const Home = () => {
-  const navigate = useNavigate();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR<IPost[]>(`/posts`, fetcher);
-
-  if (md === undefined) navigate('/intro');
+  const navigator = useNavigate();
+  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: pd } = useSWR<IPost[]>(`/posts`, fetcher);
 
   const isMyPost = (post: IPost) => {
     return post.User.id === md?.id;
   };
-  const publicOnly = (posts: IPost[]): IPost[] =>
-    posts.filter((post) => [0, false].includes(post.is_private) || isMyPost(post));
+
+  useEffect(() => {
+    if (md === undefined && pd === undefined) navigator('/');
+  }, [md, pd]);
 
   return (
     <Base>

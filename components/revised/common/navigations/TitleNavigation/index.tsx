@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
-import { MdArrowBackIosNew } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
+  onClickPrev: () => void;
   title: string | React.ReactNode;
 }
 import { Base, Button } from '../DetailTopNavigation';
+import { BsArrowLeft } from 'react-icons/bs';
 
 export const Navigation = styled(Base)`
   > h1 {
@@ -18,14 +19,13 @@ export const Navigation = styled(Base)`
   }
 `;
 
-const TitleNavigation: FC<IProps> = ({ title }) => {
-  const navigate = useNavigate();
+const TitleNavigation: FC<IProps> = ({ onClickPrev, title }) => {
   return (
     <Navigation>
-      <Button onClick={() => navigate(-1)}>
-        <MdArrowBackIosNew />
+      <Button onClick={onClickPrev}>
+        <BsArrowLeft />
       </Button>
-      <h1> {title}</h1>
+      <h1>{title}</h1>
     </Navigation>
   );
 };

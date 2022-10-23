@@ -41,21 +41,20 @@ export const Base = styled.div`
 const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
   const navigate = useNavigate();
   const { postId } = useParams<{ postId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
-
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
+
+  const { data: myFollowingsData } = useSWR<IUser[]>(
+    `/users/${md?.id}/followings`,
+    followFetcher(setIsFollowing, profile),
+  );
 
   useEffect(() => {
     if (myFollowingsData) {
       setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
   }, []);
-
-  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
-    `/users/${md?.id}/followings`,
-    followFetcher(setIsFollowing, profile),
-  );
 
   return (
     <Base>

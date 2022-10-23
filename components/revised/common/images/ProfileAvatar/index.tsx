@@ -14,6 +14,7 @@ export const Base = styled.div`
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid #dfdfdf;
+  position: relative;
 
   > img {
     width: 100%;

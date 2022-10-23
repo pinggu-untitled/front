@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Controller, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
+import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
 
 interface IProps {
   control: any;
@@ -56,28 +57,17 @@ export const ProfileImageWrapper = styled.label`
 const ProfileImageInput: FC<IProps> = ({ control, name }) => {
   const { field } = useController({ control, name });
   const [preview, setPreview] = useState(field.value);
-
-  const previewHandler = useCallback((files) => {
-    const promisify = (file: File) => {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-          resolve(fileReader.result);
-        };
-      });
-    };
-
-    promisify(files[0]).then((res) => {
+  const handlePreview = useCallback((files) => {
+    imagePreviewPromisfier(files).then((res) => {
       setPreview(res);
     });
   }, []);
 
+  // console.log(control._defaultValues.profile_image_file);
   return (
     <Base>
       <ProfileImageWrapper>
-        {/* preview */}
-        <img src={preview} />
+        <img src={preview || control._defaultValues.profile_image_file || '/public/placeholder.png'} alt={name} />
         <Controller
           control={control}
           name={name}
@@ -86,7 +76,7 @@ const ProfileImageInput: FC<IProps> = ({ control, name }) => {
               type={'file'}
               onChange={(e) => {
                 field.onChange(e.target.files);
-                previewHandler(e.target.files);
+                handlePreview(e.target.files);
               }}
               hidden
             />
