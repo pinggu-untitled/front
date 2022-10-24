@@ -228,10 +228,7 @@ const PostDetail = () => {
         <TextZone theme={theme}>
           <h3 className={'title'}>{pd?.title}</h3>
           <div className={'mypings'}>
-            <span>
-              <Link to={`/mypings/${pd?.id}`}>마이핑스</Link>
-            </span>
-            <span> · {pd?.created_at}</span>
+            <span>{pd?.created_at}</span>
           </div>
           <p className={'content'}>{pd?.content}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>

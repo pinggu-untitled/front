@@ -43,7 +43,7 @@ export const SlidingBall = styled.div<{ active: boolean }>`
   height: 23px;
   border-radius: 50%;
   background-color: #fff;
-  transform: ${({ active }) => active && 'translateX(53px)'};
+  transform: ${({ active }) => active && 'translateX(52px)'};
   transition: 0.2s;
 `;
 

@@ -74,7 +74,7 @@ const ProfilePosts = () => {
           {md && pd && pd?.length > 0 ? (
             <CardList>
               {readable(md)(pd)?.map((post, i) => (
-                <PostCard key={uuid()} post={post} />
+                <PostCard key={uuid()} post={post} mutateFn={mutatePd} />
               ))}
             </CardList>
           ) : (

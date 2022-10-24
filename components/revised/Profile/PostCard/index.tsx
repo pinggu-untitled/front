@@ -10,8 +10,10 @@ import fetcher from '@utils/fetcher';
 import handleNavigate from '@utils/handleNavigate';
 import PillBox from '@components/revised/PillBox';
 import { ImageZone, InfoZone } from '@components/revised/Home/PostCard';
+import axios from 'axios';
 interface IProps {
   post: IPost;
+  mutateFn: any;
 }
 
 export const Base = styled.li`
@@ -33,7 +35,7 @@ export const Base = styled.li`
   }
 `;
 
-const PostCard: FC<IProps> = ({ post }) => {
+const PostCard: FC<IProps> = ({ post, mutateFn }) => {
   const navigate = useNavigate();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
 
@@ -46,6 +48,14 @@ const PostCard: FC<IProps> = ({ post }) => {
 
   const onDelete = (id: number) => (e: any) => {
     console.log(id);
+    axios
+      .delete(`/posts/${post.id}`)
+      .then((res) => {
+        console.log(res);
+        // navigate(`/${md?.id}`);
+        mutateFn();
+      })
+      .catch((err) => console.error(err));
   };
 
   if (!post) return <div>로딩중...</div>;

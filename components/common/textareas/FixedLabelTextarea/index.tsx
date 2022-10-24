@@ -7,7 +7,6 @@ interface IProps {
   control: any;
   label: string;
   name: string;
-  onSubmit?: () => void;
   placeholder?: string;
 }
 
@@ -34,11 +33,10 @@ export const Textarea = styled.textarea`
   }
 `;
 
-const FixedLabelTextarea: FC<IProps> = ({ control, label, name, onSubmit, placeholder }) => {
+const FixedLabelTextarea: FC<IProps> = ({ control, label, name, placeholder }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const handleKeyPress = useCallback((e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      onSubmit && onSubmit();
       e.preventDefault();
     }
   }, []);

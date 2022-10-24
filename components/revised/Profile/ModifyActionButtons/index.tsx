@@ -35,7 +35,7 @@ const ModifyActionButtons: FC<IProps> = ({ onEdit, onDelete }) => {
   return (
     <Base onClick={stopPropagation}>
       <Button onClick={onEdit}>수정</Button>
-      <Button onClick={onEdit} style={{ color: '#f7523d' }}>
+      <Button onClick={onDelete} style={{ color: '#f7523d' }}>
         삭제
       </Button>
     </Base>

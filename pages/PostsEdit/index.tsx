@@ -20,27 +20,8 @@ import TitleNavigation from '@components/revised/common/navigations/TitleNavigat
 import makeFormData from '@utils/makeFormData';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
 import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBar';
-export const Base = styled.div`
-  width: 100%;
-`;
-
-export const MainContentZone = styled.div`
-  width: 440px;
-  margin-top: 73px;
-  padding: 20px 20px 0 20px;
-`;
-
-export const Form = styled.form`
-  > label {
-    margin-bottom: 20px;
-  }
-
-  > div {
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-  }
-`;
+import findMatches from '@utils/findMatches';
+import { Base, MainContentZone, Form } from '@pages/PostsNew';
 
 interface IForm {
   title: string;
@@ -99,11 +80,6 @@ const PostsEdit = () => {
           .then((res) => res.data);
       }
 
-      const findMatches = (data: string, reg: RegExp, mapFn: (v: string, i: number) => void) => {
-        const temp = data?.match(reg) ?? [];
-        return temp.map(mapFn);
-      };
-
       const hashtags = findMatches(data.content, /#[^\s#]+/g, (tag, i) => {
         tag.slice(1);
         return { content: tag };
@@ -136,12 +112,14 @@ const PostsEdit = () => {
       setValue('is_private', pd?.is_private === 1 || 0);
       setValue('longitude', pd?.longitude || '');
       setValue('latitude', pd?.latitude || '');
-      setValue('images', pd?.Images.map((img) => img.src) || []);
+      // setValue('images', pd?.Images.map((img) => img.src) || []);
       setShowOptions((p) => ({ ...p, showImages: pd?.Images.length > 0 }));
     }
   }, []);
 
-  //   if (pd?.User.id !== md?.id) navigator('/');
+  // useEffect(() => {}, []);
+
+  if (pd?.User.id !== md?.id) navigator('/');
   if (pd === undefined) return <div>로딩중...</div>;
 
   return (
@@ -171,14 +149,11 @@ const PostsEdit = () => {
                   messages={{ checked: '나에게만', unChecked: '모두에게' }}
                 />
               </ProfileSummaryBar>
-
-              {/* </UserProfileCard> */}
               <FixedLabelInput control={control} label={'글 제목'} name={'title'} />
               <FixedLabelTextarea
                 control={control}
                 label={'게시글 내용'}
                 name={'content'}
-                onSubmit={onSubmit}
                 placeholder={`게시글 내용을 작성해주세요.`}
               />
               {showOptions.showImages && <ImageInputList control={control} name={'images'} />}

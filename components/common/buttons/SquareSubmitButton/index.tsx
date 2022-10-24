@@ -4,10 +4,11 @@ import styled from '@emotion/styled';
 interface IProps {
   valid: boolean;
   content: string;
+  onClick?: () => void;
 }
 
 export const Button = styled.button<{ valid: boolean }>`
-  width: 100%;
+  //width: 100%;
   height: 40px;
   border: none;
   border-radius: 4px;
@@ -17,11 +18,15 @@ export const Button = styled.button<{ valid: boolean }>`
   color: ${({ valid }) => (valid ? '#fff' : 'gray')};
   cursor: ${({ valid }) => (valid ? 'pointer' : 'text')};
   transition: 0.2s;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 `;
 
-const SquareSubmitButton: FC<IProps> = ({ valid, content }) => {
+const SquareSubmitButton: FC<IProps> = ({ valid, content, onClick }) => {
   return (
-    <Button type={'submit'} valid={valid} disabled={!valid}>
+    <Button valid={valid} disabled={!valid} onClick={onClick}>
       {content}
     </Button>
   );

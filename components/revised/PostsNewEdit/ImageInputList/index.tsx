@@ -61,7 +61,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
     const files = Promise.all(
       field.value.map((file: any) => {
         if (typeof file === 'string') {
-          return new Promise((resolve, reject) => resolve(file));
+          return new Promise((resolve) => resolve(file));
         } else {
           return fileReaderPromise(file);
         }
