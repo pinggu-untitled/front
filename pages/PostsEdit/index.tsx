@@ -22,12 +22,13 @@ import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInp
 import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBar';
 import findMatches from '@utils/findMatches';
 import { Base, MainContentZone, Form } from '@pages/PostsNew';
+import useModals from '@utils/useModals';
 
 interface IForm {
   title: string;
   content: string;
   is_private: boolean | number;
-  images: any;
+  // images: any;
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
@@ -49,7 +50,7 @@ const PostsEdit = () => {
     defaultValues: {
       title: pd?.title || '',
       content: pd?.content || '',
-      images: pd?.Images.map((img) => img.src) || [],
+      // images: pd?.Images.map((img) => img.src) || [],
       is_private: pd?.is_private || 0,
       longitude: pd?.longitude || '',
       latitude: pd?.latitude || '',
@@ -58,8 +59,13 @@ const PostsEdit = () => {
     },
   });
 
-  const { title, images, longitude, latitude } = watch();
+  const { title, longitude, latitude } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
+  const [images, setImages] = useState<any[]>([]);
+  const onChangeImages = (files: FileList) => {
+    console.log('files', files);
+  };
+
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: true,
     showSearchLocation: false,
@@ -72,9 +78,9 @@ const PostsEdit = () => {
   const onSubmit = handleSubmit(
     useCallback(async (data: IForm) => {
       let filenames = [];
-      if (data.images.length >= 1) {
+      if (images.length >= 1) {
         filenames = await axios
-          .post('/posts/images', makeFormData('images', data.images), {
+          .post('/posts/images', makeFormData('images', images), {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => res.data);
@@ -112,12 +118,10 @@ const PostsEdit = () => {
       setValue('is_private', pd?.is_private === 1 || 0);
       setValue('longitude', pd?.longitude || '');
       setValue('latitude', pd?.latitude || '');
-      // setValue('images', pd?.Images.map((img) => img.src) || []);
+      setImages(pd?.Images.map((image) => image.src) || []);
       setShowOptions((p) => ({ ...p, showImages: pd?.Images.length > 0 }));
     }
-  }, []);
-
-  // useEffect(() => {}, []);
+  }, [pd]);
 
   if (pd?.User.id !== md?.id) navigator('/');
   if (pd === undefined) return <div>로딩중...</div>;
@@ -156,7 +160,7 @@ const PostsEdit = () => {
                 name={'content'}
                 placeholder={`게시글 내용을 작성해주세요.`}
               />
-              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
+              {showOptions.showImages && <ImageInputList images={images} setImages={setImages} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton

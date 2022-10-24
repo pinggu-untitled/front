@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useFieldArray, Controller, useController } from 'react-hook-form';
 import { FaCamera } from 'react-icons/fa';
@@ -7,8 +7,8 @@ import imagePreviewPromisfier, { fileReaderPromise } from '@utils/imagePreviewPr
 import ImagePreview from '@components/revised/PostsNewEdit/ImageInputList/ImagePreview';
 
 interface IProps {
-  control: any;
-  name: string;
+  images: any[];
+  setImages: Dispatch<SetStateAction<any[]>>;
 }
 
 export const Base = styled.div`
@@ -51,15 +51,15 @@ export const FileDropper = styled.label`
   }
 `;
 
-const ImageInputList: FC<IProps> = ({ control, name }) => {
+const ImageInputList: FC<IProps> = ({ images, setImages }) => {
   const { postId } = useParams<{ postId: string }>();
-  const { remove, append } = useFieldArray({ control, name });
-  const { field } = useController({ control, name });
-  const [previews, setPreviews] = useState<string[]>([]);
+  // const { remove, append } = useFieldArray({ control, name });
+  // const { field } = useController({ control, name });
+  const [previews, setPreviews] = useState<any[]>(images);
 
   useEffect(() => {
     const files = Promise.all(
-      field.value.map((file: any) => {
+      Array.from(images).map((file: any) => {
         if (typeof file === 'string') {
           return new Promise((resolve) => resolve(file));
         } else {
@@ -68,29 +68,34 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
       }),
     );
     files.then((res) => {
+      console.log('res', res);
       setPreviews(res);
     });
-  }, [field.value]);
+  }, [images]);
 
-  const appendFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
+  const onAdd = (e: any) => setImages((prev) => [...prev, ...e.target.files]);
+
+  const onRemove = (index: number) => (e: any) => setImages((prev) => prev.filter((_, i) => i !== index));
+
+  // const appendFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
   // const appendPreviews = (files: FileList) => {
   //   imagePreviewPromisfier(files).then((res: any) => {
   //     return setPreviews((prev) => (Array.isArray(prev) ? [...prev, ...res] : [...prev, res]));
   //   });
   // };
 
-  const handleChange = useCallback((files) => {
-    appendFiles(files);
-    // appendPreviews(files);
-  }, []);
+  // const handleChange = useCallback((files) => {
+  //   appendFiles(files);
+  //   // appendPreviews(files);
+  // }, []);
 
-  const onRemove = useCallback(
-    (i: number) => {
-      remove(i);
-      // setPreviews((p) => p.filter((_, idx) => i !== idx));
-    },
-    [previews],
-  );
+  // const onRemove = useCallback(
+  //   (i: number) => {
+  //     remove(i);
+  //     // setPreviews((p) => p.filter((_, idx) => i !== idx));
+  //   },
+  //   [previews],
+  // );
 
   return (
     <Base>
@@ -99,22 +104,10 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
           <span className={'icon'}>
             <FaCamera />
           </span>
-          <span className={'count'}>{/*<span className={'highlight'}>{previews.length}</span>/8*/}</span>
-          <Controller
-            control={control}
-            name={name}
-            render={({ field }) => (
-              <input
-                type={'file'}
-                onChange={(e) => {
-                  handleChange(e.target.files);
-                  e.target.value = '';
-                }}
-                multiple={true}
-                hidden
-              />
-            )}
-          />
+          <span className={'count'}>
+            <span className={'highlight'}>{images.length}</span>/8
+          </span>
+          <input type={'file'} onChange={onAdd} multiple={true} hidden />
         </FileDropper>
         {previews.length >= 1 &&
           previews?.map((preview: string, i) => {
@@ -124,7 +117,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
               <ImagePreview
                 key={`${preview}.${i}`}
                 src={isNew ? preview : `${baseUrl}/${preview}`}
-                onClose={() => onRemove(i)}
+                onClose={onRemove(i)}
               />
             );
           })}

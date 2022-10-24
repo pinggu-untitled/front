@@ -174,7 +174,7 @@ const PostsNew = () => {
                 placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
               />
               {/*{showOptions.showImages && <ImageInputList control={control} name={'images'} />}*/}
-              <ImageInputList control={control} name={'images'} />
+              {/*<ImageInputList control={control} name={'images'} />*/}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton
