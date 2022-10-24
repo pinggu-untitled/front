@@ -58,4 +58,14 @@ interface IMyPings {
   User: IUser;
 }
 
-export { IMe, IUser, IImage, IPost, IMyPings, IHashtag, IResult, IMention, IHistory };
+interface IComment {
+  id: number;
+  content: string;
+  pid: number | null;
+  created_at: string;
+  updated_at: string;
+  User: IUser;
+  Comments: IComment[] | [];
+}
+
+export { IMe, IUser, IImage, IPost, IMyPings, IHashtag, IResult, IMention, IHistory, IComment };

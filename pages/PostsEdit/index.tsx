@@ -20,20 +20,7 @@ import TitleNavigation from '@components/revised/common/navigations/TitleNavigat
 import makeFormData from '@utils/makeFormData';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
 import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBar';
-import findMatches from '@utils/findMatches';
-import { Base, MainContentZone, Form } from '@pages/PostsNew';
-import useModals from '@utils/useModals';
-
-interface IForm {
-  title: string;
-  content: string;
-  is_private: boolean | number;
-  // images: any;
-  longitude: string;
-  latitude: string;
-  hashtags: { content: string }[];
-  mentions: { receiver: number }[];
-}
+import { Base, MainContentZone, Form, IPostForm, makeHashtags, makeMentions } from '@pages/PostsNew';
 
 const PostsEdit = () => {
   const navigator = useNavigate();
@@ -46,11 +33,10 @@ const PostsEdit = () => {
     watch,
     formState: { errors },
     setValue,
-  } = useForm<IForm>({
+  } = useForm<IPostForm>({
     defaultValues: {
       title: pd?.title || '',
       content: pd?.content || '',
-      // images: pd?.Images.map((img) => img.src) || [],
       is_private: pd?.is_private || 0,
       longitude: pd?.longitude || '',
       latitude: pd?.latitude || '',
@@ -61,11 +47,7 @@ const PostsEdit = () => {
 
   const { title, longitude, latitude } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
-  const [images, setImages] = useState<any[]>([]);
-  const onChangeImages = (files: FileList) => {
-    console.log('files', files);
-  };
-
+  const [images, setImages] = useState<any[]>(pd?.Images.map((img) => img.src) || []);
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: true,
     showSearchLocation: false,
@@ -75,56 +57,51 @@ const PostsEdit = () => {
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   }, []);
 
-  const onSubmit = handleSubmit(
-    useCallback(async (data: IForm) => {
-      let filenames = [];
-      if (images.length >= 1) {
-        filenames = await axios
-          .post('/posts/images', makeFormData('images', images), {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          })
-          .then((res) => res.data);
-      }
-
-      const hashtags = findMatches(data.content, /#[^\s#]+/g, (tag, i) => {
-        tag.slice(1);
-        return { content: tag };
-      });
-
-      const mentions = findMatches(data.content, /@[^\s@]+/g, (mt, i) => {
-        mt.slice(1);
-        return { receiver: 1 };
-      });
-
-      const temp = { ...data, hashtags, mentions, images: filenames || [] };
-
-      console.log('temp', temp);
-
-      axios
-        .patch(`/posts/${postId}`, temp)
-        .then((res) => {
-          console.log(res.data);
-          mutatePd();
-          navigator(`/posts/${postId}`);
+  const onSubmit = handleSubmit(async (data: IPostForm) => {
+    console.log('images>>>>>', images);
+    let filenames = [];
+    if (images.length >= 1) {
+      filenames = await axios
+        .post('/posts/images', makeFormData('images', images), {
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
-        .catch((err) => console.error(err));
-    }, []),
-  );
+        .then((res) => res.data);
+    }
+
+    const temp = {
+      ...data,
+      hashtags: makeHashtags(data.content),
+      mentions: makeMentions(data.content),
+      images: filenames || [],
+    };
+
+    axios
+      .patch(`/posts/${postId}`, temp)
+      .then((res) => {
+        console.log(res.data);
+        mutatePd();
+        navigator(`/posts/${postId}`);
+      })
+      .catch((err) => console.error(err));
+  });
 
   useEffect(() => {
+    console.log('useEffect start');
     if (pd) {
       setValue('title', pd?.title || '');
       setValue('content', pd?.content || '');
       setValue('is_private', pd?.is_private === 1 || 0);
       setValue('longitude', pd?.longitude || '');
       setValue('latitude', pd?.latitude || '');
-      setImages(pd?.Images.map((image) => image.src) || []);
       setShowOptions((p) => ({ ...p, showImages: pd?.Images.length > 0 }));
+    }
+
+    if (pd?.Images) {
+      setImages(pd?.Images.map((image) => image.src) || []);
     }
   }, [pd]);
 
-  if (pd?.User.id !== md?.id) navigator('/');
-  if (pd === undefined) return <div>로딩중...</div>;
+  console.log('rendering 전 ');
 
   return (
     <Base>

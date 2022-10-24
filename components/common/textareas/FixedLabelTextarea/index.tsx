@@ -33,13 +33,13 @@ export const Textarea = styled.textarea`
   }
 `;
 
+export const onKeyPress = (e: any) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+  }
+};
 const FixedLabelTextarea: FC<IProps> = ({ control, label, name, placeholder }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const handleKeyPress = useCallback((e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-    }
-  }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -58,7 +58,7 @@ const FixedLabelTextarea: FC<IProps> = ({ control, label, name, placeholder }) =
             ref={textareaRef}
             value={field.value}
             onChange={field.onChange}
-            onKeyPress={handleKeyPress}
+            onKeyPress={onKeyPress}
             placeholder={placeholder}
           />
         )}

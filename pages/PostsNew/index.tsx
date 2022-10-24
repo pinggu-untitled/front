@@ -55,16 +55,27 @@ export const Private = styled.label`
   }
 `;
 
-interface IForm {
+export interface IPostForm {
   title: string;
   content: string;
-  is_private: boolean;
-  images: any[];
+  is_private: boolean | number;
   longitude: string;
   latitude: string;
   hashtags: { content: string }[];
   mentions: { receiver: number }[];
 }
+
+export const makeHashtags = (data: string) =>
+  findMatches(data, /#[^\s#]+/g, (tag, i) => {
+    tag.slice(1);
+    return { content: tag };
+  });
+
+export const makeMentions = (data: string) =>
+  findMatches(data, /@[^\s@]+/g, (mt, i) => {
+    mt.slice(1);
+    return { receiver: 1 };
+  });
 
 const PostsNew = () => {
   const navigator = useNavigate();
@@ -74,11 +85,10 @@ const PostsNew = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<IForm>({
+  } = useForm<IPostForm>({
     defaultValues: {
       title: '',
       content: '',
-      images: [],
       is_private: false,
       longitude: '126.111111',
       latitude: '37.222222',
@@ -92,56 +102,42 @@ const PostsNew = () => {
     showSearchLocation: false,
   });
 
+  const [images, setImages] = useState<any[]>([]);
   const toggleOption = useCallback((option) => {
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   }, []);
 
-  const { title, images, longitude, latitude } = watch();
-
+  const { title, longitude, latitude } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
-  const onSubmit = handleSubmit(
-    useCallback(async (data: IForm) => {
-      let filenames;
-      if (data.images.length > 0) {
-        filenames = await axios
-          .post('/posts/images', makeFormData('images', data.images), {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          })
-          .then((res) => res.data);
-      }
+  const onSubmit = handleSubmit(async (data: IPostForm) => {
+    let filenames;
+    if (images.length > 0) {
+      filenames = await axios
+        .post('/posts/images', makeFormData('images', images), {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((res) => res.data);
+    }
 
-      const hashtags = findMatches(data.content, /#[^\s#]+/g, (tag, i) => {
-        tag.slice(1);
-        return { content: tag };
+    const newPost = await axios
+      .post('/posts', {
+        ...data,
+        hashtags: makeHashtags(data.content),
+        mentions: makeMentions(data.content),
+        images: filenames || [],
+      })
+      .then((res) => {
+        return res.data;
       });
 
-      const mentions = findMatches(data.content, /@[^\s@]+/g, (mt, i) => {
-        mt.slice(1);
-        return { receiver: 1 };
-      });
-
-      const newPost = await axios
-        .post('/posts', { ...data, hashtags, mentions, images: filenames || [] })
-        .then((res) => {
-          return res.data;
-        });
-
-      console.log('newPost', newPost);
-      if (newPost) navigator('/');
-    }, []),
-  );
+    console.log('newPost', newPost);
+    if (newPost) navigator('/');
+  });
 
   return (
     <Base>
       {showOptions.showSearchLocation ? (
         <>
-          {/*<PrevButtonTitleHeader*/}
-          {/*  title="위치 찾기"*/}
-          {/*  onClick={() => {*/}
-          {/*    navigate('/posts/new');*/}
-          {/*    toggleOption('showSearchLocation');*/}
-          {/*  }}*/}
-          {/*/>*/}
           <TitleNavigation
             onClickPrev={() => {
               navigator('/posts/new');
@@ -149,7 +145,6 @@ const PostsNew = () => {
             }}
             title={'위치 찾기'}
           />
-
           <MainContentZone>
             <SearchLocationForm />
           </MainContentZone>
@@ -173,8 +168,7 @@ const PostsNew = () => {
                 name={'content'}
                 placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
               />
-              {/*{showOptions.showImages && <ImageInputList control={control} name={'images'} />}*/}
-              {/*<ImageInputList control={control} name={'images'} />*/}
+              {showOptions.showImages && <ImageInputList images={images} setImages={setImages} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton

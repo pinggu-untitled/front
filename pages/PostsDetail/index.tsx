@@ -13,7 +13,7 @@ import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
 import { BiCommentDetail, BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLike, AiOutlineLink } from 'react-icons/ai';
-import { IImage, IMe, IMyPings, IPost } from '@typings/db';
+import { IComment, IImage, IMe, IMyPings, IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
@@ -28,6 +28,7 @@ import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
 import axios from 'axios';
+import CommentForm from '@components/revised/PostsDetail/CommentForm';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -112,7 +113,7 @@ const PostDetail = () => {
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
   const { moveCenterToPost } = useMap();
 
-  console.log(pd);
+  // console.log('🌷', pd);
   if (pd && moveCenterToPost) moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
 
   const copyUrl = (e: any) => {
@@ -137,7 +138,6 @@ const PostDetail = () => {
     },
     { content: { icon: <AiOutlineDelete />, title: '삭제하기' }, onClick: onDelete(postId) },
   ];
-
   const viewerSettingItems = [
     {
       content: {
@@ -152,7 +152,6 @@ const PostDetail = () => {
       onClick: copyUrl,
     },
   ];
-
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
@@ -233,6 +232,7 @@ const PostDetail = () => {
           <p className={'content'}>{pd?.content}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
+        <CommentForm />
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
           {md &&
             userPd &&

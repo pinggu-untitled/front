@@ -68,7 +68,10 @@ const PostCard: FC<IProps> = ({ post, mutateFn }) => {
       <div className={'info'}>
         <ImageZone>
           <TotalCount current={1} total={1} />
-          <PostImage />
+          <PostImage
+            src={post?.Images.length > 0 ? post?.Images[0].src : undefined}
+            alt={post?.Images.length > 0 ? post?.Images[0].id : undefined}
+          />
         </ImageZone>
         <InfoZone>
           <h2>

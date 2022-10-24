@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useFieldArray, Controller, useController } from 'react-hook-form';
 import { FaCamera } from 'react-icons/fa';
@@ -51,7 +51,7 @@ export const FileDropper = styled.label`
   }
 `;
 
-const ImageInputList: FC<IProps> = ({ images, setImages }) => {
+const ImageInputList = ({ images, setImages }: IProps) => {
   const { postId } = useParams<{ postId: string }>();
   // const { remove, append } = useFieldArray({ control, name });
   // const { field } = useController({ control, name });
@@ -68,10 +68,11 @@ const ImageInputList: FC<IProps> = ({ images, setImages }) => {
       }),
     );
     files.then((res) => {
-      console.log('res', res);
       setPreviews(res);
     });
-  }, [images]);
+
+    return () => {};
+  }, [images, setImages]);
 
   const onAdd = (e: any) => setImages((prev) => [...prev, ...e.target.files]);
 
