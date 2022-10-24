@@ -156,6 +156,9 @@ const PostDetail = () => {
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
+
+  if (pd === undefined) return <div>로딩중...</div>;
+
   return (
     <Base>
       <DetailTopNavigation prev={'/'} toggleOptions={handleModal('showSettingsModal')} />

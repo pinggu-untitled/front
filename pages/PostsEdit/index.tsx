@@ -57,7 +57,7 @@ const PostsEdit = () => {
   const navigator = useNavigate();
   const { postId } = useParams<{ postId: string }>();
   const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
+  const { data: pd, mutate: mutatePd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const {
     control,
     handleSubmit,
@@ -118,12 +118,14 @@ const PostsEdit = () => {
 
       console.log('temp', temp);
 
-      const editedPost = await axios.patch('/posts', temp).then((res) => {
-        return res.data;
-      });
-
-      console.log('finlaly', editedPost);
-      // if (newPost) navigate('/');
+      axios
+        .patch(`/posts/${postId}`, temp)
+        .then((res) => {
+          console.log(res.data);
+          mutatePd();
+          navigator(`/posts/${postId}`);
+        })
+        .catch((err) => console.error(err));
     }, []),
   );
 
