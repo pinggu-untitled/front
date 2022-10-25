@@ -10,6 +10,8 @@ interface IProps {
 }
 
 export const Base = styled.div`
+  flex: 1;
+  max-width: 190px;
   > p {
     font-size: 14px;
     font-weight: 600;

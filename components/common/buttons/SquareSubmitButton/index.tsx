@@ -8,7 +8,6 @@ interface IProps {
 }
 
 export const Button = styled.button<{ valid: boolean }>`
-  //width: 100%;
   height: 40px;
   border: none;
   border-radius: 4px;
@@ -18,10 +17,14 @@ export const Button = styled.button<{ valid: boolean }>`
   color: ${({ valid }) => (valid ? '#fff' : 'gray')};
   cursor: ${({ valid }) => (valid ? 'pointer' : 'text')};
   transition: 0.2s;
-  position: absolute;
+  //width: 100%;
+  //position: absolute;
+  //bottom: 20px;
+  //left: 20px;
+  //right: 20px;
+  position: fixed;
   bottom: 20px;
-  left: 20px;
-  right: 20px;
+  width: 400px;
 `;
 
 const SquareSubmitButton: FC<IProps> = ({ valid, content, onClick }) => {

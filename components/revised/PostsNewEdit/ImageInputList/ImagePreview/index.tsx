@@ -5,7 +5,7 @@ import ImagesZoomModal from '@components/common/image-related/ImagesZoomModal';
 
 interface IProps {
   src: string;
-  onClose: (e: any) => void;
+  onClose: () => void;
 }
 
 export const Base = styled.div`
@@ -47,7 +47,7 @@ export const CloseButton = styled.div`
 const ImagePreview: FC<IProps> = ({ src, onClose }) => {
   const handleClose = (e: any) => {
     e.stopPropagation();
-    onClose(e);
+    onClose();
   };
 
   return (

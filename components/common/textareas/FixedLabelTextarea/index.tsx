@@ -34,10 +34,13 @@ export const Textarea = styled.textarea`
 `;
 
 export const onKeyPress = (e: any) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
+  if (e.key === 'Enter') {
+    if (!e.shiftKey) {
+      e.preventDefault();
+    }
   }
 };
+
 const FixedLabelTextarea: FC<IProps> = ({ control, label, name, placeholder }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

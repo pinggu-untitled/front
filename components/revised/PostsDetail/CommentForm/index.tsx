@@ -104,7 +104,6 @@ const CommentForm = () => {
     axios
       .patch(`/posts/${postId}/comments/${commentId}`, { content })
       .then((res) => {
-        console.log(res.data);
         mutateCd();
       })
       .catch((err) => console.error(err));
@@ -113,7 +112,6 @@ const CommentForm = () => {
     axios
       .delete(`/posts/${postId}/comments/${commentId}`)
       .then((res) => {
-        console.log(res);
         mutateCd();
       })
       .catch((err) => console.error(err));
@@ -124,7 +122,6 @@ const CommentForm = () => {
     axios
       .post(`/posts/${postId}/comments`, { pid: pid, content })
       .then((res) => {
-        console.log(res.data);
         mutateCd();
         setComment('');
         setIsSpread(true);

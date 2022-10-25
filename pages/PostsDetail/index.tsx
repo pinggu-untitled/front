@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -13,7 +13,7 @@ import SettingsModal from '@components/revised/SettingsModal';
 import useModals from '@utils/useModals';
 import { BiCommentDetail, BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete, AiOutlineLike, AiOutlineLink } from 'react-icons/ai';
-import { IComment, IImage, IMe, IMyPings, IPost } from '@typings/db';
+import { IImage, IMe, IMyPings, IPost } from '@typings/db';
 import PostImage from '@components/revised/common/images/PostImage';
 import { v4 as uuid } from 'uuid';
 import TotalCount from '@components/revised/Home/TotalCount';
@@ -29,6 +29,7 @@ import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
 import axios from 'axios';
 import CommentForm from '@components/revised/PostsDetail/CommentForm';
+import regexifyString from 'regexify-string';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -114,6 +115,7 @@ const PostDetail = () => {
   const { moveCenterToPost } = useMap();
 
   // console.log('🌷', pd);
+
   if (pd && moveCenterToPost) moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
 
   const copyUrl = (e: any) => {
@@ -155,6 +157,40 @@ const PostDetail = () => {
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
+
+  const refineContent = useCallback<(content: string) => (string | JSX.Element)[] | JSX.Element>(
+    (content: string) => {
+      const result = regexifyString({
+        pattern: /#[^\s#]+|@[^\s@]+|http[^\shttp]+|https:[^\shttps]+|\n/g,
+        decorator(match, index) {
+          const social: string[] | null = match.match(/http[^\shttp]+|https[^\shttps]+/g);
+
+          if (social) {
+            return (
+              <a key={uuid()} href={social[0]} style={{ color: '#1974e4', textDecoration: 'underline' }}>
+                {social[0]}
+              </a>
+            );
+          }
+
+          const arr: string[] | null = match.match(/#[^\s#]+|@[^\s@]+/g);
+          console.log(arr);
+          if (arr) {
+            return (
+              <Link key={uuid()} to={`/results?search_query=${arr[0].slice(1)}`} style={{ color: '#1974e4' }}>
+                {arr[0]}
+              </Link>
+            );
+          }
+          return <br key={uuid()} />;
+        },
+        input: content,
+      });
+
+      return result;
+    },
+    [pd?.content],
+  );
 
   if (pd === undefined) return <div>로딩중...</div>;
 
@@ -229,7 +265,7 @@ const PostDetail = () => {
           <div className={'mypings'}>
             <span>{pd?.created_at}</span>
           </div>
-          <p className={'content'}>{pd?.content}</p>
+          <p className={'content'}>{refineContent(pd?.content)}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
         <CommentForm />

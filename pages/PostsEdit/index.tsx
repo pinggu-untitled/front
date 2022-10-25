@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
@@ -40,14 +39,14 @@ const PostsEdit = () => {
       is_private: pd?.is_private || 0,
       longitude: pd?.longitude || '',
       latitude: pd?.latitude || '',
+      images: [],
       hashtags: [],
       mentions: [],
     },
   });
 
-  const { title, longitude, latitude } = watch();
+  const { title, longitude, latitude, images } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
-  const [images, setImages] = useState<any[]>(pd?.Images.map((img) => img.src) || []);
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: true,
     showSearchLocation: false,
@@ -58,11 +57,10 @@ const PostsEdit = () => {
   }, []);
 
   const onSubmit = handleSubmit(async (data: IPostForm) => {
-    console.log('images>>>>>', images);
     let filenames = [];
-    if (images.length >= 1) {
+    if (data.images.length >= 1) {
       filenames = await axios
-        .post('/posts/images', makeFormData('images', images), {
+        .post('/posts/images', makeFormData('images', data.images), {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((res) => res.data);
@@ -93,11 +91,8 @@ const PostsEdit = () => {
       setValue('is_private', pd?.is_private === 1 || 0);
       setValue('longitude', pd?.longitude || '');
       setValue('latitude', pd?.latitude || '');
+      setValue('images', pd?.Images.map((img) => img.src) || '');
       setShowOptions((p) => ({ ...p, showImages: pd?.Images.length > 0 }));
-    }
-
-    if (pd?.Images) {
-      setImages(pd?.Images.map((image) => image.src) || []);
     }
   }, [pd]);
 
@@ -137,7 +132,7 @@ const PostsEdit = () => {
                 name={'content'}
                 placeholder={`게시글 내용을 작성해주세요.`}
               />
-              {showOptions.showImages && <ImageInputList images={images} setImages={setImages} />}
+              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton

@@ -7,8 +7,8 @@ import imagePreviewPromisfier, { fileReaderPromise } from '@utils/imagePreviewPr
 import ImagePreview from '@components/revised/PostsNewEdit/ImageInputList/ImagePreview';
 
 interface IProps {
-  images: any[];
-  setImages: Dispatch<SetStateAction<any[]>>;
+  control: any;
+  name: string;
 }
 
 export const Base = styled.div`
@@ -51,15 +51,15 @@ export const FileDropper = styled.label`
   }
 `;
 
-const ImageInputList = ({ images, setImages }: IProps) => {
+const ImageInputList: FC<IProps> = ({ control, name }) => {
   const { postId } = useParams<{ postId: string }>();
-  // const { remove, append } = useFieldArray({ control, name });
-  // const { field } = useController({ control, name });
-  const [previews, setPreviews] = useState<any[]>(images);
+  const { remove, append } = useFieldArray({ control, name });
+  const [previews, setPreviews] = useState<any[]>([]);
+  const { field } = useController({ control, name });
 
   useEffect(() => {
     const files = Promise.all(
-      Array.from(images).map((file: any) => {
+      Array.from(field.value).map((file: any) => {
         if (typeof file === 'string') {
           return new Promise((resolve) => resolve(file));
         } else {
@@ -72,31 +72,18 @@ const ImageInputList = ({ images, setImages }: IProps) => {
     });
 
     return () => {};
-  }, [images, setImages]);
+  }, [field.value]);
 
-  const onAdd = (e: any) => setImages((prev) => [...prev, ...e.target.files]);
+  const appendFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
+  const appendPreviews = (files: FileList) => {
+    imagePreviewPromisfier(files).then((res: any) => {
+      return setPreviews((prev) => (Array.isArray(prev) ? [...prev, ...res] : [...prev, res]));
+    });
+  };
 
-  const onRemove = (index: number) => (e: any) => setImages((prev) => prev.filter((_, i) => i !== index));
-
-  // const appendFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
-  // const appendPreviews = (files: FileList) => {
-  //   imagePreviewPromisfier(files).then((res: any) => {
-  //     return setPreviews((prev) => (Array.isArray(prev) ? [...prev, ...res] : [...prev, res]));
-  //   });
-  // };
-
-  // const handleChange = useCallback((files) => {
-  //   appendFiles(files);
-  //   // appendPreviews(files);
-  // }, []);
-
-  // const onRemove = useCallback(
-  //   (i: number) => {
-  //     remove(i);
-  //     // setPreviews((p) => p.filter((_, idx) => i !== idx));
-  //   },
-  //   [previews],
-  // );
+  const handleChange = useCallback((files) => {
+    appendFiles(files);
+  }, []);
 
   return (
     <Base>
@@ -106,9 +93,15 @@ const ImageInputList = ({ images, setImages }: IProps) => {
             <FaCamera />
           </span>
           <span className={'count'}>
-            <span className={'highlight'}>{images.length}</span>/8
+            <span className={'highlight'}>{field.value.length}</span>/8
           </span>
-          <input type={'file'} onChange={onAdd} multiple={true} hidden />
+          <Controller
+            control={control}
+            name={name}
+            render={({ field }) => (
+              <input type={'file'} onChange={(e: any) => handleChange(e.target.files)} multiple={true} hidden />
+            )}
+          />
         </FileDropper>
         {previews.length >= 1 &&
           previews?.map((preview: string, i) => {
@@ -118,7 +111,7 @@ const ImageInputList = ({ images, setImages }: IProps) => {
               <ImagePreview
                 key={`${preview}.${i}`}
                 src={isNew ? preview : `${baseUrl}/${preview}`}
-                onClose={onRemove(i)}
+                onClose={() => remove(i)}
               />
             );
           })}

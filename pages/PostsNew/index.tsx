@@ -21,19 +21,23 @@ import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBa
 import findMatches from '@utils/findMatches';
 import TitleNavigation from '@components/revised/common/navigations/TitleNavigation';
 import handleNavigate from '@utils/handleNavigate';
+import { Base as B, MainContentZone as M } from '@pages/Home';
 
-export const Base = styled.div`
+export const Base = styled(B)`
   width: 100%;
+  height: 100%;
 `;
 
-export const MainContentZone = styled.div`
-  width: 440px;
-  margin-top: 73px;
-  padding: 20px 20px 0 20px;
+export const MainContentZone = styled(M)`
+  padding: 20px 20px 40px;
   overflow: scroll;
+  bottom: 80px;
 `;
 
 export const Form = styled.form`
+  width: 100%;
+  height: 100%;
+
   > label {
     margin-bottom: 20px;
   }
@@ -61,6 +65,7 @@ export interface IPostForm {
   is_private: boolean | number;
   longitude: string;
   latitude: string;
+  images: any[];
   hashtags: { content: string }[];
   mentions: { receiver: number }[];
 }
@@ -92,6 +97,7 @@ const PostsNew = () => {
       is_private: false,
       longitude: '126.111111',
       latitude: '37.222222',
+      images: [],
       hashtags: [{ content: 'hello' }, { content: 'hello2' }],
       mentions: [{ receiver: 1 }, { receiver: 2 }],
     },
@@ -102,18 +108,17 @@ const PostsNew = () => {
     showSearchLocation: false,
   });
 
-  const [images, setImages] = useState<any[]>([]);
   const toggleOption = useCallback((option) => {
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   }, []);
 
-  const { title, longitude, latitude } = watch();
+  const { title, images, longitude, latitude } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
   const onSubmit = handleSubmit(async (data: IPostForm) => {
     let filenames;
-    if (images.length > 0) {
+    if (data.images.length > 0) {
       filenames = await axios
-        .post('/posts/images', makeFormData('images', images), {
+        .post('/posts/images', makeFormData('images', data.images), {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((res) => res.data);
@@ -168,7 +173,7 @@ const PostsNew = () => {
                 name={'content'}
                 placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
               />
-              {showOptions.showImages && <ImageInputList images={images} setImages={setImages} />}
+              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
               <ToolBox title={'게시물에 추가'}>
                 <HoverLabel label={'사진'} style={{ top: '-35px' }}>
                   <ToolButton
