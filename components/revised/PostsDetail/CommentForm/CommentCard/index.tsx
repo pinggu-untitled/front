@@ -4,12 +4,13 @@ import styled from '@emotion/styled';
 import ProfileAvatar from '@components/revised/common/images/ProfileAvatar';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
+import useInput from '@hooks/useInput';
 
 interface IProps {
   comment: IComment;
   onEdit: (commentId: number, content: string) => void;
   onDelete: (e: any) => void;
-  onReply: (e: any) => void;
+  onReply: (pid: number, content: string) => (e: any) => void;
 }
 
 export const Base = styled.li<{ depth: boolean }>`
@@ -76,18 +77,31 @@ export const ActionButton = styled.span`
 
 const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
   const { data: md } = useSWR<IMe>('/users/me', fetcher);
-  const [isInput, setIsInput] = useState(false);
-  const [isReply, setIsReply] = useState(false);
-  const [content, setContent] = useState(comment.content);
-  const onChangeContent = (e: any) => setContent(e.target.value);
-  const onSubmit = (e: any) => {
+  const [isEditInput, setEditInput] = useState(false);
+  const [isReplyInput, setReplyInput] = useState(false);
+  const [editComment, onChangeEditComment, setEditComment] = useInput(comment.content);
+  const [replyComment, onChangeReplyComment, setReplyComment] = useInput('');
+
+  const onSubmitEdit = (e: any) => {
     e.preventDefault();
-    console.log('submit');
-    onEdit(comment.id, content);
-    setIsInput(false);
+    onEdit(comment.id, editComment);
+    setEditInput(false);
+    setEditComment('');
   };
-  const onKeyPress = (e: any) => {
-    if (e.key === 'Enter') onSubmit(e);
+
+  const onSubmitReply = (e: any) => {
+    console.log('replay sumibt', replyComment);
+    onReply(comment.id, replyComment)(e);
+    setReplyInput(false);
+    setReplyComment('');
+  };
+
+  type Type = 'edit' | 'reply';
+
+  const onKeyPress = (type: Type) => (e: any) => {
+    if (e.key === 'Enter') {
+      type === 'edit' ? onSubmitEdit(e) : onSubmitReply(e);
+    }
   };
   return (
     <Base depth={comment.pid !== null}>
@@ -95,33 +109,54 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
       <div className={'container'}>
         <div className={'wrapper'}>
           <span className={'nickname'}>{comment?.User.nickname}</span>
-          {isInput ? (
+          {isEditInput ? (
             <>
-              <input value={content} onChange={onChangeContent} autoFocus={true} onKeyPress={onKeyPress} />
+              <input
+                value={editComment}
+                onChange={onChangeEditComment}
+                autoFocus={true}
+                onKeyPress={onKeyPress('edit')}
+              />
               <button type={'submit'} hidden />
             </>
           ) : (
             <p className={'content'}>{comment?.content}</p>
           )}
-          {
-            // isReply && <input value={content} onChange={onChangeContent}  onKeyPress={onKeyPress}/>
-          }
+          {isReplyInput && (
+            <input
+              type={'text'}
+              placeholder={'답글 달기...'}
+              value={replyComment}
+              onChange={onChangeReplyComment}
+              onKeyPress={onKeyPress('reply')}
+              autoFocus={true}
+            />
+          )}
         </div>
         <ActionButtonZone>
           {md?.id === comment.User.id && (
             <>
               <ActionButton
                 onClick={(e) => {
-                  setIsInput((p) => !p);
-                  isInput ? onSubmit(e) : null;
+                  setEditInput((p) => !p);
+                  isEditInput && onSubmitEdit(e);
                 }}
               >
-                {isInput ? '수정 완료' : '수정'}
+                {isEditInput ? '수정 완료' : '수정'}
               </ActionButton>
               <ActionButton onClick={onDelete}>삭제</ActionButton>
             </>
           )}
-          {comment.pid === null && <ActionButton onClick={onReply}>답글 달기</ActionButton>}
+          {comment.pid === null && (
+            <ActionButton
+              onClick={(e) => {
+                setReplyInput((p) => !p);
+                isReplyInput && onSubmitReply(e);
+              }}
+            >
+              {isReplyInput ? '답글 완료' : '답글 달기'}
+            </ActionButton>
+          )}
         </ActionButtonZone>
       </div>
     </Base>

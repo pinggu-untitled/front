@@ -2,7 +2,6 @@ import React, { FC, useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { IComment } from '@typings/db';
 import CommentCard from '@components/revised/PostsDetail/CommentForm/CommentCard';
-import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { useParams } from 'react-router-dom';
@@ -11,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { BiSend } from 'react-icons/bi';
 import axios from 'axios';
 import autosize from 'autosize';
-import { onKeyPress } from '@components/common/textareas/FixedLabelTextarea';
+import useInput from '@hooks/useInput';
 
 export const Base = styled.div`
   width: 100%;
@@ -99,9 +98,7 @@ const CommentForm = () => {
   const { postId } = useParams<{ postId: string }>();
   const { data: cd, mutate: mutateCd } = useSWR<IComment[]>(`/posts/${postId}/comments`, fetcher);
   const [isSpread, setIsSpread] = useState(true);
-  const [comment, setComment] = useState('');
-  const [pid, setPid] = useState<number | null>(null);
-  const onChangeComment = (e: any) => setComment(e.target.value);
+  const [comment, onChangeComment, setComment] = useInput('');
   const inputRef = useRef<HTMLInputElement>(null);
   const onEdit = (commentId: number, content: string) => {
     axios
@@ -121,13 +118,11 @@ const CommentForm = () => {
       })
       .catch((err) => console.error(err));
   };
-  const onReply = (commentId: number) => (e: any) => setPid(commentId);
 
-  const onSubmit = (e: any) => {
+  const onSubmit = (pid: number | null, content: string) => (e: any) => {
     e.preventDefault();
-    console.log(comment);
     axios
-      .post(`/posts/${postId}/comments`, { content: comment, pid: null })
+      .post(`/posts/${postId}/comments`, { pid: pid, content })
       .then((res) => {
         console.log(res.data);
         mutateCd();
@@ -137,27 +132,13 @@ const CommentForm = () => {
       .catch((err) => console.error(err));
   };
 
-  const onSubmitEdit = (e: any) => {
-    e.preventDefault();
+  const onReply = (pid: number, content: string) => (e: any) => {
+    onSubmit(pid, content)(e);
   };
-  const totalComments = (comments: IComment[]) => {
-    let cnt = 0;
 
-    for (let comment of comments) {
-      cnt++;
-      if (comment.Comments.length > 0) {
-        for (let comm of comment.Comments) {
-          cnt++;
-        }
-      }
-    }
-
-    return cnt;
-  };
-  const commentsArray = (comments: IComment[]): IComment[] | [] => {
+  const commentsArray = (comments: IComment[]): { fullComments: IComment[] | []; length: number } => {
     const copied: IComment[] = [];
 
-    // comments.reduce(())
     for (let comment of comments) {
       copied.push(comment);
       if (comment.Comments.length > 0) {
@@ -167,7 +148,7 @@ const CommentForm = () => {
       }
     }
 
-    return copied;
+    return { fullComments: copied, length: copied.length };
   };
 
   useEffect(() => {
@@ -176,36 +157,33 @@ const CommentForm = () => {
     }
   }, [inputRef]);
 
-  console.log(cd);
   if (cd === undefined) return <div>로딩중...</div>;
 
   return (
     <Base>
       <Header spread={isSpread}>
-        <span className={'title'}>댓글 ({totalComments(cd)})</span>
+        <span className={'title'}>댓글 ({commentsArray(cd)['length']})</span>
         <span className={'collapse-button'} onClick={() => setIsSpread((p) => !p)}>
           {isSpread ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
         </span>
       </Header>
       {isSpread && (
         <Main>
-          {cd.length > 0 ? (
+          {cd.length > 0 && (
             <form>
               <CommentCardList>
                 {cd &&
-                  commentsArray(cd)?.map((comment) => (
+                  commentsArray(cd)['fullComments']?.map((comment) => (
                     <CommentCard
                       key={uuid()}
                       comment={comment}
                       onEdit={onEdit}
                       onDelete={onDelete(comment.id)}
-                      onReply={onReply(comment.id)}
+                      onReply={onReply}
                     />
                   ))}
               </CommentCardList>
             </form>
-          ) : (
-            <EmptyMessage message={'아직 작성된 댓글이 없습니다.'} />
           )}
         </Main>
       )}
@@ -217,7 +195,7 @@ const CommentForm = () => {
           onChange={onChangeComment}
           ref={inputRef}
         />
-        <button type="submit" onClick={onSubmit} disabled={!comment}>
+        <button type="submit" onClick={onSubmit(null, comment)} disabled={!comment}>
           <BiSend />
         </button>
       </Form>
