@@ -75,6 +75,15 @@ export const ActionButton = styled.span`
   }
 `;
 
+export const ReplyInputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  > input {
+    margin-left: 6px;
+  }
+`;
+
 const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
   const { data: md } = useSWR<IMe>('/users/me', fetcher);
   const [isEditInput, setEditInput] = useState(false);
@@ -122,14 +131,17 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
             <p className={'content'}>{comment?.content}</p>
           )}
           {isReplyInput && (
-            <input
-              type={'text'}
-              placeholder={'답글 달기...'}
-              value={replyComment}
-              onChange={onChangeReplyComment}
-              onKeyPress={onKeyPress('reply')}
-              autoFocus={true}
-            />
+            <ReplyInputWrapper>
+              <ProfileAvatar profile={md} style={{ width: '23px', height: '23px' }} />
+              <input
+                type={'text'}
+                placeholder={'답글 달기...'}
+                value={replyComment}
+                onChange={onChangeReplyComment}
+                onKeyPress={onKeyPress('reply')}
+                autoFocus={true}
+              />
+            </ReplyInputWrapper>
           )}
         </div>
         <ActionButtonZone>
