@@ -1,6 +1,4 @@
-import React, { useCallback } from 'react';
-import SettingsModal from '@components/revised/SettingsModal';
-import SquareButton from '@components/common/buttons/SquareButton';
+import React from 'react';
 import { createContext, useContext, useState } from 'react';
 const { kakao } = window;
 
@@ -9,6 +7,7 @@ interface IMapContext {
   myMarker: kakao.maps.Marker | null;
   initializeMap: ((container: HTMLElement, latitude: number, longitude: number) => void) | null;
   moveCenterToPost: ((latitude: number, longitude: number) => void) | null;
+  getMapInfo: () => void;
 }
 
 const MapContext = createContext<IMapContext>({
@@ -16,6 +15,7 @@ const MapContext = createContext<IMapContext>({
   myMarker: null,
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
+  getMapInfo: () => {},
 });
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
@@ -43,24 +43,25 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       setMyMarker((prev) => {
         const newMyMarker = new kakao.maps.Marker({ position, clickable: true });
         newMyMarker.setMap(newMap);
-        newMyMarker.isClicked = false;
         // 지도 클릭 시 내 위치 마커 이동
         newMap.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
           newMyMarker.setPosition(latLng);
         });
         // 내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
         newMyMarker.addListener('click', () => {
+          console.log(newMyMarker.getPosition());
           // 게시물 작성 모달
           const content = `
-            <div>
+            <div style='background-color: black; color: white;'>
               <ul>
+                <li>이것은 테스트</li>
                 <li>안녕하시오.</li>
                 <li>안녕하가시오.</li>
               </ul>
             </div>
           `;
           const overlay = new kakao.maps.CustomOverlay({
-            position,
+            position: newMyMarker.getPosition(),
             content,
           });
           overlay.setMap(newMap);
@@ -88,8 +89,21 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     }
   };
 
+  /* 지도 정보 얻기 */
+  const getMapInfo = () => {
+    const bounds = map?.getBounds();
+    const swLatLng = bounds?.getSouthWest();
+    const noLatLng = bounds?.getNorthEast();
+    console.log('bounds >> ', bounds);
+    console.log('swLatLng >> ', swLatLng);
+    console.log('swLat >> ', typeof swLatLng?.getLat());
+    console.log('neLatLng >> ', noLatLng);
+  };
+
   return (
-    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToPost }}>{children}</MapContext.Provider>
+    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToPost, getMapInfo }}>
+      {children}
+    </MapContext.Provider>
   );
 };
 
