@@ -86,7 +86,6 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
     e.preventDefault();
     onEdit(comment.id, editComment);
     setEditInput(false);
-    setEditComment('');
   };
 
   const onSubmitReply = (e: any) => {
