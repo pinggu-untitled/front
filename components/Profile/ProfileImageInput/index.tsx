@@ -63,11 +63,10 @@ const ProfileImageInput: FC<IProps> = ({ control, name }) => {
     });
   }, []);
 
-  // console.log(control._defaultValues.profile_image_file);
   return (
     <Base>
       <ProfileImageWrapper>
-        <img src={preview || control._defaultValues.profile_image_file || '/public/placeholder.png'} alt={name} />
+        <img src={preview || field.value || '/public/placeholder.png'} alt={name} />
         <Controller
           control={control}
           name={name}

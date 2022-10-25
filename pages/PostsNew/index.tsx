@@ -29,6 +29,7 @@ export const Base = styled(B)`
 `;
 
 export const MainContentZone = styled(M)`
+  top: 73px;
   padding: 20px 20px 40px;
   overflow: scroll;
   bottom: 80px;

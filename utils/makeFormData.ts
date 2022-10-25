@@ -1,6 +1,11 @@
-const makeFormData = (name: string, files: File[]) => {
+const makeFormData = (name: string, files: File[] | File) => {
   const formData = new FormData();
-  files.forEach((file) => formData.append(name, file));
+
+  if (Array.isArray(files)) {
+    files.forEach((file) => formData.append(name, file));
+  } else {
+    formData.append(name, files);
+  }
 
   return formData;
 };
