@@ -43,13 +43,9 @@ const ProfileEdit = () => {
       filename = data.profile_image_url;
     } else {
       filename = await axios
-        .post(
-          '/profile/image',
-          { image: makeFormData('profile_image_url', data.profile_image_url[0]) },
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          },
-        )
+        .post('/profile/image', makeFormData('image', data.profile_image_url[0]), {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
         .then((res) => {
           console.log('res', res);
           return res.data;
