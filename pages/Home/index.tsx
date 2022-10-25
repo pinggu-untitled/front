@@ -10,6 +10,7 @@ import TopNavigation from '@components/revised/common/navigations/TopNavigation'
 import { redirect, useNavigate } from 'react-router-dom';
 import readable from '@utils/readable';
 import { Redirect } from 'react-router';
+import { useMap } from '@contexts/MapContext';
 
 export const Base = styled.div`
   width: 100%;
@@ -30,7 +31,10 @@ const Home = () => {
   const navigator = useNavigate();
   const { data: md } = useSWR<IMe>('/users/me', fetcher);
   const { data: pd } = useSWR<IPost[]>('/posts', fetcher);
+  const { moveCenterToMe } = useMap();
   const isMyPost = (post: IPost) => post.User.id === md?.id;
+
+  moveCenterToMe();
 
   useEffect(() => {
     if (md === undefined && pd === undefined) navigator('/');

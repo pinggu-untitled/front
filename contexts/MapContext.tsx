@@ -5,8 +5,9 @@ const { kakao } = window;
 interface IMapContext {
   map: kakao.maps.Map | null;
   myMarker: kakao.maps.Marker | null;
-  initializeMap: ((container: HTMLElement, latitude: number, longitude: number) => void) | null;
-  moveCenterToPost: ((latitude: number, longitude: number) => void) | null;
+  initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
+  moveCenterToMe: () => void;
+  moveCenterToPost: (latitude: number, longitude: number) => void;
   getMapInfo: () => void;
 }
 
@@ -14,6 +15,7 @@ const MapContext = createContext<IMapContext>({
   map: null,
   myMarker: null,
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
+  moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
   getMapInfo: () => {},
 });
@@ -21,7 +23,6 @@ const MapContext = createContext<IMapContext>({
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
-  // const [center, setCenter] = useState(); // 지도 중심 좌표
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
   const [subMarker, setSubMarker] = useState(); // 중심 좌표 주변 포스트 마커
 
@@ -79,14 +80,32 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     });
   };
 
-  /* 특정 포스트 위치로 지도 중심 좌표 변경 */
-  const moveCenterToPost = (latitude: number, longitude: number) => {
+  /* 중심 좌표 설정 및 마커 표시 */
+  const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker) => {
     const position = new kakao.maps.LatLng(latitude, longitude);
-    if (map && postMarker) {
+    if (map && marker) {
       map.setCenter(position);
-      postMarker.setPosition(position);
-      postMarker.setMap(map);
+      marker.setPosition(position);
+      marker.setMap(map);
     }
+  };
+
+  /* 내 위치로 지도 중심 좌표 변경 with 내 위치 마커 */
+  const moveCenterToMe = () => {
+    if (map && myMarker) {
+      const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+        setMapCenter(latitude, longitude, myMarker);
+      };
+      const onError = (error: any) => {
+        console.error(error);
+      };
+      navigator?.geolocation.getCurrentPosition(onSuccess, onError);
+    }
+  };
+
+  /* 특정 포스트 위치로 지도 중심 좌표 변경 with 특정 포스트 마커 */
+  const moveCenterToPost = (latitude: number, longitude: number) => {
+    if (map && postMarker) setMapCenter(latitude, longitude, postMarker);
   };
 
   /* 지도 정보 얻기 */
@@ -101,7 +120,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   };
 
   return (
-    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToPost, getMapInfo }}>
+    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMapInfo }}>
       {children}
     </MapContext.Provider>
   );

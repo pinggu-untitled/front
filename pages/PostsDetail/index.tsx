@@ -112,13 +112,12 @@ const PostDetail = () => {
   const { data: userPd } = useSWR<IPost[]>(`/users/${pd?.User.id}/posts`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
-  const { moveCenterToPost, getMapInfo } = useMap();
+  const { moveCenterToPost } = useMap();
 
   // console.log('🌷', pd);
 
   if (pd && moveCenterToPost) {
     moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
-    getMapInfo();
   }
 
   const copyUrl = (e: any) => {
