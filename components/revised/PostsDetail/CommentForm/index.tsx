@@ -97,7 +97,7 @@ export const CommentInput = styled.input`
 const CommentForm = () => {
   const { postId } = useParams<{ postId: string }>();
   const { data: cd, mutate: mutateCd } = useSWR<IComment[]>(`/posts/${postId}/comments`, fetcher);
-  const [isSpread, setIsSpread] = useState(true);
+  const [isSpread, setIsSpread] = useState(false);
   const [comment, onChangeComment, setComment] = useInput('');
   const inputRef = useRef<HTMLInputElement>(null);
   const onEdit = (commentId: number, content: string) => {
