@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Controller, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
 import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
@@ -57,16 +57,22 @@ export const ProfileImageWrapper = styled.label`
 const ProfileImageInput: FC<IProps> = ({ control, name }) => {
   const { field } = useController({ control, name });
   const [preview, setPreview] = useState(field.value);
-  const handlePreview = useCallback((files) => {
-    imagePreviewPromisfier(files).then((res) => {
-      setPreview(res);
-    });
+
+  const handlePreview = (files: any) => {
+    if (typeof files === 'string') return files;
+    imagePreviewPromisfier(files).then((res) => setPreview(res));
+  };
+
+  useEffect(() => {
+    // handlePreview(field.value);
+    setPreview(field.value?.startsWith('http') ? field.value : `http://localhost:8080/uploads/profile/${field.value}`);
+    // return () => {};
   }, []);
 
   return (
     <Base>
       <ProfileImageWrapper>
-        <img src={preview || field.value || '/public/placeholder.png'} alt={name} />
+        <img src={preview || '/public/placeholder.png'} alt={name} />
         <Controller
           control={control}
           name={name}

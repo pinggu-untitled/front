@@ -45,7 +45,7 @@ const TopNavigation: FC<IProps> = ({ title }) => {
   const settingsItem = [
     { content: { icon: <FiEdit />, title: '게시물 작성하기' }, onClick: handleNavigate('/posts/new') },
     { content: { icon: <MdOutlineBookmarkAdd />, title: '마이핑스 만들기' }, onClick: handleNavigate('/mypings/new') },
-    { content: { icon: <AiOutlineUser />, title: '프로필 편집하기' }, onClick: handleNavigate(`/${md?.id}/edit`) },
+    { content: { icon: <AiOutlineUser />, title: '프로필 수정하기' }, onClick: handleNavigate(`/${md?.id}/edit`) },
     {
       content: { icon: <IoIosLogOut />, title: '로그아웃', rest: <a href={'http://localhost:8080/auth/logout'}></a> },
       onClick: () => {

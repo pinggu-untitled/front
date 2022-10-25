@@ -25,12 +25,12 @@ interface IForm {
 const ProfileEdit = () => {
   const navigator = useNavigate();
   const { userId } = useParams<{ userId: string }>();
-  const { data: md } = useSWR<IUser>('/users/me', fetcher);
+  const { data: md } = useSWR<IUser>(`/users/${userId}`, fetcher);
   const { control, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
-      nickname: md?.nickname,
-      bio: md?.bio,
-      profile_image_url: md?.profile_image_url,
+      nickname: md?.nickname || '',
+      bio: md?.bio || '',
+      profile_image_url: md?.profile_image_url || '',
     },
   });
   const { nickname } = watch();
@@ -46,30 +46,22 @@ const ProfileEdit = () => {
         .post('/profile/image', makeFormData('image', data.profile_image_url[0]), {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
-        .then((res) => {
-          console.log('res', res);
-          return res.data;
-        });
+        .then((res) => res.data);
     }
-    console.log('filename', filename);
-    // filenames = await axios
-    //   .post('/posts/images', makeFormData('images', data.images), {
-    //     headers: { 'Content-Type': 'multipart/form-data' },
-    //   })
-    //   .then((res) => res.data);
-    // console.log('uuid filename>>>', filename);
-    // const newPost = await axios.patch('/profile/info', { ...data, profile_image_url: filename });
-    // console.log(newPost);
-  }, []);
 
-  const controller = new AbortController();
-  const { signal } = controller;
+    const editedProfile = await axios
+      .patch('/profile/info', { ...data, profile_image_url: filename })
+      .then((res) => res.data)
+      .catch((err) => console.error(err));
+
+    navigator(`/${userId}`);
+  }, []);
 
   useEffect(() => {
     if (md) {
-      setValue('nickname', md.nickname);
-      setValue('bio', md.bio);
-      // setValue('profile_image_url', md.profile_image_url);
+      setValue('nickname', md.nickname || '');
+      setValue('bio', md.bio || '');
+      setValue('profile_image_url', md.profile_image_url || '');
     }
   }, [md]);
 
