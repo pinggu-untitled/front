@@ -42,19 +42,32 @@ const ProfileEdit = () => {
     if (typeof data.profile_image_url === 'string') {
       filename = data.profile_image_url;
     } else {
-      filename = await axios.post(
-        '/profile/image',
-        { image: makeFormData('profile_image_url', data.profile_image_url[0]) },
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      );
+      filename = await axios
+        .post(
+          '/profile/image',
+          { image: makeFormData('profile_image_url', data.profile_image_url[0]) },
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          },
+        )
+        .then((res) => {
+          console.log('res', res);
+          return res.data;
+        });
     }
-
-    console.log('uuid filename>>>', filename);
+    console.log('filename', filename);
+    // filenames = await axios
+    //   .post('/posts/images', makeFormData('images', data.images), {
+    //     headers: { 'Content-Type': 'multipart/form-data' },
+    //   })
+    //   .then((res) => res.data);
+    // console.log('uuid filename>>>', filename);
     // const newPost = await axios.patch('/profile/info', { ...data, profile_image_url: filename });
     // console.log(newPost);
   }, []);
+
+  const controller = new AbortController();
+  const { signal } = controller;
 
   useEffect(() => {
     if (md) {
