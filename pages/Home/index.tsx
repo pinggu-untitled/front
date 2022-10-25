@@ -28,11 +28,9 @@ interface IForm {
 }
 const Home = () => {
   const navigator = useNavigate();
-  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd } = useSWR<IPost[]>(`/posts`, fetcher);
-  const isMyPost = (post: IPost) => {
-    return post.User.id === md?.id;
-  };
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: pd } = useSWR<IPost[]>('/posts', fetcher);
+  const isMyPost = (post: IPost) => post.User.id === md?.id;
 
   useEffect(() => {
     if (md === undefined && pd === undefined) navigator('/');
