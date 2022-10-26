@@ -32,7 +32,7 @@ const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
     <Base style={style} onClick={onClick}>
       <img
         src={
-          profile?.profile_image_url.startsWith('http://k.kakaocdn.net')
+          profile?.profile_image_url.startsWith('http') || profile?.profile_image_url.startsWith('https')
             ? profile?.profile_image_url
             : `http://localhost:8080/uploads/profile/${profile?.profile_image_url}` || '/public/placeholder.png'
         }

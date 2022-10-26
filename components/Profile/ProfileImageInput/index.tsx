@@ -72,9 +72,6 @@ const ProfileImageInput: FC<IProps> = ({ control, name }) => {
     handlePreview(field.value);
   }, [field.value]);
 
-  console.log('field.value', field.value);
-  console.log('preview', preview);
-
   return (
     <Base>
       <ProfileImageWrapper>
