@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useLayoutEffect } from 'react';
 import styled from '@emotion/styled';
 import { useLocation, useNavigate, useParams, useRoutes } from 'react-router-dom';
 import SearchInput from '@components/common/inputs/SearchInput';
@@ -41,12 +41,15 @@ const Explore = () => {
   //   userData ? `/results?search_query=${query}).search_query}` : null,
   //   fetcher,
   // );
-  moveCenterToMe();
 
   const onSubmit = useCallback((data: IForm) => {
     console.log(data);
     setSearch(data.query);
     navigate(`/results?search_query=${data.query}`);
+  }, []);
+
+  useLayoutEffect(() => {
+    moveCenterToMe();
   }, []);
 
   useEffect(() => {
