@@ -1,27 +1,28 @@
-import React, { useCallback } from 'react';
-import SettingsModal from '@components/revised/SettingsModal';
-import SquareButton from '@components/common/buttons/SquareButton';
+import React from 'react';
 import { createContext, useContext, useState } from 'react';
 const { kakao } = window;
 
 interface IMapContext {
   map: kakao.maps.Map | null;
   myMarker: kakao.maps.Marker | null;
-  initializeMap: ((container: HTMLElement, latitude: number, longitude: number) => void) | null;
-  moveCenterToPost: ((latitude: number, longitude: number) => void) | null;
+  initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
+  moveCenterToMe: () => void;
+  moveCenterToPost: (latitude: number, longitude: number) => void;
+  getMapInfo: () => void;
 }
 
 const MapContext = createContext<IMapContext>({
   map: null,
   myMarker: null,
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
+  moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
+  getMapInfo: () => {},
 });
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
-  // const [center, setCenter] = useState(); // 지도 중심 좌표
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
   const [subMarker, setSubMarker] = useState(); // 중심 좌표 주변 포스트 마커
 
@@ -43,24 +44,25 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       setMyMarker((prev) => {
         const newMyMarker = new kakao.maps.Marker({ position, clickable: true });
         newMyMarker.setMap(newMap);
-        newMyMarker.isClicked = false;
         // 지도 클릭 시 내 위치 마커 이동
         newMap.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
           newMyMarker.setPosition(latLng);
         });
         // 내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
         newMyMarker.addListener('click', () => {
+          console.log(newMyMarker.getPosition());
           // 게시물 작성 모달
           const content = `
-            <div>
+            <div style='background-color: black; color: white;'>
               <ul>
+                <li>이것은 테스트</li>
                 <li>안녕하시오.</li>
                 <li>안녕하가시오.</li>
               </ul>
             </div>
           `;
           const overlay = new kakao.maps.CustomOverlay({
-            position,
+            position: newMyMarker.getPosition(),
             content,
           });
           overlay.setMap(newMap);
@@ -78,18 +80,49 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     });
   };
 
-  /* 특정 포스트 위치로 지도 중심 좌표 변경 */
-  const moveCenterToPost = (latitude: number, longitude: number) => {
+  /* 중심 좌표 설정 및 마커 표시 */
+  const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker) => {
     const position = new kakao.maps.LatLng(latitude, longitude);
-    if (map && postMarker) {
+    if (map && marker) {
       map.setCenter(position);
-      postMarker.setPosition(position);
-      postMarker.setMap(map);
+      marker.setPosition(position);
+      marker.setMap(map);
     }
   };
 
+  /* 내 위치로 지도 중심 좌표 변경 with 내 위치 마커 */
+  const moveCenterToMe = () => {
+    if (map && myMarker) {
+      const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+        setMapCenter(latitude, longitude, myMarker);
+      };
+      const onError = (error: any) => {
+        console.error(error);
+      };
+      navigator?.geolocation.getCurrentPosition(onSuccess, onError);
+    }
+  };
+
+  /* 특정 포스트 위치로 지도 중심 좌표 변경 with 특정 포스트 마커 */
+  const moveCenterToPost = (latitude: number, longitude: number) => {
+    if (map && postMarker) setMapCenter(latitude, longitude, postMarker);
+  };
+
+  /* 지도 정보 얻기 */
+  const getMapInfo = () => {
+    const bounds = map?.getBounds();
+    const swLatLng = bounds?.getSouthWest();
+    const noLatLng = bounds?.getNorthEast();
+    console.log('bounds >> ', bounds);
+    console.log('swLatLng >> ', swLatLng);
+    console.log('swLat >> ', typeof swLatLng?.getLat());
+    console.log('neLatLng >> ', noLatLng);
+  };
+
   return (
-    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToPost }}>{children}</MapContext.Provider>
+    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMapInfo }}>
+      {children}
+    </MapContext.Provider>
   );
 };
 
