@@ -24,10 +24,6 @@ export const Base = styled.div`
 `;
 
 const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
-  // console.log('profile???', `http://localhost:8080/uploads/profile/${profile?.profile_image_url}`);
-
-  // if (!profile?.profile_image_url) return <div>로딩중</div>;
-
   return (
     <Base style={style} onClick={onClick}>
       <img

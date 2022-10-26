@@ -11,6 +11,7 @@ import { BiSend } from 'react-icons/bi';
 import axios from 'axios';
 import autosize from 'autosize';
 import useInput from '@hooks/useInput';
+import { makeHashtags, makeMentions } from '@pages/PostsNew';
 
 export const Base = styled.div`
   width: 100%;
@@ -83,12 +84,14 @@ export const Form = styled.form`
   }
 `;
 
-export const CommentInput = styled.input`
+export const CommentTextarea = styled.textarea`
   width: 100%;
-  padding: 8px 12px;
+  padding: 16px 12px 0px;
   font-size: 14px;
-  resize: none;
   border: none;
+  resize: none;
+  font-family: inherit;
+
   &:focus {
     outline: none;
   }
@@ -99,10 +102,14 @@ const CommentForm = () => {
   const { data: cd, mutate: mutateCd } = useSWR<IComment[]>(`/posts/${postId}/comments`, fetcher);
   const [isSpread, setIsSpread] = useState(false);
   const [comment, onChangeComment, setComment] = useInput('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const texareaRef = useRef<HTMLTextAreaElement>(null);
   const onEdit = (commentId: number, content: string) => {
     axios
-      .patch(`/posts/${postId}/comments/${commentId}`, { content })
+      .patch(`/posts/${postId}/comments/${commentId}`, {
+        content,
+        hashtags: makeHashtags(content),
+        mentions: makeMentions(content),
+      })
       .then((res) => {
         mutateCd();
       })
@@ -119,8 +126,19 @@ const CommentForm = () => {
 
   const onSubmit = (pid: number | null, content: string) => (e: any) => {
     e.preventDefault();
+    console.log('body', {
+      pid: pid,
+      content,
+      hashtags: makeHashtags(content),
+      mentions: makeMentions(content),
+    });
     axios
-      .post(`/posts/${postId}/comments`, { pid: pid, content })
+      .post(`/posts/${postId}/comments`, {
+        pid: pid,
+        content,
+        hashtags: makeHashtags(content),
+        mentions: makeMentions(content),
+      })
       .then((res) => {
         mutateCd();
         setComment('');
@@ -148,21 +166,25 @@ const CommentForm = () => {
     return { fullComments: copied, length: copied.length };
   };
 
-  useEffect(() => {
-    if (inputRef.current) {
-      autosize(inputRef.current);
+  const onKeyPress = (e: any) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      onSubmit(null, comment)(e);
     }
-  }, [inputRef]);
+  };
+
+  useEffect(() => {
+    if (texareaRef.current) {
+      autosize(texareaRef.current);
+    }
+  }, [texareaRef]);
 
   if (cd === undefined) return <div>로딩중...</div>;
 
   return (
     <Base>
-      <Header spread={isSpread}>
+      <Header spread={isSpread} onClick={() => setIsSpread((p) => !p)}>
         <span className={'title'}>댓글 ({commentsArray(cd)['length']})</span>
-        <span className={'collapse-button'} onClick={() => setIsSpread((p) => !p)}>
-          {isSpread ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
-        </span>
+        <span className={'collapse-button'}>{isSpread ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</span>
       </Header>
       {isSpread && (
         <Main>
@@ -185,12 +207,12 @@ const CommentForm = () => {
         </Main>
       )}
       <Form>
-        <CommentInput
-          type={'text'}
+        <CommentTextarea
           placeholder={'댓글 달기...'}
           value={comment}
           onChange={onChangeComment}
-          ref={inputRef}
+          ref={texareaRef}
+          onKeyPress={onKeyPress}
         />
         <button type="submit" onClick={onSubmit(null, comment)} disabled={!comment}>
           <BiSend />

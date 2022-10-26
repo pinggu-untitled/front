@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
-import { IMe, IMyPings } from '@typings/db';
+import { IMe, IMyPings, IPost } from '@typings/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import { InfoZone } from '@components/revised/Home/PostCard';
 import { Base } from '@components/revised/Profile/PostCard';
@@ -32,25 +32,28 @@ export const MyPingsImage = styled.div`
 `;
 
 const MyPingsCard: FC<IProps> = ({ mypings }) => {
+  console.log(mypings);
+
   const navigator = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd, mutate: mutateMypings } = useSWR<any>(`/users/${userId}/mypings/${mypings.id}/posts`, fetcher);
-
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-  };
-  const onEdit = (id: number) => (e: any) => {
-    navigator(`/mypings/${mypings?.id}/edit`);
+  const { data: pd, mutate: mutateMypings } = useSWR(`/mypings/12/posts`, fetcher);
+  console.log('mypings-post', pd);
+  const onEdit = (mypingsId: number) => (e: any) => {
+    navigator(`/mypings/${mypingsId}/edit`);
   };
 
-  const onDelete = (id: number) => (e: any) => {
+  const onDelete = (mypingsId: number) => (e: any) => {
     axios
-      .delete(`/mypings/${mypings.id}`)
+      .delete(`/mypings/${mypingsId}`)
       .then((res) => {
         console.log(res.data);
       })
       .catch((err) => console.error(err));
+  };
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
   };
 
   if (!mypings) return <div>로딩중...</div>;
@@ -63,7 +66,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
       <div className={'info'}>
         <MyPingsImage>
           {mypings.title.slice(0, 1).toUpperCase()}
-          {pd?.length && <TotalCount current={`+ ${pd?.length}`} />}
+          {pd?.length > 0 && <TotalCount current={`+ ${pd?.length}`} />}
         </MyPingsImage>
         <InfoZone>
           <h2>
@@ -74,9 +77,9 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
           </h2>
         </InfoZone>
       </div>
-      {md?.id === userId && (
+      {md?.id === Number(userId) && (
         <form onSubmit={onSubmit}>
-          <ModifyActionButtons onEdit={onEdit} onDelete={onDelete} />
+          <ModifyActionButtons onEdit={onEdit(mypings.id)} onDelete={onDelete(mypings.id)} />
         </form>
       )}
     </Base>

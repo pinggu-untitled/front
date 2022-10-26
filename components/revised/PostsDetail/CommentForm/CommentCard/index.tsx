@@ -1,10 +1,14 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { IComment, IMe } from '@typings/db';
 import styled from '@emotion/styled';
 import ProfileAvatar from '@components/revised/common/images/ProfileAvatar';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import useInput from '@hooks/useInput';
+import contentRegexfier from '@utils/contentRegexfier';
+import handleNavigate from '@utils/handleNavigate';
+import { useNavigate } from 'react-router-dom';
+import autosize from 'autosize';
 
 interface IProps {
   comment: IComment;
@@ -39,13 +43,16 @@ export const Base = styled.li<{ depth: boolean }>`
         font-size: 14px;
       }
 
-      & input {
-        width: 100%;
-        padding: 8px 0;
+      & textarea {
+        width: 95%;
+        position: relative;
+        padding: 20px 0 0;
         font-size: 14px;
         resize: none;
         border: none;
+        font-family: inherit;
         border-bottom: 1px solid #dfdfdf;
+        margin-left: 6px;
         &:focus {
           outline: none;
         }
@@ -78,10 +85,6 @@ export const ActionButton = styled.span`
 export const ReplyInputWrapper = styled.div`
   display: flex;
   align-items: center;
-
-  > input {
-    margin-left: 6px;
-  }
 `;
 
 const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
@@ -90,6 +93,8 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
   const [isReplyInput, setReplyInput] = useState(false);
   const [editComment, onChangeEditComment, setEditComment] = useInput(comment.content);
   const [replyComment, onChangeReplyComment, setReplyComment] = useInput('');
+  const navigator = useNavigate();
+  const texareaRef = useRef<HTMLTextAreaElement>(null);
 
   const onSubmitEdit = (e: any) => {
     e.preventDefault();
@@ -107,19 +112,30 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
   type Type = 'edit' | 'reply';
 
   const onKeyPress = (type: Type) => (e: any) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       type === 'edit' ? onSubmitEdit(e) : onSubmitReply(e);
     }
   };
+
+  useEffect(() => {
+    if (texareaRef.current) {
+      autosize(texareaRef.current);
+    }
+  }, [texareaRef]);
+
   return (
     <Base depth={comment.pid !== null}>
-      <ProfileAvatar profile={comment.User} style={{ width: '23px', height: '23px' }} />
+      <ProfileAvatar
+        profile={comment.User}
+        style={{ width: '23px', height: '23px' }}
+        onClick={handleNavigate(navigator, `/${comment.User.id}`)}
+      />
       <div className={'container'}>
         <div className={'wrapper'}>
           <span className={'nickname'}>{comment?.User.nickname}</span>
           {isEditInput ? (
             <>
-              <input
+              <textarea
                 value={editComment}
                 onChange={onChangeEditComment}
                 autoFocus={true}
@@ -128,18 +144,18 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
               <button type={'submit'} hidden />
             </>
           ) : (
-            <p className={'content'}>{comment?.content}</p>
+            <p className={'content'}>{contentRegexfier(comment?.content)}</p>
           )}
           {isReplyInput && (
             <ReplyInputWrapper>
               <ProfileAvatar profile={md} style={{ width: '23px', height: '23px' }} />
-              <input
-                type={'text'}
+              <textarea
                 placeholder={'답글 달기...'}
                 value={replyComment}
                 onChange={onChangeReplyComment}
                 onKeyPress={onKeyPress('reply')}
                 autoFocus={true}
+                ref={texareaRef}
               />
             </ReplyInputWrapper>
           )}

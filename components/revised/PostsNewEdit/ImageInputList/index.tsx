@@ -57,16 +57,16 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
   const [previews, setPreviews] = useState<any[]>([]);
   const { field } = useController({ control, name });
 
-  const appendFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
-  const appendPreviews = (files: FileList) => {
-    imagePreviewPromisfier(files).then((res: any) => {
-      return setPreviews((prev) => (Array.isArray(prev) ? [...prev, ...res] : [...prev, res]));
-    });
-  };
+  const addFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
+  // const addPreviews = (files: FileList) => {
+  //   imagePreviewPromisfier(files).then((res: any) => {
+  //     return setPreviews((prev) => (Array.isArray(prev) ? [...prev, ...res] : [...prev, res]));
+  //   });
+  // };
 
-  const handleChange = useCallback((files) => {
-    appendFiles(files);
-  }, []);
+  const handleChange = (files: FileList) => {
+    addFiles(files);
+  };
 
   useEffect(() => {
     const files = Promise.all(
