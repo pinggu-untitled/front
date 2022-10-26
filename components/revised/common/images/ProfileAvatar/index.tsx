@@ -24,16 +24,19 @@ export const Base = styled.div`
 `;
 
 const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
-  console.log('profile', profile?.profile_image_url);
+  // console.log('profile???', `http://localhost:8080/uploads/profile/${profile?.profile_image_url}`);
+
+  // if (!profile?.profile_image_url) return <div>로딩중</div>;
+
   return (
     <Base style={style} onClick={onClick}>
       <img
         src={
-          profile?.profile_image_url.startsWith('http')
+          profile?.profile_image_url.startsWith('http://k.kakaocdn.net')
             ? profile?.profile_image_url
             : `http://localhost:8080/uploads/profile/${profile?.profile_image_url}` || '/public/placeholder.png'
         }
-        alt={`${profile?.nickname}`}
+        alt={`${profile?.nickname}님의 사진 안나옴`}
       />
     </Base>
   );
