@@ -24,9 +24,12 @@ export interface ICheckedPost {
 
 const ProfileMyPings = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: ud } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
+  const { data: mypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+  const { data: sharepings } = useSWR<IMyPings[]>(`/users/${userId}/sharepings`, fetcher);
+  console.log('mypings', mypings);
+  console.log('sharepings', sharepings);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,

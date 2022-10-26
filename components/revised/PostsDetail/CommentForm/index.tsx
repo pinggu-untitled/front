@@ -104,6 +104,11 @@ const CommentForm = () => {
   const [comment, onChangeComment, setComment] = useInput('');
   const texareaRef = useRef<HTMLTextAreaElement>(null);
   const onEdit = (commentId: number, content: string) => {
+    console.log('body', {
+      content,
+      hashtags: makeHashtags(content),
+      mentions: makeMentions(content),
+    });
     axios
       .patch(`/posts/${postId}/comments/${commentId}`, {
         content,
