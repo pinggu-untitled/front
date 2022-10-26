@@ -25,7 +25,7 @@ export const ModalContent = styled.div`
   border-right: 1px solid #dfdfdf;
   overflow: hidden;
   top: 0;
-  left: 63px;
+  left: 68px;
   bottom: 0;
   background-color: #fff;
 `;

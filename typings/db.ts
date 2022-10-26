@@ -1,35 +1,71 @@
-export interface IUser {
+interface IMe {
   id: number;
   nickname: string;
   profile_image_url: string;
 }
 
-export interface IHistory {
+interface IUser {
+  id: number;
+  nickname: string;
+  profile_image_url: string;
+  bio: string;
+}
+
+interface IHistory {
   id: number;
   content: string;
 }
 
-export interface IPost {
-  id: number;
-  title: string;
-  content: string;
-  longitude: number;
-  latitude: number;
-  is_private: boolean;
-  hits: number;
-}
-
-export interface IHashtag {
+interface IHashtag {
   id: number;
   content: string;
 }
 
-export interface IMention {
+interface IMention {
   id: number;
 }
 
-export interface IResult {
+interface IResult {
   users: [];
   posts: [];
   myPings: [];
 }
+
+interface IPost {
+  id: number;
+  title: string;
+  content: string;
+  is_private: boolean | number;
+  hits: number;
+  latitude: string;
+  longitude: string;
+  updated_at: string;
+  created_at: string;
+  User: IUser;
+  Images: IImage[];
+}
+
+interface IImage {
+  id: number;
+  src: string;
+}
+
+interface IMyPings {
+  id: number;
+  title: string;
+  category: number;
+  is_private: boolean | number;
+  User: IUser;
+}
+
+interface IComment {
+  id: number;
+  content: string;
+  pid: number | null;
+  created_at: string;
+  updated_at: string;
+  User: IUser;
+  Comments: IComment[] | [];
+}
+
+export { IMe, IUser, IImage, IPost, IMyPings, IHashtag, IResult, IMention, IHistory, IComment };

@@ -1,8 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import TopNavigation from '@components/common/navigations/TopNavigation';
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
+import { IMe, IPost } from '@typings/db';
+import CardList from '@components/revised/CardList';
+import PostCard from '@components/revised/Home/PostCard';
+import { v4 as uuid } from 'uuid';
+import TopNavigation from '@components/revised/common/navigations/TopNavigation';
+import { redirect, useNavigate } from 'react-router-dom';
+import readable from '@utils/readable';
+import { Redirect } from 'react-router';
 
 export const Base = styled.div`
   width: 100%;
@@ -16,58 +23,30 @@ export const MainContentZone = styled.div`
   bottom: 0;
 `;
 
-export const PostCards = styled.ul``;
-export const PostCard = styled.li`
-  width: 100%;
-  height: 100px;
-  border: 1px solid #dfdfdf;
-  background-color: rgba(0, 0, 0, 0.05);
-  > a {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
 interface IForm {
   searchQueries: string;
 }
 const Home = () => {
-  const { control, handleSubmit } = useForm<IForm>({
-    defaultValues: { searchQueries: '' },
-  });
-  const onSubmit = useCallback((data: IForm) => {
-    console.log(data);
-  }, []);
+  const navigator = useNavigate();
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: pd } = useSWR<IPost[]>('/posts', fetcher);
+  const isMyPost = (post: IPost) => post.User.id === md?.id;
 
-  const posts: any[] = [
-    {
-      id: 1,
-      title: '맛집',
-    },
-    {
-      id: 2,
-      title: '개노맛집',
-    },
-  ];
-
-  const clickHandler = useCallback((content: string) => {
-    console.log(content);
-  }, []);
+  useEffect(() => {
+    if (md === undefined && pd === undefined) navigator('/');
+  }, [md, pd]);
 
   return (
     <Base>
       <TopNavigation title={'홈'} />
       <MainContentZone>
-        <PostCards>
-          {posts.map((post) => (
-            <PostCard>
-              <Link to={`/posts/${post.id}`}>{post.title}</Link>
-            </PostCard>
-          ))}
-        </PostCards>
+        {md && pd && (
+          <CardList>
+            {readable(md)(pd)?.map((post) => (
+              <PostCard key={uuid()} post={post} isMine={isMyPost(post)} />
+            ))}
+          </CardList>
+        )}
       </MainContentZone>
     </Base>
   );

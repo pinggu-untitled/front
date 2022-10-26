@@ -18,6 +18,8 @@
       "@utils/*": ["utils/*"],
       "@typings/*": ["typings/*"],
       "@themes/*": ["themes/*"],
-    }
+      "@contexts/*": ["contexts/*"]
+    },
+    "types": ["kakao.maps.d.ts"]
   }
 }

@@ -1,11 +1,12 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, CSSProperties, useState } from 'react';
 import styled from '@emotion/styled';
-import { Controller } from 'react-hook-form';
+import { Controller, useController } from 'react-hook-form';
 import { useTheme } from '@emotion/react';
 
 interface IProps {
   control: any;
   name: string;
+  style?: CSSProperties;
 }
 
 export const Button = styled.label<{ active: boolean; theme: any }>`
@@ -14,6 +15,7 @@ export const Button = styled.label<{ active: boolean; theme: any }>`
   border-radius: 20px;
   align-items: center;
   padding: 3px;
+  //height: 32px;
   background-color: ${({ theme, active }) => (active ? '#0295f6' : '#8e8e8e')};
   cursor: pointer;
 `;
@@ -27,11 +29,12 @@ export const SlidingBall = styled.div<{ active: boolean }>`
   transition: 0.2s;
 `;
 
-const ToggleButtonInput = ({ control, name }: IProps) => {
+const ToggleButtonInput = ({ control, name, style }: IProps) => {
   const theme = useTheme();
-  const [sliding, setSliding] = useState<boolean>(control._defaultValues[name]);
+  const { field } = useController({ control, name });
+  const [sliding, setSliding] = useState<boolean>(field.value);
   return (
-    <Button active={sliding} theme={theme}>
+    <Button active={sliding} theme={theme} style={style}>
       <Controller
         control={control}
         name={name}

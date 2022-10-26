@@ -11,8 +11,11 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://pinggu.com' : 'http://localhost:8080';
 
 render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+    ,
+  </React.StrictMode>,
   document.querySelector('#app'),
 );

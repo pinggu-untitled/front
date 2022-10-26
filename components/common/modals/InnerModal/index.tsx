@@ -16,13 +16,6 @@ export const Base = styled.div`
   right: 0;
   z-index: 4000;
   background-color: rgba(255, 255, 255, 0.9);
-
-  > div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 `;
 
 const InnerModal: FC<IProps> = ({ children, show, onCloseModal, style }) => {

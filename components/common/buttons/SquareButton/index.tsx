@@ -5,6 +5,7 @@ interface IProps {
   content: string;
   onClick: () => void;
   style?: CSSProperties;
+  [key: string]: any;
 }
 
 export const Button = styled.button`
@@ -16,8 +17,12 @@ export const Button = styled.button`
   font-size: 14px;
 `;
 
-const SquareButton = ({ content, onClick, style }: IProps) => {
-  return <Button onClick={onClick}>{content}</Button>;
+const SquareButton = ({ content, onClick, rest }: IProps) => {
+  return (
+    <Button onClick={onClick} {...rest}>
+      {content}
+    </Button>
+  );
 };
 
 export default SquareButton;

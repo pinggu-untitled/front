@@ -17,7 +17,6 @@ export const Header = styled.header`
   padding: 0 20px;
   display: flex;
   align-items: center;
-  background-color: #fff;
 
   & h1 {
     text-align: center;
