@@ -23,7 +23,7 @@ export const Base = styled.div`
   }
 `;
 
-const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
+const ProfileAvatar: FC<IProps> = ({ profile, style, onClick }) => {
   return (
     <Base style={style} onClick={onClick}>
       <img
@@ -38,4 +38,4 @@ const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
   );
 };
 
-export default memo(ProfileImage);
+export default memo(ProfileAvatar);

@@ -28,7 +28,7 @@ import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
 import axios from 'axios';
-import CommentForm from '@components/revised/PostsDetail/CommentForm';
+import CommentPool from '@components/revised/PostsDetail/CommentPool';
 import contentRegexfier from '@utils/contentRegexfier';
 
 export const ImagesContainer = styled.div`
@@ -236,7 +236,9 @@ const PostDetail = () => {
           <p className={'content'}>{contentRegexfier(pd?.content)}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        <CommentForm />
+        {/* 댓글 */}
+        <CommentPool />
+        {/* 게시물 작성자의 다른 게시물 */}
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
           {md &&
             userPd &&
