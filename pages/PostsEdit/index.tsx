@@ -96,8 +96,6 @@ const PostsEdit = () => {
     }
   }, [pd]);
 
-  console.log('rendering 전');
-
   return (
     <Base>
       {showOptions.showSearchLocation ? (

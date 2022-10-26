@@ -1,7 +1,8 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Controller, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
 import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
+import { useParams } from 'react-router-dom';
 
 interface IProps {
   control: any;
@@ -55,18 +56,26 @@ export const ProfileImageWrapper = styled.label`
 `;
 
 const ProfileImageInput: FC<IProps> = ({ control, name }) => {
+  const { userId } = useParams<{ userId: string }>();
   const { field } = useController({ control, name });
   const [preview, setPreview] = useState(field.value);
-  const handlePreview = useCallback((files) => {
-    imagePreviewPromisfier(files).then((res) => {
-      setPreview(res);
-    });
-  }, []);
+
+  const handlePreview = (files: any) => {
+    if (typeof files === 'string') {
+      setPreview(files.startsWith('http') ? files : `http://localhost:8080/uploads/profile/${files}`);
+    } else {
+      imagePreviewPromisfier(files).then((res) => setPreview(res[0]));
+    }
+  };
+
+  useEffect(() => {
+    handlePreview(field.value);
+  }, [field.value]);
 
   return (
     <Base>
       <ProfileImageWrapper>
-        <img src={preview || field.value || '/public/placeholder.png'} alt={name} />
+        <img src={preview || '/public/placeholder.png'} alt={'프로필 사진 안나옴'} />
         <Controller
           control={control}
           name={name}
@@ -75,7 +84,7 @@ const ProfileImageInput: FC<IProps> = ({ control, name }) => {
               type={'file'}
               onChange={(e) => {
                 field.onChange(e.target.files);
-                handlePreview(e.target.files);
+                // handlePreview(e.target.files);
               }}
               hidden
             />

@@ -7,10 +7,10 @@ export const fileReaderPromise = (file: File) =>
     };
   });
 
-const imagePreviewPromisfier = (files: FileList) => {
-  if (files.length === 1) {
-    return fileReaderPromise(files[0]);
-  }
+const imagePreviewPromisfier = (files: FileList, signal?: any) => {
+  // if (files.length === 1) {
+  //   return fileReaderPromise(files[0]);
+  // }
   return Promise.all(Array.from(files).map(fileReaderPromise));
 };
 
