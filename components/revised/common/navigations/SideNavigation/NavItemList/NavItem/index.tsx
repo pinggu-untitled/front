@@ -32,7 +32,7 @@ export const Base = styled.li<{ active: boolean }>`
 const NavItem: FC<IItem> = ({ icon: { filled, outlined }, title, path }) => {
   const navigate = useNavigate();
   const isMatched = useMatch(path);
-  const handleNavigate = (path: string) => () => navigate(path);
+  const handleNavigate = (path: string) => () => navigate(path === '/' ? '/?moveCenter=true' : path);
 
   return (
     <Base onClick={handleNavigate(path)} active={Boolean(isMatched)}>

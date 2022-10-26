@@ -116,7 +116,9 @@ const PostDetail = () => {
 
   // console.log('🌷', pd);
 
-  if (pd && moveCenterToPost) moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
+  if (pd && moveCenterToPost) {
+    moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
+  }
 
   const copyUrl = (e: any) => {
     copyUrlRef.current?.select();
