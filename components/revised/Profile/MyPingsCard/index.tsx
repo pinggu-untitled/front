@@ -49,17 +49,9 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: pd } = useSWR<IPost[]>(`/mypings/${mypings?.id}/posts`, fetcher);
-  const [isSharing, setIsSharing] = useState<boolean | null>(false);
-  const shareFetcher = (setState: Dispatch<SetStateAction<boolean | null>>, mypings: IMyPings) => (url: string) => {
-    axios.get(url).then((res) => {
-      setState(isIdExisting(res.data, mypings));
-    });
-  };
+  const [isSharing, setSharing] = useState<boolean | null>(false);
 
-  const { data: sharepings, mutate: mutateSharepings } = useSWR(
-    `/users/${md?.id}/sharepings`,
-    shareFetcher(setIsSharing, mypings),
-  );
+  const { data: mySharepings } = useSWR(`/users/${md?.id}/sharepings`, fetcher);
 
   const onEdit = (mypingsId: number) => (e: any) => {
     navigator(`/mypings/${mypingsId}/edit`);
@@ -76,34 +68,38 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
     e.preventDefault();
   };
 
-  const onShare = (mypingsId: number) => {
-    console.log(`${mypingsId}로 마이핑스 공유 신청하기`);
-    // setIsSharing(true); // useEffect 내부에서 대신 할 예정.
+  const onShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
     axios
       .post(`/mypings/${mypingsId}/sharepings`)
       .then((res) => {
         console.log('쉐어핑스 신청 완료', res.data);
+        setSharing(true);
       })
       .catch((err) => console.error(err));
   };
 
-  const onUnShare = (mypingsId: number) => {
-    console.log(`${mypings.id}로 마이핑스 공유 취소하기`);
-    // setIsSharing(false); // useEffect 내부에서 대신 할 예정.
+  const onUnShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
+    axios
+      .delete(`/mypings/${mypingsId}/sharepings`)
+      .then((res) => {
+        console.log(`${mypings.id} 마이핑스 공유 취소 완료`, res.data);
+        setSharing(false);
+      })
+      .catch((err) => console.error(err));
   };
 
   type Type = 'share' | 'unShare';
-  const handleShare = (type: Type, mypingsId: number) => (e: any) => {
-    e.stopPropagation();
-    type === 'share' ? onShare(mypingsId) : onUnShare(mypingsId);
-  };
+  const handleShare =
+    (type: Type, mypingsId: number, setSharing: Dispatch<SetStateAction<boolean | null>>) => (e: any) => {
+      e.stopPropagation();
+      type === 'share' ? onShare(setSharing, mypingsId) : onUnShare(setSharing, mypingsId);
+    };
 
   useEffect(() => {
-    console.log('useEffect 시작');
-    if (sharepings) {
-      setIsSharing(isIdExisting(sharepings, mypings));
+    if (mySharepings) {
+      setSharing(isIdExisting(mySharepings, mypings));
     }
-  }, []);
+  }, [mySharepings]);
 
   if (!mypings && !pd) return <div>로딩중...</div>;
 
@@ -125,7 +121,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
             )}
           </h2>
           {md && (
-            <ShareButton onClick={handleShare(isSharing ? 'unShare' : 'share', mypings.id)}>
+            <ShareButton onClick={handleShare(isSharing ? 'unShare' : 'share', mypings.id, setSharing)}>
               {isSharing ? (
                 <MdOutlineBookmark style={{ color: '#f7523d' }} />
               ) : (
