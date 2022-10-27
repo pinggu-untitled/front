@@ -28,16 +28,32 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
-  const [subMarker, setSubMarker] = useState(); // 중심 좌표 주변 포스트 마커
+  // const [subMarkers, setSubMarkers] = useState(); // 중심 좌표 주변 포스트 마커
 
   /* 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
-  const getSubPosts = async (map: kakao.maps.Map) => {
+  const getSubPosts = (map: kakao.maps.Map) => {
     const bounds = map?.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
     const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',');
-    console.log(swLat, swLng, neLat, neLng);
+    // console.log(swLat, swLng, neLat, neLng);
     fetcher(`/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`)
-      .then((data) => console.log('data >> ', data))
+      .then((posts) => {
+        console.log(posts);
+        const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+        posts
+          .map((post: IPost) => ({
+            latlng: new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude)),
+          }))
+          .forEach((position: any) => {
+            const imageSize = new kakao.maps.Size(24, 35);
+            const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+            new kakao.maps.Marker({
+              map: map,
+              position: position.latlng,
+              image: markerImage,
+            });
+          });
+      })
       .catch((err) => console.error(err));
   };
 
