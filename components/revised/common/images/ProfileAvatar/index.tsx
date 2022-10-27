@@ -23,11 +23,7 @@ export const Base = styled.div`
   }
 `;
 
-const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
-  // console.log('profile???', `http://localhost:8080/uploads/profile/${profile?.profile_image_url}`);
-
-  // if (!profile?.profile_image_url) return <div>로딩중</div>;
-
+const ProfileAvatar: FC<IProps> = ({ profile, style, onClick }) => {
   return (
     <Base style={style} onClick={onClick}>
       <img
@@ -42,4 +38,4 @@ const ProfileImage: FC<IProps> = ({ profile, style, onClick }) => {
   );
 };
 
-export default memo(ProfileImage);
+export default memo(ProfileAvatar);

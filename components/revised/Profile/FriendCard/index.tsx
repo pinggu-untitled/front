@@ -48,7 +48,7 @@ const FriendCard: FC<IProps> = ({ profile }) => {
 
   useEffect(() => {
     if (myFollowingsData) {
-      setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
+      setIsFollowing(isIdExisting(myFollowingsData, profile));
     }
   }, []);
 

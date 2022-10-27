@@ -1,7 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import styled from '@emotion/styled';
-import AddButton from '@components/Profile/AddButton';
-import PostCard from '@components/revised/Profile/PostCard';
 import { IPost, IUser, IMe } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
@@ -10,9 +7,7 @@ import SettingsButton from '@components/revised/Profile/SettingsButton';
 import SettingsModal from '@components/revised/SettingsModal';
 import { FiScissors } from 'react-icons/fi';
 import EditModal from '@components/revised/Profile/EditModal';
-import SelectPostCard from '@components/revised/Profile/SelectPostCard';
 import { v4 as uuid } from 'uuid';
-import { useForm } from 'react-hook-form';
 import BottomSummary from '../../components/revised/Profile/BottomSummary';
 import MyPingsCard from '@components/revised/Profile/MyPingsCard';
 import { Base, MainContentZone, Form } from '../ProfilePosts';
@@ -29,10 +24,12 @@ export interface ICheckedPost {
 
 const ProfileMyPings = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>('/users/me', fetcher);
-  const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const { data: mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
-
+  const { data: md } = useSWR<IMe>('/users/me', fetcher);
+  const { data: ud } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
+  const { data: mypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
+  const { data: sharepings } = useSWR<IMyPings[]>(`/users/${userId}/sharepings`, fetcher);
+  console.log('mypings', mypings);
+  console.log('sharepings', sharepings);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
@@ -59,7 +56,7 @@ const ProfileMyPings = () => {
   );
 
   const userSettingItems = [
-    { content: { icon: <FiScissors />, title: '편집하기' }, onClick: handleModal('showEditModal') },
+    { content: { icon: <FiScissors />, title: '수정하기' }, onClick: handleModal('showEditModal') },
   ];
 
   if (!mypings) return <div>로딩중...</div>;
@@ -68,7 +65,7 @@ const ProfileMyPings = () => {
     <>
       <Base>
         <MainContentZone>
-          {md && mypings && mypings?.length > 0 ? (
+          {md && mypings?.length > 0 ? (
             <CardList>
               {readable(md)(mypings)?.map((ping, i) => (
                 <MyPingsCard key={uuid()} mypings={ping} />

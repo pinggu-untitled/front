@@ -28,8 +28,8 @@ import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
 import axios from 'axios';
-import CommentForm from '@components/revised/PostsDetail/CommentForm';
-import regexifyString from 'regexify-string';
+import CommentPool from '@components/revised/PostsDetail/CommentPool';
+import contentRegexfier from '@utils/contentRegexfier';
 
 export const ImagesContainer = styled.div`
   width: 100%;
@@ -160,40 +160,6 @@ const PostDetail = () => {
 
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
 
-  const refineContent = useCallback<(content: string) => (string | JSX.Element)[] | JSX.Element>(
-    (content: string) => {
-      const result = regexifyString({
-        pattern: /#[^\s#]+|@[^\s@]+|http[^\shttp]+|https:[^\shttps]+|\n/g,
-        decorator(match, index) {
-          const social: string[] | null = match.match(/http[^\shttp]+|https[^\shttps]+/g);
-
-          if (social) {
-            return (
-              <a key={uuid()} href={social[0]} style={{ color: '#1974e4', textDecoration: 'underline' }}>
-                {social[0]}
-              </a>
-            );
-          }
-
-          const arr: string[] | null = match.match(/#[^\s#]+|@[^\s@]+/g);
-          console.log(arr);
-          if (arr) {
-            return (
-              <Link key={uuid()} to={`/results?search_query=${arr[0].slice(1)}`} style={{ color: '#1974e4' }}>
-                {arr[0]}
-              </Link>
-            );
-          }
-          return <br key={uuid()} />;
-        },
-        input: content,
-      });
-
-      return result;
-    },
-    [pd?.content],
-  );
-
   if (pd === undefined) return <div>로딩중...</div>;
 
   return (
@@ -267,10 +233,12 @@ const PostDetail = () => {
           <div className={'mypings'}>
             <span>{pd?.created_at}</span>
           </div>
-          <p className={'content'}>{refineContent(pd?.content)}</p>
+          <p className={'content'}>{contentRegexfier(pd?.content)}</p>
           <p className={'meta'}>조회수 {pd?.hits}</p>
         </TextZone>
-        <CommentForm />
+        {/* 댓글 */}
+        <CommentPool />
+        {/* 게시물 작성자의 다른 게시물 */}
         <PreviewSection title={`${pd?.User.nickname}의 게시물`} url={`/${pd?.User.id}`}>
           {md &&
             userPd &&

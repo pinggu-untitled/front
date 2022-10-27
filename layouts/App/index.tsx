@@ -11,6 +11,7 @@ const ProfileMyPings = loadable(() => import('@pages/ProfileMyPings'));
 const ProfileFriends = loadable(() => import('@pages/ProfileFriends'));
 const MyPingsNew = loadable(() => import('@pages/MyPingsNew'));
 const MyPingsDetail = loadable(() => import('@pages/MyPingsDetail'));
+const MyPingsEdit = loadable(() => import('@pages/MyPingsEdit'));
 const Chatrooms = loadable(() => import('@pages/Chatrooms'));
 const Settings = loadable(() => import('@pages/Settings'));
 const More = loadable(() => import('@pages/More'));
@@ -27,6 +28,7 @@ const App = () => {
     <AppLayout>
       <Routes>
         <Route index element={<Home />} />
+        <Route path={'/home'} element={<Home />} />
         <Route path={'/explore'} element={<Explore />} />
         <Route path={'/results'} element={<Results />} />
         <Route path={'/:userId'} element={<Profile />}>
@@ -35,7 +37,8 @@ const App = () => {
           <Route path={'/:userId/friends'} element={<ProfileFriends />} />
         </Route>
         <Route path={'/mypings/new'} element={<MyPingsNew />} />
-        <Route path={'/:userId/mypings/:mypingsId'} element={<MyPingsDetail />} />
+        <Route path={'/mypings/:mypingsId'} element={<MyPingsDetail />} />
+        <Route path={'/mypings/:mypingsId/edit'} element={<MyPingsEdit />} />
         <Route path={'/:userId/edit'} element={<ProfileEdit />} />
         <Route path={'/chatrooms'} element={<Chatrooms />} />
         <Route path={'/chatrooms/:chatroomId'} element={<Chatrooms />} />

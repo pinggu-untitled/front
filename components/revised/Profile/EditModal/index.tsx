@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
-import { Button } from '@components/revised/common/navigations/DetailTopNavigation';
 import TitleNavigation, { Navigation } from '@components/revised/common/navigations/TitleNavigation';
 import { Base } from '../../SearchModal';
-import { BsArrowLeft } from 'react-icons/bs';
 
 interface IProps {
   show: boolean;

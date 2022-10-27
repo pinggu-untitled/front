@@ -22,6 +22,7 @@ import findMatches from '@utils/findMatches';
 import TitleNavigation from '@components/revised/common/navigations/TitleNavigation';
 import handleNavigate from '@utils/handleNavigate';
 import { Base as B, MainContentZone as M } from '@pages/Home';
+import { IHashtag, IMention } from '@typings/db';
 
 export const Base = styled(B)`
   width: 100%;
@@ -67,8 +68,8 @@ export interface IPostForm {
   longitude: string;
   latitude: string;
   images: any[];
-  hashtags: { content: string }[];
-  mentions: { receiver: number }[];
+  // hashtags: IHashtag[];
+  // mentions: IMention[];
 }
 
 export const makeHashtags = (data: string) =>
@@ -99,8 +100,8 @@ const PostsNew = () => {
       longitude: '126.111111',
       latitude: '37.222222',
       images: [],
-      hashtags: [{ content: 'hello' }, { content: 'hello2' }],
-      mentions: [{ receiver: 1 }, { receiver: 2 }],
+      // hashtags: [{ content: 'hello' }, { content: 'hello2' }],
+      // mentions: [{ receiver: 7 }, { receiver: 18 }, { receiver: 19 }],
     },
   });
 

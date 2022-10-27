@@ -1,6 +1,6 @@
-import React, { FC, memo } from 'react';
+import React, { Dispatch, FC, memo, SetStateAction, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { IMe, IMyPings } from '@typings/db';
+import { IMe, IMyPings, IPost } from '@typings/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import { InfoZone } from '@components/revised/Home/PostCard';
 import { Base } from '@components/revised/Profile/PostCard';
@@ -11,10 +11,14 @@ import ModifyActionButtons from '@components/revised/Profile/ModifyActionButtons
 import handleNavigate from '@utils/handleNavigate';
 import PillBox from '@components/revised/PillBox';
 import axios from 'axios';
+import { MdOutlineBookmarkBorder, MdOutlineBookmark } from 'react-icons/md';
+import isIdExisting from '@utils/isIdExisting';
 
 interface IProps {
   mypings: IMyPings;
 }
+// #1974e4
+// #f7523d;
 
 export const MyPingsImage = styled.div`
   position: relative;
@@ -31,29 +35,73 @@ export const MyPingsImage = styled.div`
   color: gray;
 `;
 
+export const ShareButton = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 0;
+  font-size: 26px;
+  cursor: pointer;
+  padding: 0 0 0 12px;
+`;
+
 const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const navigator = useNavigate();
   const { userId } = useParams<{ userId: string }>();
-  const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
-  const { data: pd, mutate: mutateMypings } = useSWR<any>(`/users/${userId}/mypings/${mypings.id}/posts`, fetcher);
+  const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
+  const { data: pd } = useSWR<IPost[]>(`/mypings/${mypings?.id}/posts`, fetcher);
+  const [isSharing, setSharing] = useState<boolean | null>(false);
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-  };
-  const onEdit = (id: number) => (e: any) => {
-    navigator(`/mypings/${mypings?.id}/edit`);
-  };
+  const { data: mySharepings } = useSWR(`/users/${md?.id}/sharepings`, fetcher);
 
-  const onDelete = (id: number) => (e: any) => {
+  const onEdit = (mypingsId: number) => (e: any) => {
+    navigator(`/mypings/${mypingsId}/edit`);
+  };
+  const onDelete = (mypingsId: number) => (e: any) => {
     axios
-      .delete(`/mypings/${mypings.id}`)
+      .delete(`/mypings/${mypingsId}`)
       .then((res) => {
         console.log(res.data);
       })
       .catch((err) => console.error(err));
   };
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+  };
 
-  if (!mypings) return <div>로딩중...</div>;
+  const onShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
+    axios
+      .post(`/mypings/${mypingsId}/sharepings`)
+      .then((res) => {
+        console.log('쉐어핑스 신청 완료', res.data);
+        setSharing(true);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const onUnShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
+    axios
+      .delete(`/mypings/${mypingsId}/sharepings`)
+      .then((res) => {
+        console.log(`${mypings.id} 마이핑스 공유 취소 완료`, res.data);
+        setSharing(false);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  type Type = 'share' | 'unShare';
+  const handleShare =
+    (type: Type, mypingsId: number, setSharing: Dispatch<SetStateAction<boolean | null>>) => (e: any) => {
+      e.stopPropagation();
+      type === 'share' ? onShare(setSharing, mypingsId) : onUnShare(setSharing, mypingsId);
+    };
+
+  useEffect(() => {
+    if (mySharepings) {
+      setSharing(isIdExisting(mySharepings, mypings));
+    }
+  }, [mySharepings]);
+
+  if (!mypings && !pd) return <div>로딩중...</div>;
 
   return (
     <Base
@@ -63,20 +111,29 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
       <div className={'info'}>
         <MyPingsImage>
           {mypings.title.slice(0, 1).toUpperCase()}
-          {pd?.length && <TotalCount current={`+ ${pd?.length}`} />}
+          {pd && pd?.length > 0 && <TotalCount current={`+ ${pd?.length}`} />}
         </MyPingsImage>
         <InfoZone>
           <h2>
             {mypings.title}
-            {mypings.is_private && (
+            {mypings.is_private === 1 && (
               <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
             )}
           </h2>
+          {md && (
+            <ShareButton onClick={handleShare(isSharing ? 'unShare' : 'share', mypings.id, setSharing)}>
+              {isSharing ? (
+                <MdOutlineBookmark style={{ color: '#f7523d' }} />
+              ) : (
+                <MdOutlineBookmarkBorder style={{ color: 'gray' }} />
+              )}
+            </ShareButton>
+          )}
         </InfoZone>
       </div>
-      {md?.id === userId && (
+      {md?.id === Number(userId) && (
         <form onSubmit={onSubmit}>
-          <ModifyActionButtons onEdit={onEdit} onDelete={onDelete} />
+          <ModifyActionButtons onEdit={onEdit(mypings.id)} onDelete={onDelete(mypings.id)} />
         </form>
       )}
     </Base>

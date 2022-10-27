@@ -40,8 +40,8 @@ const PostsEdit = () => {
       longitude: pd?.longitude || '',
       latitude: pd?.latitude || '',
       images: [],
-      hashtags: [],
-      mentions: [],
+      // hashtags: [],
+      // mentions: [],
     },
   });
 
@@ -70,7 +70,7 @@ const PostsEdit = () => {
       ...data,
       hashtags: makeHashtags(data.content),
       mentions: makeMentions(data.content),
-      images: filenames || [],
+      images: filenames,
     };
 
     axios

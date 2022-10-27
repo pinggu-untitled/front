@@ -23,6 +23,7 @@ interface IHashtag {
 
 interface IMention {
   id: number;
+  receiver: number; //userId
 }
 
 interface IResult {
@@ -43,6 +44,9 @@ interface IPost {
   created_at: string;
   User: IUser;
   Images: IImage[];
+  Comments: IComment[] | [];
+  Hashtags: IHashtag[] | [];
+  Mentions: IMention[] | [];
 }
 
 interface IImage {
@@ -65,6 +69,8 @@ interface IComment {
   created_at: string;
   updated_at: string;
   User: IUser;
+  Hashtags?: IHashtag[] | [];
+  Mentions?: IMention[] | [];
   Comments: IComment[] | [];
 }
 
