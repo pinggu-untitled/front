@@ -13,6 +13,7 @@ import PillBox from '@components/revised/PillBox';
 import axios from 'axios';
 import { MdOutlineBookmarkBorder, MdOutlineBookmark } from 'react-icons/md';
 import isIdExisting from '@utils/isIdExisting';
+import actionHandler from '@utils/actionHandler';
 
 interface IProps {
   mypings: IMyPings;
@@ -50,9 +51,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
   const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: pd } = useSWR<IPost[]>(`/mypings/${mypings?.id}/posts`, fetcher);
   const [isSharing, setSharing] = useState<boolean | null>(false);
-
-  const { data: mySharepings } = useSWR(`/users/${md?.id}/sharepings`, fetcher);
-
+  const { data: mySharepings, mutate: mutateMySharepings } = useSWR(`/users/${md?.id}/sharepings`, fetcher);
   const onEdit = (mypingsId: number) => (e: any) => {
     navigator(`/mypings/${mypingsId}/edit`);
   };
@@ -64,39 +63,14 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
       })
       .catch((err) => console.error(err));
   };
+
   const onSubmit = (e: any) => {
     e.preventDefault();
   };
 
-  const onShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
-    axios
-      .post(`/mypings/${mypingsId}/sharepings`)
-      .then((res) => {
-        console.log('쉐어핑스 신청 완료', res.data);
-        setSharing(true);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const onUnShare = (setSharing: Dispatch<SetStateAction<boolean | null>>, mypingsId: number) => {
-    axios
-      .delete(`/mypings/${mypingsId}/sharepings`)
-      .then((res) => {
-        console.log(`${mypings.id} 마이핑스 공유 취소 완료`, res.data);
-        setSharing(false);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  type Type = 'share' | 'unShare';
-  const handleShare =
-    (type: Type, mypingsId: number, setSharing: Dispatch<SetStateAction<boolean | null>>) => (e: any) => {
-      e.stopPropagation();
-      type === 'share' ? onShare(setSharing, mypingsId) : onUnShare(setSharing, mypingsId);
-    };
-
   useEffect(() => {
     if (mySharepings) {
+      console.log('useEffect', isIdExisting(mySharepings, mypings));
       setSharing(isIdExisting(mySharepings, mypings));
     }
   }, [mySharepings]);
@@ -121,7 +95,13 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
             )}
           </h2>
           {md && (
-            <ShareButton onClick={handleShare(isSharing ? 'unShare' : 'share', mypings.id, setSharing)}>
+            <ShareButton
+              onClick={actionHandler(
+                isSharing ? 'deactivate' : 'activate',
+                `/mypings/${mypings.id}/sharepings`,
+                setSharing,
+              )}
+            >
               {isSharing ? (
                 <MdOutlineBookmark style={{ color: '#f7523d' }} />
               ) : (

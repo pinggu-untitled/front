@@ -6,12 +6,11 @@ import FollowActionButton from '@components/revised/Profile/FollowActionButton';
 import { Base as FollowActionButtonBase } from '@components/revised/Profile/FollowActionButton';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import mutateFollow from '@utils/mutateFollow';
 import { useNavigate, useParams } from 'react-router-dom';
 import isIdExisting from '@utils/isIdExisting';
 import { FollowState } from '@components/revised/Profile/FriendCard';
-import followFetcher from '@utils/followFetcher';
 import handleNavigate from '@utils/handleNavigate';
+import actionHandler from '@utils/actionHandler';
 
 interface IProps {
   profile: IUser;
@@ -63,16 +62,16 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
 
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
 
-  const { data: myFollowingsData } = useSWR<IUser[]>(
+  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
     `/users/${md?.id}/followings`,
-    followFetcher(setIsFollowing, profile),
+    fetcher,
   );
 
   useEffect(() => {
     if (myFollowingsData) {
       setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
-  }, []);
+  }, [myFollowingsData]);
 
   return (
     <Base>
@@ -87,7 +86,7 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
           ) : (
             <FollowActionButton
               isFollowing={isFollowing}
-              onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
+              onClick={actionHandler(isFollowing ? 'deactivate' : 'activate', `/follow/${profile.id}`, setIsFollowing)}
               style={{ right: '10px' }}
             />
           )}

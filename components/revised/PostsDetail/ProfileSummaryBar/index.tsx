@@ -7,12 +7,10 @@ import handleNavigate from '@utils/handleNavigate';
 import FollowActionButton from '@components/revised/Profile/FollowActionButton';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import mutateFollow from '@utils/mutateFollow';
 import isIdExisting from '@utils/isIdExisting';
 import PillBox from '@components/revised/PillBox';
 import { FollowState } from '@components/revised/Profile/FriendCard';
-import axios from 'axios';
-import followFetcher from '@utils/followFetcher';
+import actionHandler from '@utils/actionHandler';
 
 interface IProps {
   profile: IUser;
@@ -45,16 +43,16 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
   const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
 
-  const { data: myFollowingsData } = useSWR<IUser[]>(
+  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
     `/users/${md?.id}/followings`,
-    followFetcher(setIsFollowing, profile),
+    fetcher,
   );
 
   useEffect(() => {
     if (myFollowingsData) {
       setIsFollowing((prev) => isIdExisting(myFollowingsData, profile));
     }
-  }, []);
+  }, [myFollowingsData]);
 
   return (
     <Base>
@@ -71,7 +69,7 @@ const ProfileSummaryBar: FC<IProps> = ({ profile }) => {
       ) : (
         <FollowActionButton
           isFollowing={isFollowing}
-          onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
+          onClick={actionHandler(isFollowing ? 'activate' : 'deactivate', `/follow/${profile.id}`, setIsFollowing)}
           style={{ right: '10px' }}
         />
       )}

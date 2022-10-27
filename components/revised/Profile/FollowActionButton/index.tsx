@@ -19,13 +19,8 @@ export const Base = styled.button`
 `;
 
 const FollowActionButton: FC<IProps> = ({ isFollowing, onClick, style }) => {
-  const clickAction = (e: any) => {
-    e.stopPropagation();
-    onClick();
-  };
-
   return (
-    <Base style={style} onClick={clickAction}>
+    <Base style={style} onClick={onClick}>
       {isFollowing ? '팔로우 취소' : '팔로우'}
     </Base>
   );
