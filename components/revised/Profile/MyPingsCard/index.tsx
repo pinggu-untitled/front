@@ -94,7 +94,7 @@ const MyPingsCard: FC<IProps> = ({ mypings }) => {
               <PillBox text={'🔒 Private'} style={{ fontSize: '11px', padding: '2px 6px 0', marginLeft: '5px' }} />
             )}
           </h2>
-          {md && (
+          {md && md?.id !== mypings.User.id && (
             <ShareButton
               onClick={actionHandler(
                 isSharing ? 'deactivate' : 'activate',
