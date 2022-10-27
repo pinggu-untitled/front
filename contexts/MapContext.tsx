@@ -92,7 +92,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       });
 
       // event-지도 이동 시 포스트 조회
-      // newMap.addListener('dragend', () => getSubPosts(newMap));
+      newMap.addListener('dragend', () => getSubPosts(newMap));
 
       // getSubPosts(newMap);
       return newMap;
