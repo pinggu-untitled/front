@@ -1,15 +1,13 @@
 import React, { Dispatch, FC, memo, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { IMe, IUser } from '@typings/db';
-import ProfileImage from '@components/revised/common/images/ProfileAvatar';
-import { useNavigate, useParams } from 'react-router-dom';
+import ProfileAvatar from '@components/revised/common/images/ProfileAvatar';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import FollowActionButton from '../FollowActionButton';
 import isIdExisting from '@utils/isIdExisting';
-import axios from 'axios';
-import mutateFollow from '@utils/mutateFollow';
-import followFetcher from '@utils/followFetcher';
+import actionHandler from '@utils/actionHandler';
 import handleNavigate from '@utils/handleNavigate';
 
 interface IProps {
@@ -37,31 +35,28 @@ export const Base = styled.li`
 export type FollowState = boolean | null;
 
 const FriendCard: FC<IProps> = ({ profile }) => {
-  const navigate = useNavigate();
+  const navigator = useNavigate();
   const { data: md } = useSWR<IMe>(`/users/me`, fetcher);
   const [isFollowing, setIsFollowing] = useState<FollowState>(null);
 
-  const { data: myFollowingsData, mutate: mutateMyFollowings } = useSWR<IUser[]>(
-    `/users/${md?.id}/followings`,
-    followFetcher(setIsFollowing, profile),
-  );
+  const { data: myFollowingsData } = useSWR<IUser[]>(`/users/${md?.id}/followings`, fetcher);
 
   useEffect(() => {
     if (myFollowingsData) {
       setIsFollowing(isIdExisting(myFollowingsData, profile));
     }
-  }, []);
+  }, [myFollowingsData]);
 
   return (
-    <Base onClick={handleNavigate(navigate, `/${profile.id}`)}>
+    <Base onClick={handleNavigate(navigator, `/${profile.id}`)}>
       <div className={'left'}>
-        <ProfileImage profile={profile} style={{ width: '50px', height: '50px' }} />
+        <ProfileAvatar profile={profile} style={{ width: '50px', height: '50px' }} />
         <span className={'nickname'}>{profile.nickname}</span>
       </div>
       {profile.id !== md?.id && (
         <FollowActionButton
           isFollowing={isFollowing}
-          onClick={mutateFollow(isFollowing, setIsFollowing, profile.id)}
+          onClick={actionHandler(isFollowing ? 'deactivate' : 'activate', `/follow/${profile.id}`, setIsFollowing)}
           style={{ right: '10px' }}
         />
       )}

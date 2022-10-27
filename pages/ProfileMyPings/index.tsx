@@ -28,8 +28,8 @@ const ProfileMyPings = () => {
   const { data: ud } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
   const { data: mypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
   const { data: sharepings } = useSWR<IMyPings[]>(`/users/${userId}/sharepings`, fetcher);
-  console.log('mypings', mypings);
-  console.log('sharepings', sharepings);
+  // console.log('mypings', mypings);
+  // console.log('sharepings', sharepings);
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
