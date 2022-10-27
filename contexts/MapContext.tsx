@@ -36,10 +36,9 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
     const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',');
     console.log(swLat, swLng, neLat, neLng);
-    const data = await fetcher(
-      `/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`,
-    );
-    console.log('data >>> ', data);
+    fetcher(`/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`)
+      .then((data) => console.log('data >> ', data))
+      .catch((err) => console.error(err));
   };
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
