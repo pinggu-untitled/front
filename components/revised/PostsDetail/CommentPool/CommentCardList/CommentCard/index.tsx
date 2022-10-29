@@ -8,7 +8,6 @@ import useInput from '@hooks/useInput';
 import contentRegexfier from '@utils/contentRegexfier';
 import handleNavigate from '@utils/handleNavigate';
 import { useNavigate, useParams } from 'react-router-dom';
-import autosize from 'autosize';
 
 export const Base = styled.li<{ depth: boolean }>`
   display: flex;
@@ -68,7 +67,6 @@ export const ActionButton = styled.span`
     text-decoration: underline;
   }
 `;
-
 export const ReplyInputZone = styled.div`
   display: flex;
   align-items: center;
@@ -157,10 +155,8 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
         {isCommenter && (
           <ActionButton
             onClick={(e) => {
-              setShowEditInput((p) => {
-                if (p) onSubmitEdit(e);
-                return !p;
-              });
+              setShowEditInput((p) => !p);
+              if (showEditInput) onSubmitEdit(e);
             }}
           >
             {showEditInput ? '수정 완료' : '수정'}
@@ -170,10 +166,8 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
         {isParentComment(comment.pid) && (
           <ActionButton
             onClick={(e) => {
-              setShowReplyInput((p) => {
-                if (p) onSubmitReply(e);
-                return !p;
-              });
+              setShowReplyInput((p) => !p);
+              if (showReplyInput) onSubmitReply(e);
             }}
           >
             {showReplyInput ? '답글 완료' : '답글 달기'}

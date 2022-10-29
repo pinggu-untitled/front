@@ -9,7 +9,6 @@ import { v4 as uuid } from 'uuid';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
 import { redirect, useNavigate, useLocation } from 'react-router-dom';
 import readable from '@utils/readable';
-import { Redirect } from 'react-router';
 import { useMap } from '@contexts/MapContext';
 
 export const Base = styled.div`
