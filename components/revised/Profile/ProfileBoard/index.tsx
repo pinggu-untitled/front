@@ -11,6 +11,7 @@ import isIdExisting from '@utils/isIdExisting';
 import { FollowState } from '@components/revised/Profile/FriendCard';
 import handleNavigate from '@utils/handleNavigate';
 import actionHandler from '@utils/actionHandler';
+import contentRegexifier from '@utils/contentRegexfier';
 
 interface IProps {
   profile: IUser;
@@ -93,7 +94,7 @@ const ProfileBoard: FC<IProps> = ({ profile }) => {
         </div>
         {profile.bio && (
           <p className="bio">
-            {profile.bio.slice(0, 100)} {profile.bio.length >= 100 ? '...' : null}
+            {contentRegexifier(profile.bio.slice(0, 100))} {profile.bio.length >= 100 ? '...' : null}
           </p>
         )}
       </InfoZone>
