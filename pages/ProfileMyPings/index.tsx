@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { IPost, IUser, IMe } from '@typings/db';
+import React, { useState, useCallback, useReducer } from 'react';
+import { IUser, IMe } from '@typings/db';
 import CardList from '@components/revised/CardList';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -16,20 +16,22 @@ import { IMyPings } from '../../typings/db';
 import EmptyMessage from '@components/revised/Profile/EmptyMessage';
 import SelectMyPingsCard from '@components/revised/Profile/SelectMyPingsCard';
 import readable from '@utils/readable';
+import { SortButtonZone, Tap } from '@pages/ProfileFriends';
 
 export interface ICheckedPost {
   id: number;
   title: string;
 }
 
+type Tap = 'all' | 'mypings' | 'sharepings';
 const ProfileMyPings = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: md } = useSWR<IMe>('/users/me', fetcher);
   const { data: ud } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
   const { data: mypings } = useSWR<IMyPings[]>(`/users/${userId}/mypings`, fetcher);
   const { data: sharepings } = useSWR<IMyPings[]>(`/users/${userId}/sharepings`, fetcher);
-  // console.log('mypings', mypings);
-  // console.log('sharepings', sharepings);
+  const [tap, setTap] = useReducer((prev: Tap, cur: Tap): Tap => cur, 'all');
+
   const [showModals, setShowModals] = useState<{ [key: string]: boolean }>({
     showSettingsModal: false,
     showEditModal: false,
@@ -47,29 +49,38 @@ const ProfileMyPings = () => {
     });
   };
 
-  const onSubmit = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      console.log(checkedPosts);
-    },
-    [checkedPosts],
-  );
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    console.log(checkedPosts);
+  };
 
   const userSettingItems = [
     { content: { icon: <FiScissors />, title: '수정하기' }, onClick: handleModal('showEditModal') },
   ];
 
-  if (!mypings) return <div>로딩중...</div>;
+  if (!mypings || !sharepings) return <div>로딩중...</div>;
 
   return (
     <>
       <Base>
-        <MainContentZone>
-          {md && mypings?.length > 0 ? (
+        <SortButtonZone>
+          <Tap active={tap === 'all'} onClick={() => setTap('all')}>
+            모두
+          </Tap>
+          <Tap active={tap === 'mypings'} onClick={() => setTap('mypings')}>
+            마이핑스
+          </Tap>
+          <Tap active={tap === 'sharepings'} onClick={() => setTap('sharepings')}>
+            쉐어핑스
+          </Tap>
+        </SortButtonZone>
+        <MainContentZone style={{ top: '270px' }}>
+          {md && (mypings?.length > 0 || sharepings?.length > 0) ? (
             <CardList>
-              {readable(md)(mypings)?.map((ping, i) => (
-                <MyPingsCard key={uuid()} mypings={ping} />
-              ))}
+              {(tap === 'all' || tap === 'mypings') &&
+                readable(md)(mypings)?.map((ping, i) => <MyPingsCard key={uuid()} mypings={ping} />)}
+              {(tap === 'all' || tap === 'sharepings') &&
+                readable(md)(sharepings)?.map((ping, i) => <MyPingsCard key={uuid()} mypings={ping} />)}
             </CardList>
           ) : (
             <EmptyMessage message={'아직 회원님이 만든 마이핑스가 없어요.'} />

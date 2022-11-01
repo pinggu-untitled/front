@@ -21,6 +21,7 @@ export const Base = styled.li`
   display: flex;
   align-items: flex-start;
   cursor: pointer;
+  width: 100%;
 `;
 
 export const ImageZone = styled.div`
@@ -34,7 +35,6 @@ export const ImageZone = styled.div`
 export const InfoZone = styled.div`
   margin-left: 10px;
   padding: 5px 0;
-
   > h2 {
     font-size: 16px;
     line-height: 18px;

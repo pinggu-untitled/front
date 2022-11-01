@@ -22,10 +22,9 @@ export const Base = styled.li`
   flex-direction: column;
   align-items: flex-start;
   cursor: pointer;
-  border-radius: 4px;
   padding: 10px 0;
 
-  > .info {
+  > .container {
     display: flex;
     align-items: flex-start;
   }
@@ -65,7 +64,7 @@ const PostCard: FC<IProps> = ({ post, mutateFn }) => {
       onClick={handleNavigate(navigate, `/posts/${post?.id}`)}
       style={md?.id === post?.User.id ? { paddingBottom: 0, border: 'none' } : {}}
     >
-      <div className={'info'}>
+      <div className={'container'}>
         <ImageZone>
           {post?.Images.length > 0 && <TotalCount current={1} total={post?.Images.length} />}
           <PostImage

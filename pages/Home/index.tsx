@@ -26,6 +26,7 @@ export const MainContentZone = styled.div`
 interface IForm {
   searchQueries: string;
 }
+
 const Home = () => {
   const navigator = useNavigate();
   const { data: md } = useSWR<IMe>('/users/me', fetcher);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useReducer } from 'react';
 import styled from '@emotion/styled';
 import { IUser, IMe } from '@typings/db';
 import CardList from '@components/revised/CardList';
@@ -28,14 +28,14 @@ export const Tap = styled.div<{ active: boolean }>`
   cursor: pointer;
 `;
 
-export type TFollow = 'follower' | 'following';
+type Tap = 'follower' | 'following';
 
 const ProfileFriends = () => {
   const [, rerender] = useState();
   const { userId } = useParams<{ userId: string }>();
   const { data: md, mutate: mutateMd } = useSWR<IMe>(`/users/me`, fetcher);
   const { data: ud, mutate: mutateUd } = useSWR<IUser[]>(`/users/${userId}`, fetcher);
-  const [tap, setTap] = useState<TFollow>('following');
+  const [tap, setTap] = useReducer((prev: Tap, cur: Tap): Tap => cur, 'following');
   const { data: followingsData, mutate: mutateFollowings } = useSWR<IUser[]>(`/users/${userId}/followings`, fetcher);
   const { data: followersData, mutate: mutateFollowers } = useSWR<IUser[]>(`/users/${userId}/followers`, fetcher);
   const { data: myFollowingData, mutate: mutateMyFollowingData } = useSWR<IUser[]>(
@@ -43,16 +43,14 @@ const ProfileFriends = () => {
     fetcher,
   );
 
-  const toggleFollow = (type: TFollow) => () => setTap(type);
-
   return (
     <>
       <Base>
         <SortButtonZone>
-          <Tap active={tap === 'following'} onClick={toggleFollow('following')}>
+          <Tap active={tap === 'following'} onClick={() => setTap('following')}>
             팔로잉
           </Tap>
-          <Tap active={tap === 'follower'} onClick={toggleFollow('follower')}>
+          <Tap active={tap === 'follower'} onClick={() => setTap('follower')}>
             팔로워
           </Tap>
         </SortButtonZone>

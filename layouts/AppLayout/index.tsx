@@ -1,8 +1,7 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback, useReducer } from 'react';
 import styled from '@emotion/styled';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../themes/themes';
-import MainNavigation from '@components/common/navigations/MainNavigation';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useLocation } from 'react-router-dom';
 import Map from '@components/Map/index';
@@ -64,25 +63,27 @@ export const MapZone = styled.div`
 
 const AppLayout: FC<IProps> = ({ children }) => {
   const location = useLocation();
-  const [showPage, setShowPage] = useState(true);
-  const onToggle = useCallback(() => {
-    setShowPage((p) => !p);
-  }, []);
-
+  const [showPage, toggleShowPage] = useReducer((show) => !show, true);
   return (
     <ThemeProvider theme={theme}>
       <Layout>
-        {['/intro', '/introduce'].includes(location.pathname) ? (
+        {['/intro', '/introduce'].includes(location.pathname) || location.hash === '#notfound' ? (
           <div>{children}</div>
         ) : (
           <MapProvider>
             <>
-              <SideNavigation />
+              <div
+                onClick={() => {
+                  if (!showPage) toggleShowPage();
+                }}
+              >
+                <SideNavigation />
+              </div>
               <MainPage show={showPage}>{children}</MainPage>
               <MapZone>
                 <Map />
               </MapZone>
-              <SlideButton show={showPage} onClick={onToggle}>
+              <SlideButton show={showPage} onClick={toggleShowPage}>
                 {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
               </SlideButton>
             </>

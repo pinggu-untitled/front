@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { BiSearch } from 'react-icons/bi';
 
 interface IProps {
   onClickPrev: () => void;
@@ -26,6 +26,9 @@ const TitleNavigation: FC<IProps> = ({ onClickPrev, title }) => {
         <BsArrowLeft />
       </Button>
       <h1>{title}</h1>
+      <Button>
+        <BiSearch />
+      </Button>
     </Navigation>
   );
 };

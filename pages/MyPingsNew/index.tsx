@@ -1,31 +1,43 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
-import PrevButtonTitleHeader from '@components/common/headers/PrevButtonTitleHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FixedLabelInput from '@components/common/inputs/FixedLabelInput';
-import FixedLabelTextarea from '@components/common/textareas/FixedLabelTextarea';
+import ImageInputList from '@components/revised/PostsNewEdit/ImageInputList';
 import axios from 'axios';
-import SquareButton from '@components/common/buttons/SquareButton';
-import ProfileImageInput from '@components/Profile/ProfileImageInput';
-import ToggleButtonInput from '@components/common/inputs/ToggleButtonInput';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 import TextToggleButtonInput from '@components/common/inputs/TextToggleButtonInput';
-// import UserProfileCard from '@components/common/profiles-related/UserProfileCard';
-import { Private } from '@pages/PostsNew';
 import SquareSubmitButton from '@components/common/buttons/SquareSubmitButton';
-import SelectBox from '@components/common/selects/SelectBox';
+import ToolBox from '@components/revised/PostsNewEdit/ToolBox';
+import ToolButton from '@components/revised/PostsNewEdit/ToolBox/ToolButton';
+import { BsImages } from 'react-icons/bs';
+import { HiLocationMarker } from 'react-icons/hi';
+import HoverLabel from '@components/common/labels/HoverLabel';
+import SearchLocationForm from '@components/revised/PostsNewEdit/SearchLocationForm';
+import makeFormData from '@utils/makeFormData';
+import ProfileSummaryBar from '@components/revised/PostsNewEdit/ProfileSummaryBar';
+import findMatches from '@utils/findMatches';
+import TitleNavigation from '@components/revised/common/navigations/TitleNavigation';
+import handleNavigate from '@utils/handleNavigate';
+import { Base as B, MainContentZone as M } from '@pages/Home';
 
-export const Base = styled.div`
+export const Base = styled(B)`
   width: 100%;
+  height: 100%;
 `;
 
-export const MainContentZone = styled.div`
-  width: 440px;
-  margin-top: 73px;
-  padding: 20px 20px 0 20px;
+export const MainContentZone = styled(M)`
+  top: 73px;
+  padding: 20px 20px 40px;
+  overflow: scroll;
+  bottom: 80px;
 `;
 
 export const Form = styled.form`
+  width: 100%;
+  height: 100%;
+
   > label {
     margin-bottom: 20px;
   }
@@ -37,64 +49,141 @@ export const Form = styled.form`
   }
 `;
 
-interface IForm {
+export const Private = styled.label`
+  display: flex;
+  align-items: center;
+
+  > span {
+    font-size: 14px;
+    margin-right: 5px;
+  }
+`;
+
+export interface IPostForm {
   title: string;
-  category: string; // 선택
-  is_private: boolean;
-  posts: { id: number; title: string }[]; // 선택
+  is_private: boolean | number;
+  longitude: string;
+  latitude: string;
+  images: any[];
 }
 
-const MyPingsNew = () => {
-  const navigate = useNavigate();
-  const { nickname } = useParams<{ nickname: string }>();
-  const ud = { id: 1, nickname: '아무개', bio: '나는야 아무개', profile_image_url: '/public/1.png' };
+export const makeHashtags = (data: string) =>
+  findMatches(data, /#[^\s#]+/g, (tag, i) => {
+    tag.slice(1);
+    return { content: tag };
+  });
 
+export const makeMentions = (data: string) =>
+  findMatches(data, /@[^\s@]+/g, (mt, i) => {
+    mt.slice(1);
+    return { receiver: 1 };
+  });
+
+const MypingsNew = () => {
+  const navigator = useNavigate();
+  const { data: ud, mutate: mutateUd } = useSWR(`/users/me`, fetcher);
   const {
     control,
     handleSubmit,
-    formState: { errors },
     watch,
-  } = useForm<IForm>({
+    formState: { errors },
+  } = useForm<IPostForm>({
     defaultValues: {
       title: '',
-      category: '',
       is_private: false,
-      posts: [{ id: 1, title: 'good' }],
+      longitude: '126.111111',
+      latitude: '37.222222',
+      images: [],
     },
   });
 
-  const { title, category, is_private, posts } = watch();
-  const isSubmitAvailable = Boolean(title);
-  const onSubmit = useCallback(() => {}, []);
-  console.log(category);
+  const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
+    showImages: false,
+    showSearchLocation: false,
+  });
+
+  const toggleOption = useCallback((option) => {
+    setShowOptions((p) => ({ ...p, [option]: !p[option] }));
+  }, []);
+
+  const { title, images, longitude, latitude } = watch();
+  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
+  const onSubmit = handleSubmit(async (data: IPostForm) => {
+    let filenames;
+    if (data.images.length > 0) {
+      filenames = await axios
+        .post('/posts/images', makeFormData('images', data.images), {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((res) => res.data);
+    }
+
+    const newPost = await axios
+      .post('/posts', {
+        ...data,
+        images: filenames || [],
+      })
+      .then((res) => {
+        return res.data;
+      });
+
+    console.log('created mypings>>>', newPost);
+    if (newPost) navigator('/');
+  });
+
   return (
     <Base>
-      <PrevButtonTitleHeader title="마이핑스 만들기" onClick={() => navigate('/')} />
-      <MainContentZone>
-        <Form onSubmit={onSubmit}>
-          {/* <UserProfileCard user={ud}>
-            <TextToggleButtonInput
-              control={control}
-              name={'is_private'}
-              messages={{ checked: '모두에게', unChecked: '나에게만' }}
-            />
-          </UserProfileCard> */}
-          <FixedLabelInput control={control} label={'제목'} name={'title'} />
-          {/*<FixedLabelInput control={control} label={'카테고리'} name={'category'} />*/}
-          <SelectBox
-            label={'카테고리'}
-            name={'category'}
-            control={control}
-            data={[
-              { id: 1, title: '나의 마이핑스1' },
-              { id: 2, title: '나의 마이핑스2' },
-            ]}
+      {showOptions.showSearchLocation ? (
+        <>
+          <TitleNavigation
+            onClickPrev={() => {
+              navigator('/mypings/new');
+              toggleOption('showSearchLocation');
+            }}
+            title={'위치 찾기'}
           />
-          <SquareSubmitButton content={'만들기'} valid={isSubmitAvailable} />
-        </Form>
-      </MainContentZone>
+          <MainContentZone>
+            <SearchLocationForm />
+          </MainContentZone>
+        </>
+      ) : (
+        <>
+          <TitleNavigation onClickPrev={handleNavigate(navigator, '/')} title={'마이핑스 만들기'} />
+          <MainContentZone>
+            <Form>
+              <ProfileSummaryBar>
+                <TextToggleButtonInput
+                  control={control}
+                  name={'is_private'}
+                  messages={{ checked: '나에게만', unChecked: '모두에게' }}
+                />
+              </ProfileSummaryBar>
+              <FixedLabelInput control={control} label={'마이핑스 제목'} name={'title'} />
+
+              {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
+              <ToolBox title={'게시물에 추가'}>
+                <HoverLabel label={'사진'} style={{ top: '-35px' }}>
+                  <ToolButton
+                    icon={<BsImages />}
+                    colors={{ font: '#44bd63', background: images.length >= 1 && '#e3f0d4' }}
+                    onClick={() => toggleOption('showImages')}
+                  />
+                </HoverLabel>
+                <HoverLabel label={'위치'} style={{ top: '-35px' }}>
+                  <ToolButton
+                    icon={<HiLocationMarker />}
+                    colors={{ font: '#f5533d', background: longitude && latitude && '#fecbd2' }}
+                    onClick={() => toggleOption('showSearchLocation')}
+                  />
+                </HoverLabel>
+              </ToolBox>
+              <SquareSubmitButton onClick={onSubmit} content={'공유하기'} valid={isSubmitAvailable} />
+            </Form>
+          </MainContentZone>
+        </>
+      )}
     </Base>
   );
 };
 
-export default MyPingsNew;
+export default MypingsNew;

@@ -22,6 +22,7 @@ const Intro = loadable(() => import('@pages/Intro'));
 const Introduce = loadable(() => import('@pages/Introduce'));
 const PostsEdit = loadable(() => import('@pages/PostsEdit'));
 const ProfileEdit = loadable(() => import('@pages/ProfileEdit'));
+const NotFound = loadable(() => import('@pages/NotFound'));
 
 const App = () => {
   return (
@@ -43,12 +44,13 @@ const App = () => {
         <Route path={'/chatrooms'} element={<Chatrooms />} />
         <Route path={'/chatrooms/:chatroomId'} element={<Chatrooms />} />
         <Route path={'/intro'} element={<Intro />} />
-        <Route path={'/introduce'} element={<Introduce />} />
         <Route path={'/settings'} element={<Settings />} />
         <Route path={'/more'} element={<More />} />
         <Route path={'/posts/:postId/edit'} element={<PostsEdit />} />
         <Route path={'/posts/:postId'} element={<PostsDetail />} />
         <Route path={'/posts/new'} element={<PostsNew />} />
+        <Route path={'/introduce'} element={<Introduce />} />
+        <Route path={'/#notfound'} element={<NotFound />} />
       </Routes>
     </AppLayout>
   );

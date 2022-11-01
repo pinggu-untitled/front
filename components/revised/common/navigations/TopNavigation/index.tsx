@@ -6,7 +6,6 @@ import { HiOutlineViewGridAdd } from 'react-icons/hi';
 import { FiEdit } from 'react-icons/fi';
 import { AiOutlineUser } from 'react-icons/ai';
 import { MdOutlineBookmarkAdd } from 'react-icons/md';
-
 import SettingsModal from '@components/revised/SettingsModal';
 import { useNavigate } from 'react-router-dom';
 import SearchModal from '@components/revised/SearchModal';
