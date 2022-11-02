@@ -1,4 +1,11 @@
-export const showPostInfo = (title: string, postImg: string = '', content: string, like: number, userImg: string, nickname: string) => {
+export const showPostInfo = (
+  title: string,
+  postImg: string = '',
+  content: string,
+  like: number,
+  userImg: string,
+  nickname: string,
+) => {
   return `
   <div style="background-color: gray; width: 270px; height: 160px; display: flex; flex-direction: column; border-radius: 5px; overflow: hidden">
       <h2 style="background-color: lightblue; margin: 0; padding: 0; text-align: center">${title}</h2>
