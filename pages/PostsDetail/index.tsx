@@ -23,7 +23,6 @@ import TapItem from '@components/revised/Profile/TapList/TapItem';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
-import { useMap } from '@contexts/MapContext';
 import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
@@ -112,13 +111,8 @@ const PostDetail = () => {
   const { data: userPd } = useSWR<IPost[]>(`/users/${pd?.User.id}/posts`, fetcher);
   const copyUrlRef = useRef<HTMLTextAreaElement | null>(null);
   const [showModals, handleModal] = useModals('showSettingsModal', 'showEachTapSettingsModal', 'showImagesZoomModal');
-  const { moveCenterToPost } = useMap();
 
   // console.log('🌷', pd);
-
-  if (pd && moveCenterToPost) {
-    moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
-  }
 
   const copyUrl = (e: any) => {
     copyUrlRef.current?.select();
