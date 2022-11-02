@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
 import { showPostInfo } from './infowindow';
@@ -27,14 +27,27 @@ const MapContext = createContext<IMapContext>({
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
 
   /* event handler - subPostMarker에 hover시 인포윈도우 띄우기 */
-  const getSubPostInfo = (subMarker: kakao.maps.Marker, map: kakao.maps.Map, post: IPost, markPosition: kakao.maps.LatLng) => {
+  const getSubPostInfo = (
+    subMarker: kakao.maps.Marker,
+    map: kakao.maps.Map,
+    post: IPost,
+    markPosition: kakao.maps.LatLng,
+  ) => {
     const infoPosition = new kakao.maps.LatLng((markPosition.getLat() + 0.001).toFixed(5), markPosition.getLng());
-    const content = showPostInfo(post.title, post.Images[0]?.src, post.content, post.hits, post.User.profile_image_url, post.User.nickname);
+    const content = showPostInfo(
+      post.title,
+      post.Images[0]?.src,
+      post.content,
+      post.hits,
+      post.User.profile_image_url,
+      post.User.nickname,
+    );
     const overlay = new kakao.maps.CustomOverlay({
       content,
       map,
@@ -51,9 +64,10 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     return (map: kakao.maps.Map) => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(cb, delay, map);
-    }
+    };
   };
   const getSubPosts = (map: kakao.maps.Map) => {
+    const postId = pathname.split('/')[2];
     const bounds = map?.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
     const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',');
@@ -65,16 +79,18 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
         const imageSize = new kakao.maps.Size(24, 35);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
         posts.forEach((post: IPost) => {
-          const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
-          const subMarker = new kakao.maps.Marker({
-            map: map,
-            position,
-            image: markerImage,
-          });
-          // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
-          subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
-          // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
-          subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+          if (postId !== post.id + '') {
+            const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
+            const subMarker = new kakao.maps.Marker({
+              map: map,
+              position,
+              image: markerImage,
+            });
+            // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
+            subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
+            // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
+            subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+          }
         });
       })
       .catch((err) => console.error(err));
