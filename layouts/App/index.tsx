@@ -22,7 +22,7 @@ const Intro = loadable(() => import('@pages/Intro'));
 const Introduce = loadable(() => import('@pages/Introduce'));
 const PostsEdit = loadable(() => import('@pages/PostsEdit'));
 const ProfileEdit = loadable(() => import('@pages/ProfileEdit'));
-const NotFound = loadable(() => import('@pages/NotFound'));
+// const NotFound = loadable(() => import('@pages/NotFound'));
 
 const App = () => {
   return (
@@ -50,7 +50,7 @@ const App = () => {
         <Route path={'/posts/:postId'} element={<PostsDetail />} />
         <Route path={'/posts/new'} element={<PostsNew />} />
         <Route path={'/introduce'} element={<Introduce />} />
-        <Route path={'/#notfound'} element={<NotFound />} />
+        {/* <Route path={'/#notfound'} element={<NotFound />} /> */}
       </Routes>
     </AppLayout>
   );
