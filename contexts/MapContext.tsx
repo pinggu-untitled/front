@@ -1,7 +1,8 @@
-import React from 'react';
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
+import { showPostInfo } from './infowindow';
 const { kakao } = window;
 
 interface IMapContext {
@@ -25,12 +26,33 @@ const MapContext = createContext<IMapContext>({
 });
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
+  const navigate = useNavigate();
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
-  // const [subMarkers, setSubMarkers] = useState(); // 중심 좌표 주변 포스트 마커
 
-  /* 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
+  /* event handler - subPostMarker에 hover시 인포윈도우 띄우기 */
+  const getSubPostInfo = (subMarker: kakao.maps.Marker, map: kakao.maps.Map, post: IPost, markPosition: kakao.maps.LatLng) => {
+    const infoPosition = new kakao.maps.LatLng((markPosition.getLat() + 0.001).toFixed(5), markPosition.getLng());
+    const content = showPostInfo(post.title, post.Images[0]?.src, post.content, post.hits, post.User.profile_image_url, post.User.nickname);
+    const overlay = new kakao.maps.CustomOverlay({
+      content,
+      map,
+      position: infoPosition,
+    });
+    overlay.setMap(map);
+
+    subMarker.addListener('mouseout', () => overlay.setMap(null));
+  };
+
+  /* event handler - 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
+  const debounce = (cb: Function, delay: number) => {
+    let timer: any;
+    return (map: kakao.maps.Map) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(cb, delay, map);
+    }
+  };
   const getSubPosts = (map: kakao.maps.Map) => {
     const bounds = map?.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
@@ -40,22 +62,24 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       .then((posts) => {
         console.log(posts);
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-        posts
-          .map((post: IPost) => ({
-            latlng: new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude)),
-          }))
-          .forEach((position: any) => {
-            const imageSize = new kakao.maps.Size(24, 35);
-            const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-            new kakao.maps.Marker({
-              map: map,
-              position: position.latlng,
-              image: markerImage,
-            });
+        const imageSize = new kakao.maps.Size(24, 35);
+        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        posts.forEach((post: IPost) => {
+          const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
+          const subMarker = new kakao.maps.Marker({
+            map: map,
+            position,
+            image: markerImage,
           });
+          // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
+          subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
+          // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
+          subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+        });
       })
       .catch((err) => console.error(err));
   };
+  const dGetSubPosts = debounce(getSubPosts, 500);
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
   const initializeMap = (container: HTMLElement, latitude: number, longitude: number) => {
@@ -107,8 +131,8 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
         return newPostMarker;
       });
 
-      // event-지도 이동 시 포스트 조회
-      newMap.addListener('dragend', () => getSubPosts(newMap));
+      /* event-지도 이동 시 포스트 조회 */
+      newMap.addListener('center_changed', () => dGetSubPosts(newMap));
 
       // getSubPosts(newMap);
       return newMap;
@@ -162,5 +186,4 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     </MapContext.Provider>
   );
 };
-
 export const useMap = () => useContext(MapContext);
