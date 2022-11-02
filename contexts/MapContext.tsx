@@ -113,6 +113,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       latitude: myMarker?.getPosition().getLat().toFixed(6) ?? '',
       longitude: myMarker?.getPosition().getLng().toFixed(6) ?? '',
     }));
+
     myMarker?.setMap(map);
 
     /* 특정 포스트 마커 생성 */
@@ -169,18 +170,15 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       };
       navigator?.geolocation.getCurrentPosition(onSuccess, onError);
     }
-  }, [map, myMarker]);
+  }, []);
 
   /* 특정 포스트 위치로 지도 중심 좌표 변경 with 특정 포스트 마커 */
-  const moveCenterToPost = useCallback(
-    (latitude: number, longitude: number) => {
-      if (map && postMarker) {
-        postMarker.setMap(null);
-        setMapCenter(latitude, longitude, postMarker);
-      }
-    },
-    [map, postMarker],
-  );
+  const moveCenterToPost = useCallback((latitude: number, longitude: number) => {
+    if (map && postMarker) {
+      postMarker.setMap(null);
+      setMapCenter(latitude, longitude, postMarker);
+    }
+  }, []);
 
   /* 내가 찍은 마커 위치 가져오기 */
   const getMyPosition = useCallback(() => myPosition, [myPosition]);
