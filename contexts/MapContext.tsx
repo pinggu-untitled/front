@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
 import { showPostInfo } from './infowindow';
+import { stringify } from 'querystring';
 const { kakao } = window;
 
 interface IMapContext {
@@ -11,8 +12,7 @@ interface IMapContext {
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
   moveCenterToMe: () => void;
   moveCenterToPost: (latitude: number, longitude: number) => void;
-  getMapInfo: () => void;
-  getSubPosts: (map: kakao.maps.Map) => void;
+  getMyPosition: () => { latitude: string | undefined; longitude: string | undefined };
 }
 
 const MapContext = createContext<IMapContext>({
@@ -21,13 +21,12 @@ const MapContext = createContext<IMapContext>({
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
   moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
-  getMapInfo: () => {},
-  getSubPosts: (map: kakao.maps.Map) => {},
+  getMyPosition: () => ({ latitude: '', longitude: '' }),
 });
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const [_, rerenderer] = useState(0);
   const [map, setMap] = useState<kakao.maps.Map | null>(null); // 지도 객체
   const [myMarker, setMyMarker] = useState<kakao.maps.Marker | null>(null); // 내 위치 마커
   const [postMarker, setPostMarker] = useState<kakao.maps.Marker | null>(null); // 특정 포스트 마커
@@ -39,7 +38,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     post: IPost,
     markPosition: kakao.maps.LatLng,
   ) => {
-    const infoPosition = new kakao.maps.LatLng((markPosition.getLat() + 0.001).toFixed(5), markPosition.getLng());
+    const infoPosition = new kakao.maps.LatLng((markPosition.getLat() + 0.001).toFixed(6), markPosition.getLng());
     const content = showPostInfo(
       post.title,
       post.Images[0]?.src,
@@ -67,8 +66,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     };
   };
   const getSubPosts = (map: kakao.maps.Map) => {
-    const postId = pathname.split('/')[2];
-    const bounds = map?.getBounds();
+    const bounds = map.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
     const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',');
     // console.log(swLat, swLng, neLat, neLng);
@@ -76,21 +74,19 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       .then((posts) => {
         console.log(posts);
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-        const imageSize = new kakao.maps.Size(24, 35);
+        const imageSize = new kakao.maps.Size(20, 32);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
         posts.forEach((post: IPost) => {
-          if (postId !== post.id + '') {
-            const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
-            const subMarker = new kakao.maps.Marker({
-              map: map,
-              position,
-              image: markerImage,
-            });
-            // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
-            subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
-            // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
-            subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
-          }
+          const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
+          const subMarker = new kakao.maps.Marker({
+            map,
+            position,
+            image: markerImage,
+          });
+          // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
+          subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
+          // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
+          subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
         });
       })
       .catch((err) => console.error(err));
@@ -98,7 +94,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const dGetSubPosts = debounce(getSubPosts, 500);
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
-  const initializeMap = (container: HTMLElement, latitude: number, longitude: number) => {
+  const initializeMap = useCallback((container: HTMLElement, latitude: number, longitude: number) => {
     console.log('Map Initialized!!!!!@@@@!!!!!!');
     const position = new kakao.maps.LatLng(latitude, longitude);
     const options = {
@@ -109,6 +105,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     /* 지도 생성 */
     setMap((prev) => {
       const newMap = new kakao.maps.Map(container, options);
+      getSubPosts(newMap);
       newMap.setZoomable(false);
 
       /* 내 위치 마커 생성 */
@@ -118,6 +115,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
         // event-지도 클릭 시 내 위치 마커 이동
         newMap.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
           newMyMarker.setPosition(latLng);
+          rerenderer((prev) => prev + 1);
         });
         // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
         newMyMarker.addListener('click', () => {
@@ -144,16 +142,16 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       /* 특정 포스트 마커 생성 */
       setPostMarker((prev) => {
         const newPostMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0), clickable: true });
+        newPostMarker.setZIndex(1);
         return newPostMarker;
       });
 
       /* event-지도 이동 시 포스트 조회 */
       newMap.addListener('center_changed', () => dGetSubPosts(newMap));
-
       // getSubPosts(newMap);
       return newMap;
     });
-  };
+  }, []);
 
   /* 중심 좌표 설정 및 마커 표시 */
   const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker) => {
@@ -166,7 +164,7 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   };
 
   /* 내 위치로 지도 중심 좌표 변경 with 내 위치 마커 */
-  const moveCenterToMe = () => {
+  const moveCenterToMe = useCallback(() => {
     if (map && myMarker) {
       const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
         setMapCenter(latitude, longitude, myMarker);
@@ -176,28 +174,31 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       };
       navigator?.geolocation.getCurrentPosition(onSuccess, onError);
     }
-  };
+  }, [map, myMarker]);
 
   /* 특정 포스트 위치로 지도 중심 좌표 변경 with 특정 포스트 마커 */
-  const moveCenterToPost = (latitude: number, longitude: number) => {
-    if (map && postMarker) setMapCenter(latitude, longitude, postMarker);
-  };
+  const moveCenterToPost = useCallback(
+    (latitude: number, longitude: number) => {
+      if (map && postMarker) {
+        postMarker.setMap(null);
+        setMapCenter(latitude, longitude, postMarker);
+      }
+    },
+    [map, postMarker],
+  );
 
-  /* 지도 정보 얻기 */
-  const getMapInfo = () => {
-    const bounds = map?.getBounds();
-    const swLatLng = bounds?.getSouthWest();
-    const noLatLng = bounds?.getNorthEast();
-    console.log('bounds >> ', bounds);
-    console.log('swLatLng >> ', swLatLng);
-    console.log('swLat >> ', typeof swLatLng?.getLat());
-    console.log('neLatLng >> ', noLatLng);
+  /* 내가 찍은 마커 위치 가져오기 */
+  const getMyPosition = () => {
+    const myPosition = myMarker?.getPosition();
+    const latitude = myPosition?.getLat().toFixed(6);
+    const longitude = myPosition?.getLng().toFixed(6);
+    console.log('lat >>> ', latitude, 'lng >>> ', longitude);
+
+    return { latitude, longitude };
   };
 
   return (
-    <MapContext.Provider
-      value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMapInfo, getSubPosts }}
-    >
+    <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMyPosition }}>
       {children}
     </MapContext.Provider>
   );

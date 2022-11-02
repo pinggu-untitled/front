@@ -7,7 +7,7 @@ export const showPostInfo = (
   nickname: string,
 ) => {
   return `
-  <div style="background-color: gray; width: 270px; height: 160px; display: flex; flex-direction: column; border-radius: 5px; overflow: hidden">
+  <div style="background-color: gray; width: 270px; height: 160px; display: flex; flex-direction: column; border-radius: 5px; overflow: hidden; z-index: 999">
       <h2 style="background-color: lightblue; margin: 0; padding: 0; text-align: center">${title}</h2>
       <div style="background-color: lightgray; display: flex; flex: 1">
         <div style="display: flex; align-items: center ">
