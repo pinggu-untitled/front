@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import styled from '@emotion/styled';
 import DetailTopNavigation from '@components/revised/common/navigations/DetailTopNavigation';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -23,7 +23,7 @@ import TapItem from '@components/revised/Profile/TapList/TapItem';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';
@@ -116,10 +116,6 @@ const PostDetail = () => {
 
   // console.log('🌷', pd);
 
-  if (pd && moveCenterToPost) {
-    moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
-  }
-
   const copyUrl = (e: any) => {
     copyUrlRef.current?.select();
     document.execCommand('copy');
@@ -159,6 +155,12 @@ const PostDetail = () => {
   const postImageStyle = { width: '100%', height: '100%', borderRadius: 0, border: 'none' };
 
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
+
+  useEffect(() => {
+    if (pd) {
+      moveCenterToPost(Number(pd.latitude), Number(pd.longitude));
+    }
+  }, [pd]);
 
   if (pd === undefined) return <div>로딩중...</div>;
 

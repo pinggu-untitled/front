@@ -22,12 +22,13 @@ const Intro = loadable(() => import('@pages/Intro'));
 const Introduce = loadable(() => import('@pages/Introduce'));
 const PostsEdit = loadable(() => import('@pages/PostsEdit'));
 const ProfileEdit = loadable(() => import('@pages/ProfileEdit'));
-const NotFound = loadable(() => import('@pages/NotFound'));
+const Map = loadable(() => import('@components/Map'));
+// const NotFound = loadable(() => import('@pages/NotFound'));
 
 const App = () => {
   return (
-    <AppLayout>
-      <Routes>
+    <Routes>
+      <Route path="/" element={<AppLayout />}>
         <Route index element={<Home />} />
         <Route path={'/home'} element={<Home />} />
         <Route path={'/explore'} element={<Explore />} />
@@ -43,16 +44,16 @@ const App = () => {
         <Route path={'/:userId/edit'} element={<ProfileEdit />} />
         <Route path={'/chatrooms'} element={<Chatrooms />} />
         <Route path={'/chatrooms/:chatroomId'} element={<Chatrooms />} />
-        <Route path={'/intro'} element={<Intro />} />
         <Route path={'/settings'} element={<Settings />} />
         <Route path={'/more'} element={<More />} />
         <Route path={'/posts/:postId/edit'} element={<PostsEdit />} />
         <Route path={'/posts/:postId'} element={<PostsDetail />} />
         <Route path={'/posts/new'} element={<PostsNew />} />
-        <Route path={'/introduce'} element={<Introduce />} />
-        <Route path={'/#notfound'} element={<NotFound />} />
-      </Routes>
-    </AppLayout>
+      </Route>
+      <Route path={'/intro'} element={<Intro />} />
+      <Route path={'/introduce'} element={<Introduce />} />
+      {/* <Route path={'/#notfound'} element={<NotFound />} /> */}
+    </Routes>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,7 @@ import TitleNavigation from '@components/revised/common/navigations/TitleNavigat
 import handleNavigate from '@utils/handleNavigate';
 import { Base as B, MainContentZone as M } from '@pages/Home';
 import { IHashtag, IMention } from '@typings/db';
+import { useMap } from '@contexts/Map/MapContext';
 
 export const Base = styled(B)`
   width: 100%;
@@ -85,7 +86,9 @@ export const makeMentions = (data: string) =>
   });
 
 const PostsNew = () => {
+  const { getMyPosition } = useMap();
   const navigator = useNavigate();
+  const { latitude, longitude } = getMyPosition();
   const { data: ud, mutate: mutateUd } = useSWR(`/users/me`, fetcher);
   const {
     control,
@@ -97,8 +100,8 @@ const PostsNew = () => {
       title: '',
       content: '',
       is_private: false,
-      longitude: '126.111111',
-      latitude: '37.222222',
+      longitude: latitude,
+      latitude: longitude,
       images: [],
       // hashtags: [{ content: 'hello' }, { content: 'hello2' }],
       // mentions: [{ receiver: 7 }, { receiver: 18 }, { receiver: 19 }],
@@ -114,7 +117,7 @@ const PostsNew = () => {
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   }, []);
 
-  const { title, images, longitude, latitude } = watch();
+  const { title, images } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
   const onSubmit = handleSubmit(async (data: IPostForm) => {
     let filenames;
@@ -129,6 +132,8 @@ const PostsNew = () => {
     const newPost = await axios
       .post('/posts', {
         ...data,
+        latitude,
+        longitude,
         hashtags: makeHashtags(data.content),
         mentions: makeMentions(data.content),
         images: filenames || [],

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 
 const Map = () => {
   const { initializeMap } = useMap();

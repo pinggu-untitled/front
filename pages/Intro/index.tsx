@@ -53,7 +53,7 @@ const Intro = () => {
   const baseUrl = 'http://localhost:8080';
   const { data: md, mutate: mutateMd } = useSWR('/users/me', fetcher);
 
-  if (md) navigate('/');
+  // if (md) navigate('/');
 
   return (
     <Base>

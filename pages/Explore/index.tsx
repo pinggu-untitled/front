@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import queryString from 'query-string';
 import axios from 'axios';
 import FixedHeader from '@components/common/headers/FixedHeader';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 
 export const Base = styled.div`
   width: 100%;

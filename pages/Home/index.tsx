@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import TopNavigation from '@components/revised/common/navigations/TopNavigation';
 import { redirect, useNavigate, useLocation } from 'react-router-dom';
 import readable from '@utils/readable';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 
 export const Base = styled.div`
   width: 100%;
