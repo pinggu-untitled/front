@@ -23,7 +23,7 @@ import TitleNavigation from '@components/revised/common/navigations/TitleNavigat
 import handleNavigate from '@utils/handleNavigate';
 import { Base as B, MainContentZone as M } from '@pages/Home';
 import { IHashtag, IMention } from '@typings/db';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 
 export const Base = styled(B)`
   width: 100%;

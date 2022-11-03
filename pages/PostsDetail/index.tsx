@@ -23,7 +23,7 @@ import TapItem from '@components/revised/Profile/TapList/TapItem';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import TapList from '@components/revised/Profile/TapList';
 import HoverLabel from '@components/common/labels/HoverLabel';
-import { useMap } from '@contexts/MapContext';
+import { useMap } from '@contexts/Map/MapContext';
 import compose from '@utils/compose';
 import readable from '@utils/readable';
 import handleNavigate from '@utils/handleNavigate';

@@ -3,10 +3,10 @@ import styled from '@emotion/styled';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../themes/themes';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Map from '@components/Map/index';
 import SideNavigation from '@components/revised/common/navigations/SideNavigation';
-import { MapProvider } from '@contexts/MapContext';
+import { MapProvider } from '@contexts/Map/MapContext';
 
 interface IProps {
   children: React.ReactNode;
@@ -61,34 +61,33 @@ export const MapZone = styled.div`
   background-color: #fff;
 `;
 
-const AppLayout: FC<IProps> = ({ children }) => {
+const AppLayout = () => {
   const location = useLocation();
   const [showPage, toggleShowPage] = useReducer((show) => !show, true);
   return (
     <ThemeProvider theme={theme}>
       <Layout>
-        {['/intro', '/introduce'].includes(location.pathname) || location.hash === '#notfound' ? (
-          <div>{children}</div>
-        ) : (
-          <MapProvider>
-            <>
-              <div
-                onClick={() => {
-                  if (!showPage) toggleShowPage();
-                }}
-              >
-                <SideNavigation />
-              </div>
-              <MainPage show={showPage}>{children}</MainPage>
-              <MapZone>
-                <Map />
-              </MapZone>
-              <SlideButton show={showPage} onClick={toggleShowPage}>
-                {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
-              </SlideButton>
-            </>
-          </MapProvider>
-        )}
+        <MapProvider>
+          <>
+            <div
+              onClick={() => {
+                if (!showPage) toggleShowPage();
+              }}
+            >
+              <SideNavigation />
+            </div>
+            <MapZone>
+              <Map />
+            </MapZone>
+            <MainPage show={showPage}>
+              <Outlet />
+            </MainPage>
+
+            <SlideButton show={showPage} onClick={toggleShowPage}>
+              {showPage ? <IoIosArrowBack /> : <IoIosArrowForward />}
+            </SlideButton>
+          </>
+        </MapProvider>
       </Layout>
     </ThemeProvider>
   );

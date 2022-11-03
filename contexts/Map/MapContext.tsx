@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import useSWR from 'swr';
+import { useNavigate, useParams } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
-import { showPostInfo } from './infowindow';
+import { showPostInfo } from '../infowindow';
+import debounce from '@utils/debounce';
+import axios from 'axios';
 const { kakao } = window;
 
 interface IMapContext {
@@ -29,7 +32,15 @@ const MapContext = createContext<IMapContext>({
 
 export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const navigate = useNavigate();
+  const { postId } = useParams();
   const [myPosition, setMyPosition] = useState({ latitude: '', longitude: '' });
+  const [postPosition, setPostPosition] = useState({ latitude: '', longitude: '' });
+  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, (url: string) => {
+    return axios.get(url).then((res) => {
+      setPostPosition({ latitude: res.data.latitude, longitude: res.data.longitude });
+      return res.data;
+    });
+  });
 
   /* event handler - subPostMarker에 hover시 인포윈도우 띄우기 */
   const getSubPostInfo = (
@@ -57,14 +68,14 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
     subMarker.addListener('mouseout', () => overlay.setMap(null));
   };
 
-  /* event handler - 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
-  const debounce = (cb: Function, delay: number) => {
-    let timer: any;
-    return (map: kakao.maps.Map | null) => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(cb, delay, map);
-    };
-  };
+  // /* event handler - 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
+  // const debounce = (cb: Function, delay: number) => {
+  //   let timer: any;
+  //   return (map: kakao.maps.Map | null) => {
+  //     if (timer) clearTimeout(timer);
+  //     timer = setTimeout(cb, delay, map);
+  //   };
+  // };
   const getSubPosts = (map: kakao.maps.Map | null) => {
     const bounds = map?.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',') ?? [];
@@ -94,60 +105,70 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const dGetSubPosts = debounce(getSubPosts, 500);
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
-  const initializeMap = useCallback((container: HTMLElement, latitude: number, longitude: number) => {
-    console.log('Map Initialized!!!!!@@@@!!!!!!');
-    const position = new kakao.maps.LatLng(latitude, longitude);
-    const options = {
-      center: position,
-      level: 3,
-      disableDoubleClickZoom: true,
-    };
-    /* 지도 생성 */
-    map = new kakao.maps.Map(container, options);
-    getSubPosts(map);
-    map?.setZoomable(false);
+  const initializeMap = useCallback(
+    (container: HTMLElement, latitude: number, longitude: number) => {
+      console.log('Map Initialized!!!!!@@@@!!!!!!');
+      console.log('postId >>> ', postId);
+      if (pd && postId) {
+        console.log('wpifjalfjsflwpqkfdkdkdkfk');
+        latitude = Number(pd?.latitude);
+        longitude = Number(pd?.longitude);
+      }
+      const position = new kakao.maps.LatLng(latitude, longitude);
+      const options = {
+        center: position,
+        level: 3,
+        disableDoubleClickZoom: true,
+      };
+      /* 지도 생성 */
+      map = new kakao.maps.Map(container, options);
+      getSubPosts(map);
+      map?.setZoomable(false);
 
-    /* 내 위치 마커 생성 */
-    myMarker = new kakao.maps.Marker({ position, clickable: true });
-    setMyPosition((prev) => ({
-      latitude: myMarker?.getPosition().getLat().toFixed(6) ?? '',
-      longitude: myMarker?.getPosition().getLng().toFixed(6) ?? '',
-    }));
+      /* 내 위치 마커 생성 */
+      myMarker = new kakao.maps.Marker({ position, clickable: true });
+      setMyPosition((prev) => ({
+        latitude: myMarker?.getPosition().getLat().toFixed(6) ?? '',
+        longitude: myMarker?.getPosition().getLng().toFixed(6) ?? '',
+      }));
 
-    myMarker?.setMap(map);
+      myMarker?.setMap(map);
 
-    /* 특정 포스트 마커 생성 */
-    postMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0), clickable: true });
-    postMarker?.setZIndex(1);
+      /* 특정 포스트 마커 생성 */
+      postMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0), clickable: true });
+      postMarker?.setZIndex(1);
 
-    // event-지도 클릭 시 내 위치 마커 이동
-    map?.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
-      setMyPosition((prev) => ({ latitude: latLng.getLat().toFixed(6), longitude: latLng.getLng().toFixed(6) }));
-      myMarker?.setPosition(latLng);
-    });
-    // event-지도 이동 시 포스트 조회
-    map?.addListener('center_changed', () => dGetSubPosts(map));
-
-    // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
-    myMarker?.addListener('click', () => {
-      console.log(myMarker?.getPosition());
-      // 게시물 작성 모달
-      const content = `
-            <div style='background-color: black; color: white;'>
-              <ul>
-                <li>이것은 테스트</li>
-                <li>안녕하시오.</li>
-                <li>안녕하가시오.</li>
-              </ul>
-            </div>
-          `;
-      const overlay = new kakao.maps.CustomOverlay({
-        position: myMarker?.getPosition(),
-        content,
+      // event-지도 클릭 시 내 위치 마커 이동
+      map?.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
+        setMyPosition((prev) => ({ latitude: latLng.getLat().toFixed(6), longitude: latLng.getLng().toFixed(6) }));
+        myMarker?.setPosition(latLng);
       });
-      overlay.setMap(map);
-    });
-  }, []);
+      // event-지도 이동 시 포스트 조회
+      map?.addListener('center_changed', () => dGetSubPosts(map));
+
+      // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
+      myMarker?.addListener('click', () => {
+        navigate('/posts/new');
+        // console.log(myMarker?.getPosition());
+        // // 게시물 작성 모달
+        // const content = `
+        //       <div style='background-color: black; color: white;'>
+        //         <ul>
+        //           <li>이것은 테스트</li>
+        //           <li>안녕하시오.</li>
+        //           <li>안녕하가시오.</li>
+        //         </ul>
+        //       </div>
+        //     `;
+        // const overlay = new kakao.maps.CustomOverlay({
+        //   position: myMarker?.getPosition(),
+        //   content,
+        // });
+        // overlay.setMap(map);
+      });
+    },
+    [postPosition],
+  );
 
   /* 중심 좌표 설정 및 마커 표시 */
   const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker | null) => {
@@ -182,6 +203,12 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
 
   /* 내가 찍은 마커 위치 가져오기 */
   const getMyPosition = useCallback(() => myPosition, [myPosition]);
+
+  useEffect(() => {
+    if (pd) {
+      setPostPosition({ latitude: pd?.latitude, longitude: pd.longitude });
+    }
+  }, [pd]);
 
   return (
     <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMyPosition }}>
