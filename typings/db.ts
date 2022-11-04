@@ -49,6 +49,21 @@ interface IPost {
   Mentions: IMention[] | [];
 }
 
+interface IUserPost {
+  id: number;
+  title: string;
+  content: string;
+  is_private: boolean | number;
+  hits: number;
+  latitude: string;
+  longitude: string;
+  updated_at: string;
+  created_at: string;
+  User: IUser;
+  Images: IImage[];
+  Likers: { id: number; User: IUser }[];
+}
+
 interface IImage {
   id: number;
   src: string;

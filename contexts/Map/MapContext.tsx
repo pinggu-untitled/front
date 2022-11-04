@@ -69,13 +69,6 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   };
 
   // /* event handler - 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
-  // const debounce = (cb: Function, delay: number) => {
-  //   let timer: any;
-  //   return (map: kakao.maps.Map | null) => {
-  //     if (timer) clearTimeout(timer);
-  //     timer = setTimeout(cb, delay, map);
-  //   };
-  // };
   const getSubPosts = (map: kakao.maps.Map | null) => {
     const bounds = map?.getBounds();
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',') ?? [];
@@ -122,8 +115,8 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
       };
       /* 지도 생성 */
       map = new kakao.maps.Map(container, options);
-      getSubPosts(map);
       map?.setZoomable(false);
+      getSubPosts(map);
 
       /* 내 위치 마커 생성 */
       myMarker = new kakao.maps.Marker({ position, clickable: true });
