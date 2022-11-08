@@ -20,9 +20,10 @@ const Map = () => {
   );
 
   /* 현재 위치를 가져오지 못한 경우 */
-  const onError = useCallback((error: any) => {
+  const onError = useCallback(({ message }: { message: string }) => {
     const container = document.getElementById('myMap');
-    if (container) container.innerText = '지도를 표시할 수 없습니다.';
+    if (container)
+      container.innerText = `지도를 표시할 수 없습니다. ${message}`;
   }, []);
 
   /* geolocation을 이용해 현재 위치를 얻음 */
@@ -34,8 +35,8 @@ const Map = () => {
     <div
       id='myMap'
       style={{
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
       }}
     ></div>
   );
