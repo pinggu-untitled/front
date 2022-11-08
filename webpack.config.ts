@@ -1,7 +1,12 @@
 import path from 'path';
+const __dirname = path.resolve();
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -25,6 +30,7 @@ const config: Configuration = {
       '@utils': path.resolve(__dirname, 'utils'),
       '@typings': path.resolve(__dirname, 'typings'),
       '@themes': path.resolve(__dirname, 'themes'),
+      '@contexts': path.resolve(__dirname, 'contexts'),
     },
   },
   entry: {
@@ -69,6 +75,17 @@ const config: Configuration = {
       // },
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
+
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      env: process.env,
+      minify: false,
+      REACT_APP_KAKAO_MAP_KEY: process.env.REACT_APP_KAKAO_MAP_KEY,
+    }),
+
+    new webpack.DefinePlugin({
+      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
+    }),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -90,7 +107,7 @@ if (isDevelopment && config.plugins) {
       overlay: {
         useURLPolyfill: true,
       },
-    }),
+    })
   );
 }
 if (!isDevelopment && config.plugins) {

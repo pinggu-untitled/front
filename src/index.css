@@ -1,0 +1,30 @@
+:root {
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  /*font-family: "Apercu Pro",sans-serif;*/
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+
+li {
+  list-style: none;
+}
+
+/*@media (prefers-color-scheme: light) {*/
+/*  :root {*/
+/*    color: #213547;*/
+/*    background-color: #ffffff;*/
+/*  }*/
+/*}*/
