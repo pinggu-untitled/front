@@ -30,17 +30,17 @@ const MapContext = createContext<IMapContext>({
   getMyPosition: () => ({ latitude: '', longitude: '' }),
 });
 
-export const MapProvider = ({ children }: { children: React.ReactChild }) => {
+export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const { postId } = useParams();
   const [myPosition, setMyPosition] = useState({ latitude: '', longitude: '' });
   const [postPosition, setPostPosition] = useState({ latitude: '', longitude: '' });
-  const { data: pd } = useSWR<IPost>(`/posts/${postId}`, (url: string) => {
-    return axios.get(url).then((res) => {
-      setPostPosition({ latitude: res.data.latitude, longitude: res.data.longitude });
-      return res.data;
-    });
-  });
+  // const { data: pd } = useSWR<IPost>(`/posts/${postId}`, (url: string) => {
+  //   return axios.get(url).then((res) => {
+  //     setPostPosition({ latitude: res.data.latitude, longitude: res.data.longitude });
+  //     return res.data;
+  //   });
+  // });
 
   /* event handler - subPostMarker에 hover시 인포윈도우 띄우기 */
   const getSubPostInfo = (
@@ -98,70 +98,66 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   const dGetSubPosts = debounce(getSubPosts, 500);
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
-  const initializeMap = useCallback(
-    (container: HTMLElement, latitude: number, longitude: number) => {
-      console.log('Map Initialized!!!!!@@@@!!!!!!');
-      console.log('postId >>> ', postId);
-      if (pd && postId) {
-        console.log('wpifjalfjsflwpqkfdkdkdkfk');
-        latitude = Number(pd?.latitude);
-        longitude = Number(pd?.longitude);
-      }
-      const position = new kakao.maps.LatLng(latitude, longitude);
-      const options = {
-        center: position,
-        level: 3,
-        disableDoubleClickZoom: true,
-      };
-      /* 지도 생성 */
-      map = new kakao.maps.Map(container, options);
-      map?.setZoomable(false);
-      getSubPosts(map);
+  const initializeMap = useCallback((container: HTMLElement, latitude: number, longitude: number) => {
+    console.log('Map Initialized!!!!!@@@@!!!!!!');
+    // console.log('postId >>> ', postId);
+    // if (pd && postId) {
+    //   latitude = Number(pd?.latitude);
+    //   longitude = Number(pd?.longitude);
+    // }
+    const position = new kakao.maps.LatLng(latitude, longitude);
+    const options = {
+      center: position,
+      level: 3,
+      disableDoubleClickZoom: true,
+    };
+    /* 지도 생성 */
+    map = new kakao.maps.Map(container, options);
+    map?.setZoomable(false);
+    getSubPosts(map);
 
-      /* 내 위치 마커 생성 */
-      myMarker = new kakao.maps.Marker({ position, clickable: true });
-      setMyPosition((prev) => ({
-        latitude: myMarker?.getPosition().getLat().toFixed(6) ?? '',
-        longitude: myMarker?.getPosition().getLng().toFixed(6) ?? '',
-      }));
+    /* 내 위치 마커 생성 */
+    myMarker = new kakao.maps.Marker({ position, clickable: true });
+    setMyPosition((prev) => ({
+      latitude: myMarker?.getPosition().getLat().toFixed(6) ?? '',
+      longitude: myMarker?.getPosition().getLng().toFixed(6) ?? '',
+    }));
 
-      myMarker?.setMap(map);
+    myMarker?.setMap(map);
 
-      /* 특정 포스트 마커 생성 */
-      postMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0), clickable: true });
-      postMarker?.setZIndex(1);
+    /* 특정 포스트 마커 생성 */
+    postMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(0, 0), clickable: true });
+    postMarker?.setZIndex(1);
 
-      // event-지도 클릭 시 내 위치 마커 이동
-      map?.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
-        setMyPosition((prev) => ({ latitude: latLng.getLat().toFixed(6), longitude: latLng.getLng().toFixed(6) }));
-        myMarker?.setPosition(latLng);
-      });
-      // event-지도 이동 시 포스트 조회
-      map?.addListener('center_changed', () => dGetSubPosts(map));
+    // event-지도 클릭 시 내 위치 마커 이동
+    map?.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
+      setMyPosition((prev) => ({ latitude: latLng.getLat().toFixed(6), longitude: latLng.getLng().toFixed(6) }));
+      myMarker?.setPosition(latLng);
+    });
+    // event-지도 이동 시 포스트 조회
+    map?.addListener('center_changed', () => dGetSubPosts(map));
 
-      // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
-      myMarker?.addListener('click', () => {
-        navigate('/posts/new');
-        // console.log(myMarker?.getPosition());
-        // // 게시물 작성 모달
-        // const content = `
-        //       <div style='background-color: black; color: white;'>
-        //         <ul>
-        //           <li>이것은 테스트</li>
-        //           <li>안녕하시오.</li>
-        //           <li>안녕하가시오.</li>
-        //         </ul>
-        //       </div>
-        //     `;
-        // const overlay = new kakao.maps.CustomOverlay({
-        //   position: myMarker?.getPosition(),
-        //   content,
-        // });
-        // overlay.setMap(map);
-      });
-    },
-    [postPosition],
-  );
+    // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
+    myMarker?.addListener('click', () => {
+      navigate('/posts/new');
+      // console.log(myMarker?.getPosition());
+      // // 게시물 작성 모달
+      // const content = `
+      //       <div style='background-color: black; color: white;'>
+      //         <ul>
+      //           <li>이것은 테스트</li>
+      //           <li>안녕하시오.</li>
+      //           <li>안녕하가시오.</li>
+      //         </ul>
+      //       </div>
+      //     `;
+      // const overlay = new kakao.maps.CustomOverlay({
+      //   position: myMarker?.getPosition(),
+      //   content,
+      // });
+      // overlay.setMap(map);
+    });
+  }, []);
 
   /* 중심 좌표 설정 및 마커 표시 */
   const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker | null) => {
@@ -187,21 +183,24 @@ export const MapProvider = ({ children }: { children: React.ReactChild }) => {
   }, []);
 
   /* 특정 포스트 위치로 지도 중심 좌표 변경 with 특정 포스트 마커 */
-  const moveCenterToPost = useCallback((latitude: number, longitude: number) => {
-    if (map && postMarker) {
-      postMarker.setMap(null);
-      setMapCenter(latitude, longitude, postMarker);
-    }
-  }, []);
+  const moveCenterToPost = useCallback(
+    (latitude: number, longitude: number) => {
+      if (map && postMarker) {
+        const pLat = latitude.toFixed(6);
+        const pLng = longitude.toFixed(6);
+        if (postPosition.latitude !== pLat && postPosition.longitude !== pLng) {
+          setPostPosition((prev) => ({ latitude: pLat, longitude: pLng }));
+
+          postMarker.setMap(null);
+          setMapCenter(latitude, longitude, postMarker);
+        }
+      }
+    },
+    [postPosition],
+  );
 
   /* 내가 찍은 마커 위치 가져오기 */
   const getMyPosition = useCallback(() => myPosition, [myPosition]);
-
-  useEffect(() => {
-    if (pd) {
-      setPostPosition({ latitude: pd?.latitude, longitude: pd.longitude });
-    }
-  }, [pd]);
 
   return (
     <MapContext.Provider value={{ map, myMarker, initializeMap, moveCenterToMe, moveCenterToPost, getMyPosition }}>
