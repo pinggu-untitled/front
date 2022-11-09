@@ -1,19 +1,9 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useFieldArray, Controller, useController } from 'react-hook-form';
 import { FaCamera } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
-import imagePreviewPromisfier, {
-  fileReaderPromise,
-} from '@utils/imagePreviewPromisfier';
+import imagePreviewPromisfier, { fileReaderPromise } from '@utils/imagePreviewPromisfier';
 import ImagePreview from '@components/PostNew/ImageInputList/ImagePreview';
 
 interface IProps {
@@ -66,8 +56,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
   const [previews, setPreviews] = useState<any[]>([]);
   const { field } = useController({ control, name });
 
-  const addFiles = (files: FileList) =>
-    Array.from(files).forEach((file) => append(file));
+  const addFiles = (files: FileList) => Array.from(files).forEach((file) => append(file));
 
   const handleChange = (files: FileList) => {
     addFiles(files);
@@ -81,7 +70,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
         } else {
           return fileReaderPromise(file);
         }
-      })
+      }),
     );
     files.then((res) => {
       setPreviews(res);
@@ -102,12 +91,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
             control={control}
             name={name}
             render={({ field }) => (
-              <input
-                type={'file'}
-                onChange={(e: any) => handleChange(e.target.files)}
-                multiple={true}
-                hidden
-              />
+              <input type={'file'} onChange={(e: any) => handleChange(e.target.files)} multiple={true} hidden />
             )}
           />
         </FileDropper>

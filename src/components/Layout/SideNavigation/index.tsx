@@ -1,37 +1,19 @@
 import { Side, NavItemList } from '@components/Layout/SideNavigation/style';
-import {
-  RiHome5Line,
-  RiHome5Fill,
-  RiChat3Fill,
-  RiChat3Line,
-} from 'react-icons/ri';
+import { RiHome5Line, RiHome5Fill, RiChat3Fill, RiChat3Line } from 'react-icons/ri';
 import { FaRegCompass, FaCompass } from 'react-icons/fa';
-import {
-  IoEllipsisHorizontalOutline,
-  IoEllipsisHorizontalSharp,
-} from 'react-icons/io5';
+import { IoEllipsisHorizontalOutline, IoEllipsisHorizontalSharp } from 'react-icons/io5';
 import NavItem from '@components/Layout/SideNavigation/NavItem';
 import { useSession } from '@contexts/SessionContext';
 import ProfileButtonModal from '@components/Layout/SideNavigation/ProfileButtonModal';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 
-const SideNavigation = ({
-  show,
-  toggle,
-}: {
-  show: boolean;
-  toggle: () => void;
-}) => {
+const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void }) => {
   const { session } = useSession();
   return (
     <Side onClick={!show ? toggle : undefined}>
       <NavItemList>
         <h1>Pinggu</h1>
-        <NavItem
-          icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }}
-          title={'홈'}
-          url={'/'}
-        />
+        <NavItem icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }} title={'홈'} url={'/'} />
         <NavItem
           icons={{
             outline: <FaRegCompass />,
@@ -41,11 +23,7 @@ const SideNavigation = ({
           title={'탐색'}
           url={'/explore'}
         />
-        <NavItem
-          icons={{ outline: <RiChat3Line />, fill: <RiChat3Fill /> }}
-          title={'채팅'}
-          url={'/chatrooms'}
-        />
+        <NavItem icons={{ outline: <RiChat3Line />, fill: <RiChat3Fill /> }} title={'채팅'} url={'/chatrooms'} />
         <NavItem
           icons={{
             outline: <FaRegUser />,

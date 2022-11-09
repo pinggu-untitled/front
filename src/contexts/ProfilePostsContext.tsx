@@ -15,10 +15,7 @@ interface IContext {
 const ProfilePostsContext = createContext<IContext | any>({});
 const ProfilePostsProvider = ({ children }: IProvider) => {
   const { userId } = useParams<{ userId: string }>();
-  const { data: Posts, mutate } = useSWR<IUserPost[]>(
-    userId ? `/users/${userId}/posts` : null,
-    fetcher
-  );
+  const { data: Posts, mutate } = useSWR<IUserPost[]>(userId ? `/users/${userId}/posts` : null, fetcher);
   const onEdit = useCallback(
     (postId: number) => () => {
       axios.patch(`/posts/${postId}`).then((res) => {
@@ -26,7 +23,7 @@ const ProfilePostsProvider = ({ children }: IProvider) => {
         mutate();
       });
     },
-    []
+    [],
   );
 
   const onDelete = useCallback(
@@ -36,14 +33,10 @@ const ProfilePostsProvider = ({ children }: IProvider) => {
         mutate();
       });
     },
-    []
+    [],
   );
 
-  return (
-    <ProfilePostsContext.Provider value={{ Posts, onEdit, onDelete }}>
-      {children}
-    </ProfilePostsContext.Provider>
-  );
+  return <ProfilePostsContext.Provider value={{ Posts, onEdit, onDelete }}>{children}</ProfilePostsContext.Provider>;
 };
 
 export const useProfilePosts = (): IContext => useContext(ProfilePostsContext);

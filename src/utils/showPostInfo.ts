@@ -4,7 +4,7 @@ export const showPostInfo = (
   content: string,
   like: number,
   userImg: string,
-  nickname: string
+  nickname: string,
 ) => {
   return `
   <div style="position: relative;">

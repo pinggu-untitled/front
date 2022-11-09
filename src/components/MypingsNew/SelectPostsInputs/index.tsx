@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useReducer, useState } from 'react';
 import { PostInputList } from '@components/PostNew/Input/style';
 import { IUserPost } from '@typings/db';
 import useSWR from 'swr';
@@ -24,14 +18,8 @@ interface IProps {
 const SelectPostsInput = ({ value, setValue }: IProps) => {
   const { mypingsId } = useParams<{ mypingsId: string }>();
   const { session } = useSession();
-  const { data: MypingsPosts } = useSWR<IUserPost[]>(
-    mypingsId ? `/mypings/${mypingsId}/posts` : null,
-    fetcher
-  );
-  const { data: UserPosts } = useSWR<IUserPost[]>(
-    `/users/${session?.id}/posts`,
-    fetcher
-  );
+  const { data: MypingsPosts } = useSWR<IUserPost[]>(mypingsId ? `/mypings/${mypingsId}/posts` : null, fetcher);
+  const { data: UserPosts } = useSWR<IUserPost[]>(`/users/${session?.id}/posts`, fetcher);
 
   const [show, setShow] = useState(false);
 
@@ -48,9 +36,7 @@ const SelectPostsInput = ({ value, setValue }: IProps) => {
       <div className={'select-container'}>
         <div className={'select-button'} onClick={() => setShow((p) => !p)}>
           마이핑스 게시물 확인하기
-          <span className={'icon'}>
-            {show ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
-          </span>
+          <span className={'icon'}>{show ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</span>
         </div>
         {show && (
           <PostInputList>
@@ -65,14 +51,7 @@ const SelectPostsInput = ({ value, setValue }: IProps) => {
             {/*  />*/}
             {/*))}*/}
             {UserPosts && UserPosts.length > 0 ? (
-              UserPosts?.map((Post) => (
-                <PostInput
-                  key={Post.id}
-                  data={Post}
-                  value={value}
-                  setValue={setValue}
-                />
-              ))
+              UserPosts?.map((Post) => <PostInput key={Post.id} data={Post} value={value} setValue={setValue} />)
             ) : (
               <EmptyMessage
                 style={{ position: 'relative', padding: '40px 0 ' }}
@@ -86,8 +65,7 @@ const SelectPostsInput = ({ value, setValue }: IProps) => {
                     }}
                   >
                     <p>
-                      아직 <strong>{session?.nickname}</strong>님이 작성한
-                      게시물이 없어요.
+                      아직 <strong>{session?.nickname}</strong>님이 작성한 게시물이 없어요.
                     </p>
                     <Link
                       to={'/posts/new'}

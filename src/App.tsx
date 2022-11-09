@@ -31,10 +31,7 @@ function App() {
             <Route path={'/posts/:postId'} element={<PostDetail />} />
             <Route path={'/mypings/new'} element={<MypingsNew />} />
             <Route path={'/mypings/:mypingsId'} element={<MypingsDetail />} />
-            <Route
-              path={'/mypings/:mypingsId/edit'}
-              element={<MypingsEdit />}
-            />
+            <Route path={'/mypings/:mypingsId/edit'} element={<MypingsEdit />} />
             <Route path={'/more'} element={<More />} />
             <Route path={'/:userId'} element={<Profile />}>
               <Route index element={<ProfilePosts />} />

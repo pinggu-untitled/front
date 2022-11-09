@@ -1,8 +1,4 @@
-import {
-  ActionButton,
-  ActionList,
-  Header,
-} from '@components/headers/PageMainHeader/style';
+import { ActionButton, ActionList, Header } from '@components/headers/PageMainHeader/style';
 import { useReducer } from 'react';
 import Modal from '@components/Modal';
 import MenuList from '@components/Layout/MenuList';
@@ -26,7 +22,7 @@ const PagePrevHeader = ({ menuItems }: IProps) => {
       ...prev,
       [modalName]: !prev[modalName],
     }),
-    { menu: false }
+    { menu: false },
   );
 
   return (

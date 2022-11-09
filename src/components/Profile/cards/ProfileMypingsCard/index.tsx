@@ -42,7 +42,13 @@ const ProfileMypingsCard = ({ data }: IProps) => {
           {session.id !== data?.User.id && (
             <ProfileAvatar
               onClick={onProfile}
-              style={{ width: '30px', height: '30px', position: 'absolute', right: 0, bottom: '6px' }}
+              style={{
+                width: '30px',
+                height: '30px',
+                position: 'absolute',
+                right: 0,
+                bottom: '6px',
+              }}
             >
               <img src={mediaPath(data.User.profile_image_url)} />
             </ProfileAvatar>

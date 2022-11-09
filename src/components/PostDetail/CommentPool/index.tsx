@@ -37,10 +37,7 @@ export const Header = styled.div<{ spread: boolean }>`
 
 const CommentPool = () => {
   const { postId } = useParams<{ postId: string }>();
-  const { data: cd, mutate: mutateCd } = useSWR<IComment[]>(
-    `/posts/${postId}/comments`,
-    fetcher
-  );
+  const { data: cd, mutate: mutateCd } = useSWR<IComment[]>(`/posts/${postId}/comments`, fetcher);
   const [isSpread, setIsSpread] = useState(true);
 
   const onEdit = (commentId: number, content: string) => {
@@ -81,28 +78,22 @@ const CommentPool = () => {
       .catch((err) => console.error(err));
   };
 
-  const onReply = (pid: number, content: string) => (e: any) =>
-    onSubmit(pid, content)(e);
+  const onReply = (pid: number, content: string) => (e: any) => onSubmit(pid, content)(e);
 
-  const commentsArray = useCallback(
-    (
-      comments: IComment[]
-    ): { fullComments: IComment[] | []; length: number } => {
-      const copied: IComment[] = [];
+  const commentsArray = useCallback((comments: IComment[]): { fullComments: IComment[] | []; length: number } => {
+    const copied: IComment[] = [];
 
-      for (let comment of comments) {
-        copied.push(comment);
-        if (comment.Comments.length > 0) {
-          for (let comm of comment.Comments) {
-            copied.push(comm);
-          }
+    for (let comment of comments) {
+      copied.push(comment);
+      if (comment.Comments.length > 0) {
+        for (let comm of comment.Comments) {
+          copied.push(comm);
         }
       }
+    }
 
-      return { fullComments: copied, length: copied.length };
-    },
-    []
-  );
+    return { fullComments: copied, length: copied.length };
+  }, []);
 
   if (cd === undefined) return <div>로딩중...</div>;
 
@@ -110,9 +101,7 @@ const CommentPool = () => {
     <Base>
       <Header spread={isSpread} onClick={() => setIsSpread((p) => !p)}>
         <span className={'title'}>댓글 ({commentsArray(cd)['length']})</span>
-        <span className={'collapse-button'}>
-          {isSpread ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
-        </span>
+        <span className={'collapse-button'}>{isSpread ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</span>
       </Header>
       <form>
         {isSpread && cd?.length > 0 && (

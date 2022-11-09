@@ -18,22 +18,11 @@ interface IProps {
   onReply: (pid: number, content: string) => (e: any) => void;
 }
 
-const CommentCardList: FC<IProps> = ({
-  comments,
-  onEdit,
-  onDelete,
-  onReply,
-}) => {
+const CommentCardList: FC<IProps> = ({ comments, onEdit, onDelete, onReply }) => {
   return (
     <Base>
       {comments.map((comment) => (
-        <CommentCard
-          key={comment.id}
-          comment={comment}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onReply={onReply}
-        />
+        <CommentCard key={comment.id} comment={comment} onEdit={onEdit} onDelete={onDelete} onReply={onReply} />
       ))}
     </Base>
   );

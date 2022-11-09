@@ -50,11 +50,7 @@ const ImagesZoomModal: FC<IProps> = ({ show, onCloseModal, images }) => {
       </CloseButton>
       <ModalContent>
         {images?.map((img, i) => (
-          <img
-            key={img.id}
-            src={`http://localhost:8080/uploads/${img.src}`}
-            alt={`${img.id}`}
-          />
+          <img key={img.id} src={`http://localhost:8080/uploads/${img.src}`} alt={`${img.id}`} />
         ))}
       </ModalContent>
     </Modal>

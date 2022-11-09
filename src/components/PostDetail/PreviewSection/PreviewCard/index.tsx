@@ -38,16 +38,12 @@ const PreviewCard: FC<IProps> = ({ post }) => {
       <ImageWrapper>
         <img
           src={
-            post?.Images.length > 0
-              ? `http://localhost:8080/uploads/${post?.Images[0].src}`
-              : '/public/placeholder.png'
+            post?.Images.length > 0 ? `http://localhost:8080/uploads/${post?.Images[0].src}` : '/public/placeholder.png'
           }
-          alt={
-            post?.Images.length > 0 ? `${post?.Images[0].id}` : 'placholder.png'
-          }
+          alt={post?.Images.length > 0 ? `${post?.Images[0].id}` : 'placholder.png'}
         />
       </ImageWrapper>
-      <p className='title'>{post.title}</p>
+      <p className="title">{post.title}</p>
     </Base>
   );
 };

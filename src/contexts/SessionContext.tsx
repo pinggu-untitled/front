@@ -1,11 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-} from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import { IMe } from '../typings/db';
 import axios from 'axios';
@@ -32,19 +25,13 @@ const SessionContext = createContext<IContext | any>({});
 const SessionProvider = ({ children }: IProvider) => {
   const navigate = useNavigate();
 
-  const { data: session } = useSWR<IMe>('/users/me', (url: string) =>
-    axios.get(url).then((res) => res.data || null)
-  );
+  const { data: session } = useSWR<IMe>('/users/me', (url: string) => axios.get(url).then((res) => res.data || null));
 
   useEffect(() => {
     if (session === null) navigate('/login');
   }, [session]);
 
-  return (
-    <SessionContext.Provider value={{ session }}>
-      {children}
-    </SessionContext.Provider>
-  );
+  return <SessionContext.Provider value={{ session }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = () => useContext(SessionContext);

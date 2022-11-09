@@ -1,12 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { IUserPost } from '@typings/db';
-import {
-  Card,
-  Info,
-  Inner,
-  NoMedia,
-  PostImage,
-} from '@components/Home/PostCard/style';
+import { Card, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoIosClose } from 'react-icons/io';
 interface IProps {

@@ -70,8 +70,7 @@ const PostNew = () => {
   });
   const [isPrivate, togglePrivate] = useReducer((prev) => !prev, false);
   const { title, images, longitude, latitude } = watch();
-  const isSubmitAvailable =
-    Boolean(title) && Boolean(longitude) && Boolean(latitude);
+  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
 
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: false,
@@ -126,9 +125,7 @@ const PostNew = () => {
             name={'content'}
             placeholder={`${longitude} ${latitude}에 올릴 게시글 내용을 작성해주세요.`}
           />
-          {showOptions.showImages && (
-            <ImageInputList control={control} name={'images'} />
-          )}
+          {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
           <ToolBox title={'게시물에 추가'}>
             <HoverLabel label={'사진'} style={{ top: '-35px' }}>
               <ToolButton

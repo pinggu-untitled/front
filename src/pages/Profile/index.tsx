@@ -19,10 +19,18 @@ const Profile = () => {
   const { session } = useSession();
 
   const items: IMenuItem[] = [
-    { icon: <BiEditAlt />, title: '프로필 수정하기', onClick: () => navigate(`/${userId}/edit`) },
+    {
+      icon: <BiEditAlt />,
+      title: '프로필 수정하기',
+      onClick: () => navigate(`/${userId}/edit`),
+    },
   ];
   const readOnlyItems: IMenuItem[] = [
-    { icon: <BiLinkAlt />, title: '링크 복사하기', onClick: () => navigate('/posts/new') },
+    {
+      icon: <BiLinkAlt />,
+      title: '링크 복사하기',
+      onClick: () => navigate('/posts/new'),
+    },
   ];
 
   if (!userId) return <div>로딩중...</div>;
@@ -30,11 +38,27 @@ const Profile = () => {
     <>
       {session?.id === Number(userId) ? <PageHeader pageName={'내 프로필'} /> : <PagePrevHeader menuItems={items} />}
       <PageMain>
-        <div style={{ display: 'float', top: '70px', width: '440px', zIndex: 1000, backgroundColor: '#fff' }}>
+        <div
+          style={{
+            display: 'float',
+            top: '70px',
+            width: '440px',
+            zIndex: 1000,
+            backgroundColor: '#fff',
+          }}
+        >
           <ProfileSummary />
           <TapZone userId={userId} />
         </div>
-        <div style={{ position: 'absolute', top: '220px', bottom: '0', width: '440px', overflow: 'scroll' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: '220px',
+            bottom: '0',
+            width: '440px',
+            overflow: 'scroll',
+          }}
+        >
           <ProfilePostsProvider>
             <ProfileMypingsProvider>
               <Outlet />

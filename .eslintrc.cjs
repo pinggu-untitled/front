@@ -24,7 +24,7 @@ module.exports = {
     'react-hooks',
     'jsx-a11y',
     'prettier',
-    [require('prettier-plugin-tailwindcss')]
+    [require('prettier-plugin-tailwindcss')],
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',

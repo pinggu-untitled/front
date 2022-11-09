@@ -12,10 +12,18 @@ const ProfilePosts = () => {
   const { userId } = useParams<{ userId: string }>();
   const { Posts } = useProfilePosts();
   const items: IMenuItem[] = [
-    { icon: <BiEditAlt />, title: '프로필 수정하기', onClick: () => navigate(`/${userId}/edit`) },
+    {
+      icon: <BiEditAlt />,
+      title: '프로필 수정하기',
+      onClick: () => navigate(`/${userId}/edit`),
+    },
   ];
   const readOnlyItems: IMenuItem[] = [
-    { icon: <BiLinkAlt />, title: '링크 복사하기', onClick: () => navigate('/posts/new') },
+    {
+      icon: <BiLinkAlt />,
+      title: '링크 복사하기',
+      onClick: () => navigate('/posts/new'),
+    },
   ];
 
   if (!userId) return <div>로딩중...</div>;

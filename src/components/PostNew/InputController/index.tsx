@@ -15,9 +15,7 @@ const FixedLabelInput = ({ control, label, name }: IProps) => {
       <Controller
         control={control}
         name={name}
-        render={({ field }) => (
-          <input value={field.value} onChange={field.onChange} />
-        )}
+        render={({ field }) => <input value={field.value} onChange={field.onChange} />}
       />
     </Label>
   );

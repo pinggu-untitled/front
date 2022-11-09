@@ -21,8 +21,11 @@ const PageTitleHeader = ({ title, menuItems, style }: IProps) => {
   const navigate = useNavigate();
 
   const [showModals, toggleModals] = useReducer(
-    (prev: IModals, modalName: string) => ({ ...prev, [modalName]: !prev[modalName] }),
-    { menu: false }
+    (prev: IModals, modalName: string) => ({
+      ...prev,
+      [modalName]: !prev[modalName],
+    }),
+    { menu: false },
   );
 
   return (
@@ -32,7 +35,14 @@ const PageTitleHeader = ({ title, menuItems, style }: IProps) => {
       </ActionButton>
       <h2
         style={
-          menuItems ? undefined : { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }
+          menuItems
+            ? undefined
+            : {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }
         }
       >
         {title}

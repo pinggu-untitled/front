@@ -1,25 +1,10 @@
 import { IPost, IUserPost } from '@typings/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
-import {
-  Info,
-  Inner,
-  NoMedia,
-  PostImage,
-  TotalCount,
-} from '@components/Home/PostCard/style';
+import { Info, Inner, NoMedia, PostImage, TotalCount } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
-import {
-  Card,
-  CheckBox,
-} from '@components/MypingsNew/SelectPostsInputs/PostInput/style';
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react';
+import { Card, CheckBox } from '@components/MypingsNew/SelectPostsInputs/PostInput/style';
+import { Dispatch, SetStateAction, useEffect, useReducer, useState } from 'react';
 
 interface IProps {
   data: IUserPost;
@@ -59,9 +44,7 @@ const PostInput = ({ data, value, setValue }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img
-                src={`http://localhost:8080/uploads/${data?.Images[0].src}`}
-              />
+              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
             </>
           ) : (
             <NoMedia style={{ fontSize: '16px' }}>

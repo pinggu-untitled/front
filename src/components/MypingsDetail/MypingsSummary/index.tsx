@@ -36,7 +36,13 @@ const MypingsSummary = ({ data }: { data: IMyPings }) => {
           <CateTag cateNumber={data?.category} />
           <ProfileAvatar
             onClick={onProfile}
-            style={{ width: '50px', height: '50px', position: 'absolute', right: 0, bottom: '6px' }}
+            style={{
+              width: '50px',
+              height: '50px',
+              position: 'absolute',
+              right: 0,
+              bottom: '6px',
+            }}
           >
             <img src={mediaPath(data.User.profile_image_url)} />
           </ProfileAvatar>

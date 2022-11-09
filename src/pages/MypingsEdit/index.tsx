@@ -27,10 +27,7 @@ const MypingsEdit = () => {
   const [showPreview, setShowPreview] = useState(false);
   const toggleShowPreview = () => setShowPreview((p) => !p);
   const { data: Mypings } = useSWR<IMyPings>(`/mypings/${mypingsId}`, fetcher);
-  const { data: MypingsPosts } = useSWR<IUserPost[]>(
-    `/mypings/${mypingsId}/posts`,
-    fetcher
-  );
+  const { data: MypingsPosts } = useSWR<IUserPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
 
   console.log(MypingsPosts);
 
@@ -40,12 +37,8 @@ const MypingsEdit = () => {
       is_private: isPrivate ? 1 : 0,
       title,
       category: +category,
-      delPosts: MypingsPosts?.filter(
-        (pp) => !posts.map((p) => p.id).includes(pp.id)
-      ).map((v) => v.id),
-      selPosts: posts
-        .filter((p) => !MypingsPosts?.map((pp) => pp.id).includes(p.id))
-        .map((v) => v.id),
+      delPosts: MypingsPosts?.filter((pp) => !posts.map((p) => p.id).includes(pp.id)).map((v) => v.id),
+      selPosts: posts.filter((p) => !MypingsPosts?.map((pp) => pp.id).includes(p.id)).map((v) => v.id),
     };
 
     console.log(result);
@@ -75,11 +68,7 @@ const MypingsEdit = () => {
       <PageMain style={{ bottom: '70px' }}>
         <Form>
           <IsPrivateInput value={isPrivate} onChange={togglePrivate} />
-          <Input
-            label={'마이핑스 제목'}
-            value={title}
-            onChange={onChangeTitle}
-          />
+          <Input label={'마이핑스 제목'} value={title} onChange={onChangeTitle} />
           <SelectCategoryInput value={category} onChange={onChangeCategory} />
           <SelectPostsInput value={posts} setValue={setPosts} />
           <FixedBottom>

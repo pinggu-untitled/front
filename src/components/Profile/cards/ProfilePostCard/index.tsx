@@ -1,11 +1,4 @@
-import {
-  Card,
-  Inner,
-  Info,
-  NoMedia,
-  PostImage,
-  TotalCount,
-} from '@components/Home/PostCard/style';
+import { Card, Inner, Info, NoMedia, PostImage, TotalCount } from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useSession } from '@contexts/SessionContext';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,7 +31,7 @@ const ProfilePostCard = ({ data }: IProps) => {
       copy.Likers = data.Likers.map((user: any) => user.User);
       return copy;
     },
-    [data]
+    [data],
   );
 
   return (
@@ -50,9 +43,7 @@ const ProfilePostCard = ({ data }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img
-                src={`http://localhost:8080/uploads/${data?.Images[0].src}`}
-              />
+              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
             </>
           ) : (
             <NoMedia>
@@ -77,17 +68,11 @@ const ProfilePostCard = ({ data }: IProps) => {
               <img src={mediaPath(data.User.profile_image_url)} />
             </ProfileAvatar>
           )}
-          <LikeButton
-            data={transformFn(data)}
-            style={{ position: 'absolute', top: '4px', right: 0 }}
-          />
+          <LikeButton data={transformFn(data)} style={{ position: 'absolute', top: '4px', right: 0 }} />
         </Info>
       </Inner>
       {session?.id === Number(userId) && (
-        <OwnerActionButtons
-          editPageUrl={`/posts/${data.id}/edit`}
-          onDelete={onDelete(data.id)}
-        />
+        <OwnerActionButtons editPageUrl={`/posts/${data.id}/edit`} onDelete={onDelete(data.id)} />
       )}
     </Card>
   );
