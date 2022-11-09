@@ -6,14 +6,22 @@ import NavItem from '@components/Layout/SideNavigation/NavItem';
 import { useSession } from '@contexts/SessionContext';
 import ProfileButtonModal from '@components/Layout/SideNavigation/ProfileButtonModal';
 import { FaRegUser, FaUser } from 'react-icons/fa';
+import { useMap } from '@contexts/MapContext';
 
 const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void }) => {
   const { session } = useSession();
+  const { moveCenterToMe } = useMap();
+
   return (
     <Side onClick={!show ? toggle : undefined}>
       <NavItemList>
         <h1>Pinggu</h1>
-        <NavItem icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }} title={'홈'} url={'/'} />
+        <NavItem
+          icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }}
+          title={'홈'}
+          url={'/'}
+          onClick={() => moveCenterToMe()}
+        />
         <NavItem
           icons={{
             outline: <FaRegCompass />,
@@ -22,6 +30,7 @@ const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void })
           }}
           title={'탐색'}
           url={'/explore'}
+          onClick={() => moveCenterToMe()}
         />
         <NavItem icons={{ outline: <RiChat3Line />, fill: <RiChat3Fill /> }} title={'채팅'} url={'/chatrooms'} />
         <NavItem
