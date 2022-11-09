@@ -20,7 +20,7 @@ const LikeButton = ({ data, style }: IProps) => {
   }, [data]);
 
   return (
-    <Button onClick={toggleMutator(like ? 'inactive' : 'active', `/posts/${data.id}/liked`, toggleLike)} style={style}>
+    <Button onClick={toggleMutator(like ? 'inactive' : 'active', `/posts/${data?.id}/liked`, toggleLike)} style={style}>
       {like ? <IoHeart style={{ color: '#f5533d' }} /> : <IoHeartOutline />}
     </Button>
   );

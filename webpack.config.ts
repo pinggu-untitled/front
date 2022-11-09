@@ -86,7 +86,9 @@ const config: Configuration = {
     }),
 
     new webpack.DefinePlugin({
-      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
+      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(
+        process.env.REACT_APP_KAKAO_MAP_KEY
+      ),
     }),
   ],
   output: {

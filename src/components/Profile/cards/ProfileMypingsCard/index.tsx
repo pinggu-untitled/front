@@ -17,21 +17,21 @@ interface IProps {
 
 const ProfileMypingsCard = ({ data }: IProps) => {
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
   const { session } = useSession();
   const { onDelete, onFetchMypingsPosts } = useProfileMypings();
-  const onMypings = () => navigate(`/mypings/${data.id}`);
   const { data: Posts } = onFetchMypingsPosts(data.id);
+
   const onProfile = (e: any) => {
     e.stopPropagation();
     navigate(`/${data?.User.id}`);
   };
 
+  if (!session) return <div>로딩중</div>;
   return (
-    <Card onClick={onMypings}>
+    <Card onClick={() => navigate(`/mypings/${data.id}`)}>
       <Inner>
         <PostImage>
-          <NoMedia>{data.title.slice(0, 1).toUpperCase()}</NoMedia>
+          <NoMedia>{data.title?.slice(0, 1).toUpperCase()}</NoMedia>
         </PostImage>
         <Info>
           <h3>
@@ -39,7 +39,7 @@ const ProfileMypingsCard = ({ data }: IProps) => {
             <PrivateTag active={data?.is_private} />
           </h3>
           <CateTag cateNumber={data?.category} />
-          {session.id !== data?.User.id && (
+          {session?.id !== data?.User?.id && (
             <ProfileAvatar
               onClick={onProfile}
               style={{

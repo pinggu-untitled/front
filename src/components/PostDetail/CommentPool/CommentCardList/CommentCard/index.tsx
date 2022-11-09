@@ -15,8 +15,8 @@ export const Base = styled.li<{ depth: boolean }>`
   padding: ${({ depth }) => (depth ? `8px 5px 8px 18px` : `8px 5px`)};
   position: relative;
 `;
+
 export const Inner = styled.div`
-  width: 100%;
   margin-left: 8px;
 
   > .nickname {
@@ -113,7 +113,7 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
 
   return (
     <Base depth={!isParentComment(comment.pid)}>
-      <ProfileAvatar onClick={() => navigate(`/${comment.User.id}`)}>
+      <ProfileAvatar style={{ width: '28px', height: '28px' }} onClick={() => navigate(`/${comment.User.id}`)}>
         <img src={mediaPath(comment.User.profile_image_url)} alt={comment.User.nickname} />
       </ProfileAvatar>
       <Inner>

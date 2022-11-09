@@ -42,7 +42,7 @@ const PageHeader = ({ pageName }: IProps) => {
     {
       icon: <RiUser3Line />,
       title: '프로필 수정하기',
-      onClick: () => navigate(`/${session?.loginUser?.id}`),
+      onClick: () => navigate(`/${session?.id}/edit`),
     },
     {
       icon: <FiLogIn />,

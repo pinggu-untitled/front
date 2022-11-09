@@ -2,7 +2,15 @@ import { FcGoogle } from 'react-icons/fc';
 import { BsFillChatFill } from 'react-icons/bs';
 import { useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ContentZone, Main, Nav, OutlineLink, PageBase, Tap, TapZone } from './style';
+import {
+  ContentZone,
+  Main,
+  Nav,
+  OutlineLink,
+  PageBase,
+  Tap,
+  TapZone,
+} from './style';
 import { useEffect } from 'react';
 import { useSession } from '@contexts/SessionContext';
 import useSWR from 'swr';
@@ -50,7 +58,9 @@ const Login = () => {
                   href={'http://localhost:8080/auth/login/kakao'}
                   style={{ backgroundColor: '#fee601' }}
                 >
-                  <BsFillChatFill style={{ color: '#3b1d1e', fontSize: '19px' }} />
+                  <BsFillChatFill
+                    style={{ color: '#3b1d1e', fontSize: '19px' }}
+                  />
                   카카오톡
                 </a>
                 <a
@@ -69,7 +79,10 @@ const Login = () => {
           {tap === 'register' && (
             <>
               <p className={'message'}>아직 준비되지 않은 서비스입니다.</p>
-              <p className={'message move-to-login'} onClick={() => setTap('login')}>
+              <p
+                className={'message move-to-login'}
+                onClick={() => setTap('login')}
+              >
                 👉🏻 소셜 계정으로 진행해 주세요
               </p>
             </>

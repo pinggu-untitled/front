@@ -6,17 +6,14 @@ import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
 import { BiEditAlt, BiLinkAlt } from 'react-icons/bi';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import ProfileSummary from '@components/Profile/ProfileSummary';
-import { IoMdGrid } from 'react-icons/io';
-import { MdBookmarkBorder } from 'react-icons/md';
-import { TbUsers } from 'react-icons/tb';
 import TapZone from '@components/Profile/TapZone';
 import ProfilePostsProvider from '@contexts/ProfilePostsContext';
 import ProfileMypingsProvider from '@contexts/ProfileMypingsContext';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
   const { session } = useSession();
+  const { userId } = useParams<{ userId: string }>();
 
   const items: IMenuItem[] = [
     {
@@ -33,7 +30,7 @@ const Profile = () => {
     },
   ];
 
-  if (!userId) return <div>로딩중...</div>;
+  if (!session || !userId) return <div>로딩중...</div>;
   return (
     <>
       {session?.id === Number(userId) ? <PageHeader pageName={'내 프로필'} /> : <PagePrevHeader menuItems={items} />}

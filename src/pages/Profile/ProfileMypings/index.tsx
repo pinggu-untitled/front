@@ -53,7 +53,9 @@ const ProfileMypings = () => {
           쉐어핑스
         </Tap>
       </InnerTap>
-      <TapMain style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}>
+      <TapMain
+        style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}
+      >
         <CardList>
           {tap === 'all' &&
             (!Mypings?.length && !UserSharepings?.length ? (
@@ -70,15 +72,23 @@ const ProfileMypings = () => {
             ))}
           {tap === 'mypings' &&
             (!Mypings?.length ? (
-              <EmptyMessage message={`아직 ${User?.nickname}님이 작성한 마이핑스가 없어요.`} />
+              <EmptyMessage
+                message={`아직 ${User?.nickname}님이 작성한 마이핑스가 없어요.`}
+              />
             ) : (
-              Mypings?.map((mypings) => <ProfileMypingsCard key={mypings?.id} data={mypings} />)
+              Mypings?.map((mypings) => (
+                <ProfileMypingsCard key={mypings?.id} data={mypings} />
+              ))
             ))}
           {tap === 'sharepings' &&
             (!UserSharepings?.length ? (
-              <EmptyMessage message={`아직 ${User?.nickname}님이 공유하고 있는 쉐어핑스가 없어요`} />
+              <EmptyMessage
+                message={`아직 ${User?.nickname}님이 공유하고 있는 쉐어핑스가 없어요`}
+              />
             ) : (
-              UserSharepings?.map((mypings) => <ProfileMypingsCard key={mypings?.id} data={mypings} />)
+              UserSharepings?.map((mypings) => (
+                <ProfileMypingsCard key={mypings?.id} data={mypings} />
+              ))
             ))}
         </CardList>
       </TapMain>

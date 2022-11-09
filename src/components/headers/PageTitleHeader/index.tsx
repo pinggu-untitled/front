@@ -21,10 +21,7 @@ const PageTitleHeader = ({ title, menuItems, style }: IProps) => {
   const navigate = useNavigate();
 
   const [showModals, toggleModals] = useReducer(
-    (prev: IModals, modalName: string) => ({
-      ...prev,
-      [modalName]: !prev[modalName],
-    }),
+    (prev: IModals, modalName: string) => ({ ...prev, [modalName]: !prev[modalName] }),
     { menu: false },
   );
 

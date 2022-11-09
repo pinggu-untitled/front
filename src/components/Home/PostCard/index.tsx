@@ -1,5 +1,12 @@
 import { IPost, IUserPost } from '@typings/db';
-import { Card, Inner, Info, NoMedia, PostImage, TotalCount } from '@components/Home/PostCard/style';
+import {
+  Card,
+  Inner,
+  Info,
+  NoMedia,
+  PostImage,
+  TotalCount,
+} from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useNavigate, useParams } from 'react-router-dom';
 import { HiOutlineCamera } from 'react-icons/hi';
@@ -30,7 +37,9 @@ const PostCard = ({ data }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
+              <img
+                src={`http://localhost:8080/uploads/${data?.Images[0].src}`}
+              />
             </>
           ) : (
             <NoMedia>
@@ -55,7 +64,10 @@ const PostCard = ({ data }: IProps) => {
               <img src={mediaPath(data.User.profile_image_url)} />
             </ProfileAvatar>
           )}
-          <LikeButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />
+          <LikeButton
+            data={data}
+            style={{ position: 'absolute', top: '4px', right: 0 }}
+          />
         </Info>
       </Inner>
     </Card>

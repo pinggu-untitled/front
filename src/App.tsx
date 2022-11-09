@@ -17,6 +17,8 @@ import ProfileMypings from '@pages/Profile/ProfileMypings';
 import MypingsDetail from '@pages/MypingsDetail';
 import MypingsNew from '@pages/MypingsNew';
 import MypingsEdit from '@pages/MypingsEdit';
+import ProfileEdit from '@pages/ProfileEdit';
+import PostEdit from '@pages/PostEdit';
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path={'/chatrooms'} element={<Chatrooms />} />
             <Route path={'/posts/new'} element={<PostNew />} />
             <Route path={'/posts/:postId'} element={<PostDetail />} />
+            <Route path={'/posts/:postId/edit'} element={<PostEdit />} />
             <Route path={'/mypings/new'} element={<MypingsNew />} />
             <Route path={'/mypings/:mypingsId'} element={<MypingsDetail />} />
             <Route path={'/mypings/:mypingsId/edit'} element={<MypingsEdit />} />
@@ -38,6 +41,7 @@ function App() {
               <Route path={'/:userId/mypings'} element={<ProfileMypings />} />
               <Route path={'/:userId/friends'} element={<ProfileFriends />} />
             </Route>
+            <Route path={'/:userId/edit'} element={<ProfileEdit />} />
           </Route>
           <Route path={'/login'} element={<Login />} />
           <Route path={'/introduce'} element={<Introduce />} />

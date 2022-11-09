@@ -13,7 +13,7 @@ export const OutletZone = styled.div<{ isActive: boolean }>`
   box-shadow: 10px 0px 6px -10px rgba(0, 0, 0, 0.08);
   visibility: ${({ isActive }) => (isActive ? 'visible' : 'hidden')};
   overflow: scroll;
-  z-index: 1000;
+  z-index: 3000;
   background-color: #fff;
 `;
 

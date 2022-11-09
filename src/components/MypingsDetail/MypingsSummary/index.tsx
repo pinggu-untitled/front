@@ -1,7 +1,13 @@
 import { IMyPings } from '@typings/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSession } from '@contexts/SessionContext';
-import { CountsInfo, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
+import {
+  CountsInfo,
+  Info,
+  Inner,
+  NoMedia,
+  PostImage,
+} from '@components/Home/PostCard/style';
 import PrivateTag from '@components/Profile/PrivateTag';
 import CateTag from '@components/Profile/CateTag';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
@@ -47,7 +53,10 @@ const MypingsSummary = ({ data }: { data: IMyPings }) => {
             <img src={mediaPath(data.User.profile_image_url)} />
           </ProfileAvatar>
           {session?.id !== Number(data?.User.id) && (
-            <ShareButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />
+            <ShareButton
+              data={data}
+              style={{ position: 'absolute', top: '4px', right: 0 }}
+            />
           )}
           <CountsInfo>
             <span className={'info'}>

@@ -31,7 +31,9 @@ const ProfileSummary = () => {
           <EditButton onClick={() => navigate(`/${userId}/edit`)}>프로필 수정</EditButton>
         ) : (
           <FollowButton
-            isActive={isIdExisting(Followings, User)}
+            User={User}
+            // userId={userId}
+            // isActive={isIdExisting(Followings, User)}
             style={{ position: 'absolute', top: '25px', right: '20px' }}
           />
         )}
