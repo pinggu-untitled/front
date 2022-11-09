@@ -46,11 +46,7 @@ const PostProvider = ({ children }: IProvider) => {
     [],
   );
 
-  return (
-    <PostContext.Provider value={{ onFetch, onEdit, onDelete }}>
-      {children}
-    </PostContext.Provider>
-  );
+  return <PostContext.Provider value={{ onFetch, onEdit, onDelete }}>{children}</PostContext.Provider>;
 };
 
 export const usePost = (): IContext => useContext(PostContext);

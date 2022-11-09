@@ -14,12 +14,9 @@ const deActivate = (url: string, toggleState: any) => {
 };
 
 type Type = 'active' | 'inactive';
-const toggleMutator =
-  (type: Type, url: string, toggleState: any) => (e: any) => {
-    e.stopPropagation();
-    type === 'active'
-      ? activate(url, toggleState)
-      : deActivate(url, toggleState);
-  };
+const toggleMutator = (type: Type, url: string, toggleState: any) => (e: any) => {
+  e.stopPropagation();
+  type === 'active' ? activate(url, toggleState) : deActivate(url, toggleState);
+};
 
 export default toggleMutator;

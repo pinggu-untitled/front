@@ -9,19 +9,11 @@ interface IProps {
   [key: string]: any;
 }
 
-const NavItem = ({
-  icons: { outline, fill, style },
-  title,
-  url,
-  rest,
-}: IProps) => {
+const NavItem = ({ icons: { outline, fill, style }, title, url, rest }: IProps) => {
   const activeStyle = { backgroundColor: '#f0f0f0' };
   return (
     <Li>
-      <NavLink
-        to={url}
-        style={({ isActive }) => (isActive ? activeStyle : undefined)}
-      >
+      <NavLink to={url} style={({ isActive }) => (isActive ? activeStyle : undefined)}>
         {({ isActive }) =>
           isActive ? (
             <>

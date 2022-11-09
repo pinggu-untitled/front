@@ -73,7 +73,7 @@ const CommentSendBox: FC<IProps> = ({ onSubmit }) => {
         ref={texareaRef}
         onKeyPress={onKeyPress}
       />
-      <button type='submit' onClick={handleSubmit} disabled={!comment}>
+      <button type="submit" onClick={handleSubmit} disabled={!comment}>
         <BiSend />
       </button>
     </Base>

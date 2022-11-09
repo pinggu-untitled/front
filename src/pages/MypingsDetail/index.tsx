@@ -20,10 +20,7 @@ const MypingsDetail = () => {
   const { mypingsId } = useParams<{ mypingsId: string }>();
   const { session } = useSession();
   const { data: Mypings } = useSWR<IMyPings>(`/mypings/${mypingsId}`, fetcher);
-  const { data: MypingsPosts } = useSWR<IPost[]>(
-    `/mypings/${mypingsId}/posts`,
-    fetcher
-  );
+  const { data: MypingsPosts } = useSWR<IPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
 
   const items: IMenuItem[] = [
     {
@@ -44,11 +41,7 @@ const MypingsDetail = () => {
 
   return (
     <>
-      <PageTitleHeader
-        title={'마이핑스'}
-        menuItems={items}
-        style={{ borderBottom: 'none' }}
-      />
+      <PageTitleHeader title={'마이핑스'} menuItems={items} style={{ borderBottom: 'none' }} />
       <PageMain>
         <div
           style={{
@@ -71,9 +64,7 @@ const MypingsDetail = () => {
           }}
         >
           {!MypingsPosts?.length ? (
-            <EmptyMessage
-              message={`아직 ${Mypings?.User.nickname}님이 공유한 게시물이 없어요.`}
-            />
+            <EmptyMessage message={`아직 ${Mypings?.User.nickname}님이 공유한 게시물이 없어요.`} />
           ) : (
             <CardList>
               {readable(session?.id, MypingsPosts)?.map((Post) => (
