@@ -6,13 +6,14 @@ interface IProps {
   icons: { outline: ReactNode; fill: ReactNode; style?: CSSProperties };
   title: string;
   url: string;
+  onClick?: Function;
   [key: string]: any;
 }
 
-const NavItem = ({ icons: { outline, fill, style }, title, url, rest }: IProps) => {
+const NavItem = ({ icons: { outline, fill, style }, title, url, rest, onClick }: IProps) => {
   const activeStyle = { backgroundColor: '#f0f0f0' };
   return (
-    <Li>
+    <Li {...rest} onClick={onClick}>
       <NavLink to={url} style={({ isActive }) => (isActive ? activeStyle : undefined)}>
         {({ isActive }) =>
           isActive ? (

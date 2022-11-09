@@ -12,8 +12,8 @@ const Layout = () => {
 
   return (
     <PageBase>
-      <SideNavigation show={show} toggle={toggleShow} />
       <MapProvider>
+        <SideNavigation show={show} toggle={toggleShow} />
         <OutletModal outlet={<Outlet />} show={show} toggleShow={toggleShow} />
         <MapZone>
           <Map />

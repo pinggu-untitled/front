@@ -18,6 +18,7 @@ import ToolButton from '@components/PostNew/ToolBox/ToolButton';
 import { BsImages } from 'react-icons/bs';
 import { HiLocationMarker } from 'react-icons/hi';
 import ImageInputList from '@components/PostNew/ImageInputList';
+import { useMap } from '@contexts/MapContext';
 
 export interface IPostForm {
   title: string;
@@ -40,6 +41,8 @@ export const makeMentions = (data: string) =>
   });
 
 const PostNew = () => {
+  const { getMyPosition } = useMap();
+  const { latitude, longitude } = getMyPosition();
   const navigator = useNavigate();
   const { session } = useSession();
   const {
@@ -51,13 +54,13 @@ const PostNew = () => {
     defaultValues: {
       title: '',
       content: '',
-      longitude: '126.111111',
-      latitude: '37.222222',
+      longitude,
+      latitude,
       images: [],
     },
   });
   const [isPrivate, togglePrivate] = useReducer((prev) => !prev, false);
-  const { title, images, longitude, latitude } = watch();
+  const { title, images } = watch();
   const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
 
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
