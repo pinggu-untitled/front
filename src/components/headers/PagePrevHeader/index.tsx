@@ -1,4 +1,8 @@
-import { ActionButton, ActionList, Header } from '@components/headers/PageMainHeader/style';
+import {
+  ActionButton,
+  ActionList,
+  Header,
+} from '@components/headers/PageMainHeader/style';
 import { useReducer } from 'react';
 import Modal from '@components/Modal';
 import MenuList from '@components/Layout/MenuList';
@@ -18,8 +22,16 @@ const PagePrevHeader = ({ menuItems }: IProps) => {
   const navigate = useNavigate();
 
   const [showModals, toggleModals] = useReducer(
+<<<<<<< HEAD
     (prev: IModals, modalName: string) => ({ ...prev, [modalName]: !prev[modalName] }),
     { menu: false },
+=======
+    (prev: IModals, modalName: string) => ({
+      ...prev,
+      [modalName]: !prev[modalName],
+    }),
+    { menu: false }
+>>>>>>> 6365b17 (a)
   );
 
   return (
