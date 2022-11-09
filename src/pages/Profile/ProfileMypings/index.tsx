@@ -24,10 +24,18 @@ const ProfileMypings = () => {
   const [tap, setTap] = useState<Tap>('all');
 
   const items: IMenuItem[] = [
-    { icon: <BiEditAlt />, title: '프로필 수정하기', onClick: () => navigate(`/${userId}/edit`) },
+    {
+      icon: <BiEditAlt />,
+      title: '프로필 수정하기',
+      onClick: () => navigate(`/${userId}/edit`),
+    },
   ];
   const readOnlyItems: IMenuItem[] = [
-    { icon: <BiLinkAlt />, title: '링크 복사하기', onClick: () => navigate('/posts/new') },
+    {
+      icon: <BiLinkAlt />,
+      title: '링크 복사하기',
+      onClick: () => navigate('/posts/new'),
+    },
   ];
 
   if (!userId && !Mypings && !UserSharepings) return <div>로딩중...</div>;
@@ -45,7 +53,9 @@ const ProfileMypings = () => {
           쉐어핑스
         </Tap>
       </InnerTap>
-      <TapMain style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}>
+      <TapMain
+        style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}
+      >
         <CardList>
           {tap === 'all' &&
             (!Mypings?.length && !UserSharepings?.length ? (
@@ -62,15 +72,23 @@ const ProfileMypings = () => {
             ))}
           {tap === 'mypings' &&
             (!Mypings?.length ? (
-              <EmptyMessage message={`아직 ${User?.nickname}님이 작성한 마이핑스가 없어요.`} />
+              <EmptyMessage
+                message={`아직 ${User?.nickname}님이 작성한 마이핑스가 없어요.`}
+              />
             ) : (
-              Mypings?.map((mypings) => <ProfileMypingsCard key={mypings?.id} data={mypings} />)
+              Mypings?.map((mypings) => (
+                <ProfileMypingsCard key={mypings?.id} data={mypings} />
+              ))
             ))}
           {tap === 'sharepings' &&
             (!UserSharepings?.length ? (
-              <EmptyMessage message={`아직 ${User?.nickname}님이 공유하고 있는 쉐어핑스가 없어요`} />
+              <EmptyMessage
+                message={`아직 ${User?.nickname}님이 공유하고 있는 쉐어핑스가 없어요`}
+              />
             ) : (
-              UserSharepings?.map((mypings) => <ProfileMypingsCard key={mypings?.id} data={mypings} />)
+              UserSharepings?.map((mypings) => (
+                <ProfileMypingsCard key={mypings?.id} data={mypings} />
+              ))
             ))}
         </CardList>
       </TapMain>

@@ -74,7 +74,9 @@ const config: Configuration = {
       //   files: "./src/**/*",
       // },
     }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: isDevelopment ? 'development' : 'production',
+    }),
 
     new HtmlWebpackPlugin({
       template: './index.html',
@@ -84,7 +86,9 @@ const config: Configuration = {
     }),
 
     new webpack.DefinePlugin({
-      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
+      REACT_APP_KAKAO_MAP_KEY: JSON.stringify(
+        process.env.REACT_APP_KAKAO_MAP_KEY
+      ),
     }),
   ],
   output: {

@@ -11,7 +11,14 @@ interface IProps {
   [key: string]: any;
 }
 
-const Modal = ({ size = 'full', children, show, onCloseModal, style, rest }: IProps) => {
+const Modal = ({
+  size = 'full',
+  children,
+  show,
+  onCloseModal,
+  style,
+  rest,
+}: IProps) => {
   if (!show) return null;
   return size === 'full' ? (
     <FullScreen onClick={onCloseModal} style={style} {...rest}>

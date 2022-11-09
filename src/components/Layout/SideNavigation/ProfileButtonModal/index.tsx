@@ -14,7 +14,11 @@ const ProfileButtonModal = () => {
   const { session, setSession } = useSession();
   const [show, toggleShow] = useReducer((prev) => !prev, false);
   const items: IMenuItem[] = [
-    { icon: <RiUser3Line />, title: '마이페이지', onClick: () => navigate(`/${session?.id}`) },
+    {
+      icon: <RiUser3Line />,
+      title: '마이페이지',
+      onClick: () => navigate(`/${session?.id}`),
+    },
     {
       icon: <FiLogIn />,
       title: '로그아웃',
@@ -26,10 +30,17 @@ const ProfileButtonModal = () => {
   return (
     <>
       <ProfileAvatar onClick={toggleShow}>
-        <img src={mediaPath(session?.profile_image_url)} alt={session?.nickname} />
+        <img
+          src={mediaPath(session?.profile_image_url)}
+          alt={session?.nickname}
+        />
       </ProfileAvatar>
       <Modal size={'full'} show={show} onCloseModal={toggleShow}>
-        <MenuList items={items} onClick={toggleShow} style={{ bottom: '20px', left: '66px' }} />
+        <MenuList
+          items={items}
+          onClick={toggleShow}
+          style={{ bottom: '20px', left: '66px' }}
+        />
       </Modal>
     </>
   );

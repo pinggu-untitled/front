@@ -12,7 +12,9 @@ const TapZone = ({ userId }: { userId: string }) => {
       <Tap
         to={`/${userId}`}
         style={({ isActive }) =>
-          location.pathname === `/${userId}` ? { fontWeight: 700, color: '#191919' } : undefined
+          location.pathname === `/${userId}`
+            ? { fontWeight: 700, color: '#191919' }
+            : undefined
         }
       >
         <span className={'content'}>
@@ -22,7 +24,9 @@ const TapZone = ({ userId }: { userId: string }) => {
       </Tap>
       <Tap
         to={`/${userId}/mypings`}
-        style={({ isActive }) => (isActive ? { fontWeight: 700, color: '#191919' } : undefined)}
+        style={({ isActive }) =>
+          isActive ? { fontWeight: 700, color: '#191919' } : undefined
+        }
       >
         <span className={'content'}>
           <MdBookmarkBorder />
@@ -31,7 +35,9 @@ const TapZone = ({ userId }: { userId: string }) => {
       </Tap>
       <Tap
         to={`/${userId}/friends`}
-        style={({ isActive }) => (isActive ? { fontWeight: 700, color: '#191919' } : undefined)}
+        style={({ isActive }) =>
+          isActive ? { fontWeight: 700, color: '#191919' } : undefined
+        }
       >
         <span className={'content'}>
           <HiOutlineUsers />

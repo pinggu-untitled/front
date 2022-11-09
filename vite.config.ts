@@ -14,7 +14,10 @@ export default defineConfig({
       { find: '@contexts', replacement: resolve(__dirname, './src/contexts') },
       { find: '@layouts', replacement: resolve(__dirname, './src/layouts') },
       { find: '@pages', replacement: resolve(__dirname, './src/pages') },
-      { find: '@components', replacement: resolve(__dirname, './src/components') },
+      {
+        find: '@components',
+        replacement: resolve(__dirname, './src/components'),
+      },
       { find: '@typings', replacement: resolve(__dirname, './src/typings') },
     ],
   },

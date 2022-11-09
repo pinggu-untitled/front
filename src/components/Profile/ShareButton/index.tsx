@@ -16,8 +16,14 @@ interface IProps {
 const ShareButton = ({ data, style }: IProps) => {
   const { session } = useSession();
   // const { Sharepings } = useProfileMypings();
-  const { data: Sharepings } = useSWR(`/users/${session?.id}/sharepings`, fetcher);
-  const [share, toggleShare] = useReducer((prev: boolean, cur: boolean) => cur, false);
+  const { data: Sharepings } = useSWR(
+    `/users/${session?.id}/sharepings`,
+    fetcher
+  );
+  const [share, toggleShare] = useReducer(
+    (prev: boolean, cur: boolean) => cur,
+    false
+  );
 
   useEffect(() => {
     toggleShare(isIdExisting(Sharepings, data));
@@ -25,10 +31,18 @@ const ShareButton = ({ data, style }: IProps) => {
 
   return (
     <Button
-      onClick={toggleMutator(share ? 'inactive' : 'active', `/mypings/${data?.id}/sharepings`, toggleShare)}
+      onClick={toggleMutator(
+        share ? 'inactive' : 'active',
+        `/mypings/${data?.id}/sharepings`,
+        toggleShare
+      )}
       style={style}
     >
-      {share ? <BsBookmarkStarFill style={{ color: '#fbab00' }} /> : <BsBookmark />}
+      {share ? (
+        <BsBookmarkStarFill style={{ color: '#fbab00' }} />
+      ) : (
+        <BsBookmark />
+      )}
     </Button>
   );
 };
