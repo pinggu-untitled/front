@@ -35,10 +35,7 @@ const ProfileSummaryBar = ({ data }: { data: IUser }) => {
   const { postId } = useParams<{ postId: string }>();
   const { data: md } = useSWR<IMe>('/users/me', fetcher);
   const { data: pd } = useSWR<IPost>(`/posts/${postId}`, fetcher);
-  const { data: Followings } = useSWR<IUser[]>(
-    `/users/${session?.id}/followings`,
-    fetcher
-  );
+  const { data: Followings } = useSWR<IUser[]>(`/users/${session?.id}/followings`, fetcher);
 
   if (!Followings) return <div>로딩중...</div>;
   return (

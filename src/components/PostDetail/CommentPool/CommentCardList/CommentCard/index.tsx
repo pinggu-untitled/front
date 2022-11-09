@@ -113,14 +113,8 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
 
   return (
     <Base depth={!isParentComment(comment.pid)}>
-      <ProfileAvatar
-        style={{ width: '28px', height: '28px' }}
-        onClick={() => navigate(`/${comment.User.id}`)}
-      >
-        <img
-          src={mediaPath(comment.User.profile_image_url)}
-          alt={comment.User.nickname}
-        />
+      <ProfileAvatar style={{ width: '28px', height: '28px' }} onClick={() => navigate(`/${comment.User.id}`)}>
+        <img src={mediaPath(comment.User.profile_image_url)} alt={comment.User.nickname} />
       </ProfileAvatar>
       <Inner>
         <span className={'nickname'}>{comment?.User.nickname}</span>
@@ -139,14 +133,8 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
         )}
         {showReplyInput && (
           <ReplyInputZone>
-            <ProfileAvatar
-              onClick={() => navigate(`/${comment.User.id}`)}
-              style={{ width: '23px', height: '23px' }}
-            >
-              <img
-                src={mediaPath(comment.User.profile_image_url)}
-                alt={comment.User.nickname}
-              />
+            <ProfileAvatar onClick={() => navigate(`/${comment.User.id}`)} style={{ width: '23px', height: '23px' }}>
+              <img src={mediaPath(comment.User.profile_image_url)} alt={comment.User.nickname} />
             </ProfileAvatar>
             <Textarea
               placeholder={'답글 달기...'}
@@ -169,9 +157,7 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
             {showEditInput ? '수정 완료' : '수정'}
           </ActionButton>
         )}
-        {(isCommenter || hasPostOwnerAuth) && (
-          <ActionButton onClick={onDelete(comment.id)}>삭제</ActionButton>
-        )}
+        {(isCommenter || hasPostOwnerAuth) && <ActionButton onClick={onDelete(comment.id)}>삭제</ActionButton>}
         {isParentComment(comment.pid) && (
           <ActionButton
             onClick={(e) => {

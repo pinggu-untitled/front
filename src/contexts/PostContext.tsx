@@ -1,9 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-} from 'react';
-import {  IPost } from '@typings/db';
+import { createContext, useCallback, useContext } from 'react';
+import { IPost } from '@typings/db';
 import { IProvider } from '@contexts/SessionContext';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -27,7 +23,7 @@ const PostProvider = ({ children }: IProvider) => {
       const { data, mutate } = useSWR(id ? `/posts/${postId}` : null, fetcher);
       return { data, mutate };
     },
-    []
+    [],
   );
 
   const onEdit = useCallback(
@@ -37,7 +33,7 @@ const PostProvider = ({ children }: IProvider) => {
         // mutate();
       });
     },
-    []
+    [],
   );
 
   const onDelete = useCallback(
@@ -47,7 +43,7 @@ const PostProvider = ({ children }: IProvider) => {
         // mutate();
       });
     },
-    []
+    [],
   );
 
   return <PostContext.Provider value={{ onFetch, onEdit, onDelete }}>{children}</PostContext.Provider>;

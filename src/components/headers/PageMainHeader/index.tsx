@@ -1,8 +1,4 @@
-import {
-  ActionButton,
-  ActionList,
-  Header,
-} from '@components/headers/PageMainHeader/style';
+import { ActionButton, ActionList, Header } from '@components/headers/PageMainHeader/style';
 import { FiGrid, FiLogIn } from 'react-icons/fi';
 import { TbBell } from 'react-icons/tb';
 import { RiUser3Line } from 'react-icons/ri';
@@ -30,7 +26,7 @@ const PageHeader = ({ pageName }: IProps) => {
       ...prev,
       [modalName]: !prev[modalName],
     }),
-    { menu: false }
+    { menu: false },
   );
   const items: IMenuItem[] = [
     {

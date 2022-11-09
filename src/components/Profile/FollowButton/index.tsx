@@ -14,15 +14,9 @@ interface IProps {
 }
 const FollowButton = ({ User, style }: IProps) => {
   const { session } = useSession();
-  const [follow, toggleFollow] = useReducer(
-    (prev: boolean, cur: boolean) => cur,
-    false
-  );
+  const [follow, toggleFollow] = useReducer((prev: boolean, cur: boolean) => cur, false);
 
-  const { data: Followings } = useSWR<IUser[]>(
-    `/users/${session?.id}/followings`,
-    fetcher
-  );
+  const { data: Followings } = useSWR<IUser[]>(`/users/${session?.id}/followings`, fetcher);
 
   useEffect(() => {
     if (Followings && User) {
@@ -31,14 +25,7 @@ const FollowButton = ({ User, style }: IProps) => {
   }, [Followings]);
 
   return (
-    <Button
-      onClick={toggleMutator(
-        follow ? 'inactive' : 'active',
-        `/follow/${User?.id}`,
-        toggleFollow
-      )}
-      style={style}
-    >
+    <Button onClick={toggleMutator(follow ? 'inactive' : 'active', `/follow/${User?.id}`, toggleFollow)} style={style}>
       {follow ? '팔로우 취소' : '팔로우'}
     </Button>
   );

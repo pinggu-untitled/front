@@ -47,8 +47,7 @@ const PostEdit = () => {
   const togglePrivate = () => setIsPrivate((p) => !p);
 
   const { title, longitude, latitude, images } = watch();
-  const isSubmitAvailable =
-    Boolean(title) && Boolean(longitude) && Boolean(latitude);
+  const isSubmitAvailable = Boolean(title) && Boolean(longitude) && Boolean(latitude);
   const [showOptions, setShowOptions] = useState<{ [key: string]: any }>({
     showImages: true,
   });
@@ -104,14 +103,8 @@ const PostEdit = () => {
         <Form>
           <IsPrivateInput value={isPrivate} onChange={togglePrivate} />
           <InputController control={control} label={'글 제목'} name={'title'} />
-          <TextareaController
-            control={control}
-            label={'내용'}
-            name={'content'}
-          />
-          {showOptions.showImages && (
-            <ImageInputList control={control} name={'images'} />
-          )}
+          <TextareaController control={control} label={'내용'} name={'content'} />
+          {showOptions.showImages && <ImageInputList control={control} name={'images'} />}
           <ToolBox title={'게시물에 추가'}>
             <HoverLabel label={'사진'} style={{ top: '-35px' }}>
               <ToolButton

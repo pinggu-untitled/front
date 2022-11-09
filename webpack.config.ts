@@ -107,7 +107,7 @@ if (isDevelopment && config.plugins) {
       overlay: {
         useURLPolyfill: true,
       },
-    })
+    }),
   );
 }
 if (!isDevelopment && config.plugins) {

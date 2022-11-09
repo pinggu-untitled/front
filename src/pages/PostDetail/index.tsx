@@ -9,12 +9,7 @@ import ImagesZoomModal from '@components/PostDetail/ImageZoomModal';
 import { useState } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import {
-  ImagesContainer,
-  PostImage,
-  TextZone,
-  More,
-} from '@components/PostDetail/style';
+import { ImagesContainer, PostImage, TextZone, More } from '@components/PostDetail/style';
 import mediaPath from '@utils/mediaPath';
 import { IImage, IPost } from '@typings/db';
 import { TotalCount } from '@components/Home/PostCard/style';
@@ -59,8 +54,7 @@ const PostDetail = () => {
     border: 'none',
   };
 
-  const exceptCurrentPost = (posts: IPost[]) =>
-    posts.filter((item) => item.id !== Number(postId));
+  const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
 
   const compose =
     (...fns: Function[]) =>
@@ -105,22 +99,13 @@ const PostDetail = () => {
                   border: 'none',
                 }}
               >
-                <img
-                  src={mediaPath(Post?.Images[0].src)}
-                  alt={Post?.Images[0].id}
-                />
+                <img src={mediaPath(Post?.Images[0].src)} alt={Post?.Images[0].id} />
               </PostImage>
             )}
             {Post?.Images.length === 2 &&
               Post?.Images.slice(0, 2).map((data: IImage) => (
-                <PostImage
-                  key={data.id}
-                  style={{ width: '100%', height: '100%', borderRadius: 0 }}
-                >
-                  <img
-                    src={`http://localhost:8080/uploads/${data.src}`}
-                    alt={`${data.id}`}
-                  />
+                <PostImage key={data.id} style={{ width: '100%', height: '100%', borderRadius: 0 }}>
+                  <img src={`http://localhost:8080/uploads/${data.src}`} alt={`${data.id}`} />
                 </PostImage>
               ))}
             {Post?.Images.length >= 3 && (
@@ -138,9 +123,7 @@ const PostDetail = () => {
                       <PostImage key={data.id} style={postImageStyle}>
                         <img src={mediaPath(data.src)} alt={`${data.id}`} />
                       </PostImage>
-                      <div className='button'>
-                        {Post?.Images.length - 2}개 더보기
-                      </div>
+                      <div className="button">{Post?.Images.length - 2}개 더보기</div>
                       //{' '}
                     </More>
                   );
@@ -182,16 +165,13 @@ const PostDetail = () => {
           <p className={'meta'}>조회수 {Post?.hits}</p>
         </TextZone>
         <CommentPool />
-        <PreviewSection
-          title={`${Post?.User.nickname}의 게시물`}
-          url={`/${Post?.User.id}`}
-        >
+        <PreviewSection title={`${Post?.User.nickname}의 게시물`} url={`/${Post?.User.id}`}>
           {session &&
             Posts &&
             compose(
               (posts: IPost[]) => readable(session, posts),
               exceptCurrentPost,
-              displayEven
+              displayEven,
             )(Posts)
               .slice(0, 6)
               ?.map((post, i) => <PreviewCard key={i} post={post} />)}

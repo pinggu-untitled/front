@@ -1,13 +1,6 @@
 import { Dispatch, DispatchWithoutAction, SetStateAction } from 'react';
 import { Preview } from '@components/MypingsNew/ShortPreview/style';
-import {
-  Card,
-  Inner,
-  Info,
-  NoMedia,
-  PostImage,
-  CountsInfo,
-} from '@components/Home/PostCard/style';
+import { Card, Inner, Info, NoMedia, PostImage, CountsInfo } from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useSession } from '@contexts/SessionContext';
 import mediaPath from '@utils/mediaPath';
@@ -42,10 +35,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
         }}
       >
         {message}
-        <span
-          onClick={toggleShow}
-          style={{ fontSize: '22px', cursor: 'pointer' }}
-        >
+        <span onClick={toggleShow} style={{ fontSize: '22px', cursor: 'pointer' }}>
           <IoIosClose />
         </span>
       </p>
@@ -68,10 +58,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
               }}
             >
               {data.title}
-              <PrivateTag
-                active={+data?.isPrivate}
-                style={{ marginRight: '4px' }}
-              />
+              <PrivateTag active={+data?.isPrivate} style={{ marginRight: '4px' }} />
             </h3>
             <CateTag cateNumber={data?.category} style={{ margin: 0 }} />
             <ProfileAvatar
@@ -88,10 +75,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
             <CountsInfo>
               <span className={'info'} style={{ fontSize: '12px' }}>
                 게시물
-                <span
-                  className={'current'}
-                  style={{ fontSize: '12px', marginLeft: '4px' }}
-                >
+                <span className={'current'} style={{ fontSize: '12px', marginLeft: '4px' }}>
                   {data.posts?.length}
                 </span>
               </span>

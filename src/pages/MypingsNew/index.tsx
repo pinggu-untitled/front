@@ -13,14 +13,7 @@ import { useSession } from '@contexts/SessionContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export const CATEGORIES = [
-  '📌 일반',
-  '😎 핫플레이스',
-  '📸 포토존',
-  '🧚 힐링',
-  '🏄 액티비티',
-  '🧷 기타',
-];
+export const CATEGORIES = ['📌 일반', '😎 핫플레이스', '📸 포토존', '🧚 힐링', '🏄 액티비티', '🧷 기타'];
 
 const MypingsNew = () => {
   const navigate = useNavigate();
@@ -57,11 +50,7 @@ const MypingsNew = () => {
       <PageMain style={{ bottom: '70px' }}>
         <Form style={{ overflow: 'scroll' }}>
           <IsPrivateInput value={isPrivate} onChange={togglePrivate} />
-          <Input
-            label={'마이핑스 제목'}
-            value={title}
-            onChange={onChangeTitle}
-          />
+          <Input label={'마이핑스 제목'} value={title} onChange={onChangeTitle} />
           <SelectCategoryInput value={category} onChange={onChangeCategory} />
           <SelectPostsInputs value={posts} setValue={setPosts} />
           <FixedBottom>

@@ -74,7 +74,7 @@ const PreviewSection: FC<IProps> = ({ title, url, children }) => {
     <Base onClick={() => navigate(url)}>
       <Header>
         <h3>{title}</h3>
-        <span className='arrow-ico'>
+        <span className="arrow-ico">
           <IoIosArrowForward />
         </span>
       </Header>

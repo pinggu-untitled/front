@@ -33,11 +33,7 @@ const Profile = () => {
   if (!session || !userId) return <div>로딩중...</div>;
   return (
     <>
-      {session?.id === Number(userId) ? (
-        <PageHeader pageName={'내 프로필'} />
-      ) : (
-        <PagePrevHeader menuItems={items} />
-      )}
+      {session?.id === Number(userId) ? <PageHeader pageName={'내 프로필'} /> : <PagePrevHeader menuItems={items} />}
       <PageMain>
         <div
           style={{

@@ -1,11 +1,4 @@
-import {
-  Card,
-  Inner,
-  Info,
-  NoMedia,
-  PostImage,
-  CountsInfo,
-} from '@components/Home/PostCard/style';
+import { Card, Inner, Info, NoMedia, PostImage, CountsInfo } from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useSession } from '@contexts/SessionContext';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -61,10 +54,7 @@ const ProfileMypingsCard = ({ data }: IProps) => {
             </ProfileAvatar>
           )}
           {session?.id !== Number(data?.User.id) && (
-            <ShareButton
-              data={data}
-              style={{ position: 'absolute', top: '4px', right: 0 }}
-            />
+            <ShareButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />
           )}
           <CountsInfo>
             <span className={'info'}>
@@ -74,10 +64,7 @@ const ProfileMypingsCard = ({ data }: IProps) => {
         </Info>
       </Inner>
       {session?.id === Number(data?.User.id) && (
-        <OwnerActionButtons
-          editPageUrl={`/mypings/${data.id}/edit`}
-          onDelete={onDelete(data.id)}
-        />
+        <OwnerActionButtons editPageUrl={`/mypings/${data.id}/edit`} onDelete={onDelete(data.id)} />
       )}
     </Card>
   );

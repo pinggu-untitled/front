@@ -11,5 +11,5 @@ axios.defaults.baseURL = 'http://localhost:8080';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

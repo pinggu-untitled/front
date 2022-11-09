@@ -77,14 +77,8 @@ const ProfileFriends = () => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const { data: User } = useSWR<IUser>(`/users/${userId}`, fetcher);
-  const { data: Followings } = useSWR<IUser[]>(
-    `/users/${userId}/followings`,
-    fetcher
-  );
-  const { data: Followers } = useSWR<IUser[]>(
-    `/users/${userId}/followers`,
-    fetcher
-  );
+  const { data: Followings } = useSWR<IUser[]>(`/users/${userId}/followings`, fetcher);
+  const { data: Followers } = useSWR<IUser[]>(`/users/${userId}/followers`, fetcher);
   const { session } = useSession();
   const [tap, setTap] = useState<Tap>('followings');
 
@@ -115,29 +109,21 @@ const ProfileFriends = () => {
           팔로워
         </Tap>
       </InnerTap>
-      <TapMain
-        style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}
-      >
+      <TapMain style={{ position: 'absolute', top: '50px', width: '440px', bottom: 0 }}>
         <CardList>
           {tap === 'followings' &&
             (!Followings?.length ? (
-              <EmptyMessage
-                message={`아직 ${User?.nickname}님이 팔로잉하는 유저가 없어요.`}
-              />
+              <EmptyMessage message={`아직 ${User?.nickname}님이 팔로잉하는 유저가 없어요.`} />
             ) : (
-              Followings?.filter((user) => user.id !== session?.id).map(
-                (user) => <FriendCard key={user?.id} data={user} />
-              )
+              Followings?.filter((user) => user.id !== session?.id).map((user) => (
+                <FriendCard key={user?.id} data={user} />
+              ))
             ))}
           {tap === 'follower' &&
             (!Followers?.length ? (
-              <EmptyMessage
-                message={`아직 ${User?.nickname}님을 팔로우하는 유저가 없어요.`}
-              />
+              <EmptyMessage message={`아직 ${User?.nickname}님을 팔로우하는 유저가 없어요.`} />
             ) : (
-              Followers?.map((user) => (
-                <FriendCard key={user?.id} data={user} />
-              ))
+              Followers?.map((user) => <FriendCard key={user?.id} data={user} />)
             ))}
         </CardList>
       </TapMain>

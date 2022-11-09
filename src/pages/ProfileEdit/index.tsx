@@ -40,13 +40,9 @@ const ProfileEdit = () => {
       filename = data.profile_image_url;
     } else {
       filename = await axios
-        .post(
-          '/profile/image',
-          makeFormData('image', data.profile_image_url[0]),
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
-        )
+        .post('/profile/image', makeFormData('image', data.profile_image_url[0]), {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
         .then((res) => res.data);
     }
 
@@ -72,22 +68,10 @@ const ProfileEdit = () => {
       <PageMain style={{ bottom: '70px' }}>
         <Form>
           <ProfileImageInput control={control} name={'profile_image_url'} />
-          <InputController
-            control={control}
-            label={'닉네임'}
-            name={'nickname'}
-          />
-          <TextareaController
-            control={control}
-            label={'소개'}
-            name={'bio'}
-            placeholder={'자신을 소개해 주세요.'}
-          />
+          <InputController control={control} label={'닉네임'} name={'nickname'} />
+          <TextareaController control={control} label={'소개'} name={'bio'} placeholder={'자신을 소개해 주세요.'} />
           <FixedBottom>
-            <SubmitButton
-              onClick={handleSubmit(onSubmit)}
-              disabled={!isSubmitAvailable}
-            >
+            <SubmitButton onClick={handleSubmit(onSubmit)} disabled={!isSubmitAvailable}>
               수정하기
             </SubmitButton>
           </FixedBottom>

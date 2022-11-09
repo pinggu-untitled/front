@@ -6,24 +6,19 @@ const Map = () => {
 
   /* 현재 위치를 지도의 중심 좌표로 설정 */
   const onSuccess = useCallback(
-    ({
-      coords: { latitude, longitude },
-    }: {
-      coords: { latitude: number; longitude: number };
-    }) => {
+    ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
       const container = document.getElementById('myMap');
       if (initializeMap && container) {
         initializeMap(container, latitude, longitude);
       }
     },
-    []
+    [],
   );
 
   /* 현재 위치를 가져오지 못한 경우 */
   const onError = useCallback(({ message }: { message: string }) => {
     const container = document.getElementById('myMap');
-    if (container)
-      container.innerText = `지도를 표시할 수 없습니다. ${message}`;
+    if (container) container.innerText = `지도를 표시할 수 없습니다. ${message}`;
   }, []);
 
   /* geolocation을 이용해 현재 위치를 얻음 */
@@ -33,7 +28,7 @@ const Map = () => {
 
   return (
     <div
-      id='myMap'
+      id="myMap"
       style={{
         width: '100vw',
         height: '100vh',

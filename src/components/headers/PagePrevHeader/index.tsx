@@ -19,7 +19,7 @@ const PagePrevHeader = ({ menuItems }: IProps) => {
 
   const [showModals, toggleModals] = useReducer(
     (prev: IModals, modalName: string) => ({ ...prev, [modalName]: !prev[modalName] }),
-    { menu: false }
+    { menu: false },
   );
 
   return (

@@ -7,11 +7,7 @@ const { kakao } = window;
 interface IMapContext {
   map: kakao.maps.Map | null;
   myMarker: kakao.maps.Marker | null;
-  initializeMap: (
-    container: HTMLElement,
-    latitude: number,
-    longitude: number
-  ) => void;
+  initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
   moveCenterToMe: () => void;
   moveCenterToPost: (latitude: number, longitude: number) => void;
   getMapInfo: () => void;
@@ -21,11 +17,7 @@ interface IMapContext {
 const MapContext = createContext<IMapContext>({
   map: null,
   myMarker: null,
-  initializeMap: (
-    container: HTMLElement,
-    latitude: number,
-    longitude: number
-  ) => {},
+  initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
   moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
   getMapInfo: () => {},
@@ -41,30 +33,16 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   /* 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
   const getSubPosts = (map: kakao.maps.Map) => {
     const bounds = map?.getBounds();
-    const [swLat, swLng] = bounds
-      ?.getSouthWest()
-      .toString()
-      .slice(1, -1)
-      .split(',');
-    const [neLat, neLng] = bounds
-      ?.getNorthEast()
-      .toString()
-      .slice(1, -1)
-      .split(',');
+    const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',');
+    const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',');
     // console.log(swLat, swLng, neLat, neLng);
-    fetcher(
-      `/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`
-    )
+    fetcher(`/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`)
       .then((posts) => {
         console.log(posts);
-        const imageSrc =
-          'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+        const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
         posts
           .map((post: IPost) => ({
-            latlng: new kakao.maps.LatLng(
-              Number(post.latitude),
-              Number(post.longitude)
-            ),
+            latlng: new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude)),
           }))
           .forEach((position: any) => {
             const imageSize = new kakao.maps.Size(24, 35);
@@ -80,11 +58,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   };
 
   /* 지도 및 마커 초기화 - 지도 생성, 중심 좌표를 내 위치로 설정, 내 위치 마커 생성 및 표시 */
-  const initializeMap = (
-    container: HTMLElement,
-    latitude: number,
-    longitude: number
-  ) => {
+  const initializeMap = (container: HTMLElement, latitude: number, longitude: number) => {
     console.log('Map Initialized!!!!!@@@@!!!!!!');
     const position = new kakao.maps.LatLng(latitude, longitude);
     const options = {
@@ -105,12 +79,9 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
         });
         newMyMarker.setMap(newMap);
         // event-지도 클릭 시 내 위치 마커 이동
-        newMap.addListener(
-          'click',
-          ({ latLng }: { latLng: kakao.maps.LatLng }) => {
-            newMyMarker.setPosition(latLng);
-          }
-        );
+        newMap.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
+          newMyMarker.setPosition(latLng);
+        });
         // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
         newMyMarker.addListener('click', () => {
           console.log(newMyMarker.getPosition());
@@ -151,11 +122,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   };
 
   /* 중심 좌표 설정 및 마커 표시 */
-  const setMapCenter = (
-    latitude: number,
-    longitude: number,
-    marker: kakao.maps.Marker
-  ) => {
+  const setMapCenter = (latitude: number, longitude: number, marker: kakao.maps.Marker) => {
     const position = new kakao.maps.LatLng(latitude, longitude);
     if (map && marker) {
       map.setCenter(position);
@@ -167,11 +134,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   /* 내 위치로 지도 중심 좌표 변경 with 내 위치 마커 */
   const moveCenterToMe = () => {
     if (map && myMarker) {
-      const onSuccess = ({
-        coords: { latitude, longitude },
-      }: {
-        coords: { latitude: number; longitude: number };
-      }) => {
+      const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
         setMapCenter(latitude, longitude, myMarker);
       };
       const onError = (error: any) => {

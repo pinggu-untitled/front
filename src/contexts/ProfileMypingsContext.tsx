@@ -23,32 +23,20 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
   const { session } = useSession();
   const { data: Mypings, mutate: mutateMypings } = useSWR<IMyPings[]>(
     userId ? `/users/${userId}/mypings` : null,
-    fetcher
+    fetcher,
   );
 
-  const { data: Sharepings } = useSWR<IMyPings[]>(
-    `/users/${session?.id}/sharepings`,
-    fetcher
-  );
+  const { data: Sharepings } = useSWR<IMyPings[]>(`/users/${session?.id}/sharepings`, fetcher);
 
-  const { data: UserSharepings } = useSWR<IMyPings[]>(
-    userId ? `/users/${userId}/sharepings` : null,
-    fetcher
-  );
+  const { data: UserSharepings } = useSWR<IMyPings[]>(userId ? `/users/${userId}/sharepings` : null, fetcher);
 
   const onFetchMypings = useCallback((mypingsId: number) => {
-    const { data, mutate } = useSWR<IMyPings[]>(
-      `/mypings/${mypingsId}`,
-      fetcher
-    );
+    const { data, mutate } = useSWR<IMyPings[]>(`/mypings/${mypingsId}`, fetcher);
     return { data, mutate };
   }, []);
 
   const onFetchMypingsPosts = useCallback((mypingsId: number) => {
-    const { data, mutate } = useSWR<IPost[]>(
-      `/mypings/${mypingsId}/posts`,
-      fetcher
-    );
+    const { data, mutate } = useSWR<IPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
     return { data, mutate };
   }, []);
 
@@ -59,7 +47,7 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
         mutateMypings();
       });
     },
-    []
+    [],
   );
 
   const onDelete = useCallback(
@@ -69,7 +57,7 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
         mutateMypings();
       });
     },
-    []
+    [],
   );
 
   return (
@@ -89,6 +77,5 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
   );
 };
 
-export const useProfileMypings = (): IContext =>
-  useContext(ProfileMypingsContext);
+export const useProfileMypings = (): IContext => useContext(ProfileMypingsContext);
 export default ProfileMypingsProvider;

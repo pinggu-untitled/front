@@ -23,7 +23,7 @@ const ProfilePostsProvider = ({ children }: IProvider) => {
         mutate();
       });
     },
-    []
+    [],
   );
 
   const onDelete = useCallback(
@@ -33,7 +33,7 @@ const ProfilePostsProvider = ({ children }: IProvider) => {
         mutate();
       });
     },
-    []
+    [],
   );
 
   return <ProfilePostsContext.Provider value={{ Posts, onEdit, onDelete }}>{children}</ProfilePostsContext.Provider>;
