@@ -1,4 +1,8 @@
-import { ActionButton, ActionList, Header } from '@components/headers/PageMainHeader/style';
+import {
+  ActionButton,
+  ActionList,
+  Header,
+} from '@components/headers/PageMainHeader/style';
 import { FiGrid, FiLogIn } from 'react-icons/fi';
 import { TbBell } from 'react-icons/tb';
 import { RiUser3Line } from 'react-icons/ri';
@@ -22,14 +26,33 @@ const PageHeader = ({ pageName }: IProps) => {
   const navigate = useNavigate();
   const { session } = useSession();
   const [showModals, toggleModals] = useReducer(
-    (prev: IModals, modalName: string) => ({ ...prev, [modalName]: !prev[modalName] }),
+    (prev: IModals, modalName: string) => ({
+      ...prev,
+      [modalName]: !prev[modalName],
+    }),
     { menu: false }
   );
   const items: IMenuItem[] = [
-    { icon: <BiPencil />, title: '게시물 만들기', onClick: () => navigate('/posts/new') },
-    { icon: <MdOutlineBookmarkAdd />, title: '마이핑스 만들기', onClick: () => navigate('/mypings/new') },
-    { icon: <RiUser3Line />, title: '프로필 수정하기', onClick: () => navigate(`/${session?.loginUser?.id}`) },
-    { icon: <FiLogIn />, title: '로그아웃', href: 'http://localhost:8080/auth/logout' },
+    {
+      icon: <BiPencil />,
+      title: '게시물 만들기',
+      onClick: () => navigate('/posts/new'),
+    },
+    {
+      icon: <MdOutlineBookmarkAdd />,
+      title: '마이핑스 만들기',
+      onClick: () => navigate('/mypings/new'),
+    },
+    {
+      icon: <RiUser3Line />,
+      title: '프로필 수정하기',
+      onClick: () => navigate(`/${session?.id}/edit`),
+    },
+    {
+      icon: <FiLogIn />,
+      title: '로그아웃',
+      href: 'http://localhost:8080/auth/logout',
+    },
   ];
 
   return (

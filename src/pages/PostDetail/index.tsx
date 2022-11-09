@@ -13,11 +13,11 @@ import {
   ImagesContainer,
   PostImage,
   TextZone,
+  More,
 } from '@components/PostDetail/style';
 import mediaPath from '@utils/mediaPath';
 import { IImage, IPost } from '@typings/db';
 import { TotalCount } from '@components/Home/PostCard/style';
-import More from '@pages/More';
 import regexifyContent from '@utils/regexifyContent';
 import CommentPool from '@components/PostDetail/CommentPool';
 import readable from '@utils/readable';
@@ -113,8 +113,14 @@ const PostDetail = () => {
             )}
             {Post?.Images.length === 2 &&
               Post?.Images.slice(0, 2).map((data: IImage) => (
-                <PostImage key={data.id}>
-                  <img src={mediaPath(data.src)} alt={`${data.id}`} />
+                <PostImage
+                  key={data.id}
+                  style={{ width: '100%', height: '100%', borderRadius: 0 }}
+                >
+                  <img
+                    src={`http://localhost:8080/uploads/${data.src}`}
+                    alt={`${data.id}`}
+                  />
                 </PostImage>
               ))}
             {Post?.Images.length >= 3 && (
@@ -135,6 +141,7 @@ const PostDetail = () => {
                       <div className='button'>
                         {Post?.Images.length - 2}개 더보기
                       </div>
+                      //{' '}
                     </More>
                   );
                 })}

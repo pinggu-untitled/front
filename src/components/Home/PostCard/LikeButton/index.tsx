@@ -13,14 +13,24 @@ interface IProps {
 
 const LikeButton = ({ data, style }: IProps) => {
   const { session } = useSession();
-  const [like, toggleLike] = useReducer((prev: boolean, cur: boolean) => cur, false);
+  const [like, toggleLike] = useReducer(
+    (prev: boolean, cur: boolean) => cur,
+    false
+  );
 
   useEffect(() => {
     toggleLike(isIdExisting(data?.Likers, session));
   }, [data]);
 
   return (
-    <Button onClick={toggleMutator(like ? 'inactive' : 'active', `/posts/${data.id}/liked`, toggleLike)} style={style}>
+    <Button
+      onClick={toggleMutator(
+        like ? 'inactive' : 'active',
+        `/posts/${data?.id}/liked`,
+        toggleLike
+      )}
+      style={style}
+    >
       {like ? <IoHeart style={{ color: '#f5533d' }} /> : <IoHeartOutline />}
     </Button>
   );
