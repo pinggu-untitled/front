@@ -43,7 +43,13 @@ const PostCard = ({ data }: IProps) => {
           <span className={'created-at'}>{data.created_at}</span>
           {!mypingsId && (
             <ProfileAvatar
-              style={{ position: 'absolute', bottom: '4px', right: 0, width: '34px', height: '34px' }}
+              style={{
+                position: 'absolute',
+                bottom: '4px',
+                right: 0,
+                width: '34px',
+                height: '34px',
+              }}
               onClick={onProfile}
             >
               <img src={mediaPath(data.User.profile_image_url)} />

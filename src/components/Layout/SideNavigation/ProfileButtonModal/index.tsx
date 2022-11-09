@@ -14,7 +14,11 @@ const ProfileButtonModal = () => {
   const { session, setSession } = useSession();
   const [show, toggleShow] = useReducer((prev) => !prev, false);
   const items: IMenuItem[] = [
-    { icon: <RiUser3Line />, title: '마이페이지', onClick: () => navigate(`/${session?.id}`) },
+    {
+      icon: <RiUser3Line />,
+      title: '마이페이지',
+      onClick: () => navigate(`/${session?.id}`),
+    },
     {
       icon: <FiLogIn />,
       title: '로그아웃',
