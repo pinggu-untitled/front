@@ -6,7 +6,7 @@ import { BiEditAlt, BiLinkAlt } from 'react-icons/bi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { useSession } from '@contexts/SessionContext';
 import ImagesZoomModal from '@components/PostDetail/ImageZoomModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { ImagesContainer, PostImage, TextZone, More } from '@components/PostDetail/style';
@@ -18,9 +18,11 @@ import CommentPool from '@components/PostDetail/CommentPool';
 import readable from '@utils/readable';
 import PreviewSection from '@components/PostDetail/PreviewSection';
 import PreviewCard from '@components/PostDetail/PreviewSection/PreviewCard';
+import { useMap } from '@contexts/MapContext';
 
 const PostDetail = () => {
   const navigate = useNavigate();
+  const { moveCenterToPost } = useMap();
   const { postId } = useParams<{ postId: string }>();
   const { data: Post } = useSWR(`/posts/${postId}`, fetcher);
   const { data: Posts } = useSWR(`/users/${Post?.User.id}/posts`, fetcher);
@@ -65,6 +67,12 @@ const PostDetail = () => {
     const len = data.length;
     return len % 2 === 0 ? data : data.slice(0, len - 1);
   };
+
+  useEffect(() => {
+    if (Post) {
+      moveCenterToPost(Number(Post.latitude), Number(Post.longitude));
+    }
+  }, [Post]);
 
   return (
     <>

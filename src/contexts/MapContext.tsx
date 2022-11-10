@@ -7,8 +7,6 @@ import debounce from '@utils/debounce';
 const { kakao } = window;
 
 interface IMapContext {
-  map: kakao.maps.Map | null;
-  myMarker: kakao.maps.Marker | null;
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
   moveCenterToMe: () => void;
   moveCenterToPost: (latitude: number, longitude: number) => void;
@@ -20,8 +18,6 @@ let myMarker: kakao.maps.Marker | null;
 let postMarker: kakao.maps.Marker | null;
 
 const MapContext = createContext<IMapContext>({
-  map: null,
-  myMarker: null,
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
   moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
@@ -30,7 +26,7 @@ const MapContext = createContext<IMapContext>({
 
 export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  const { postId } = useParams();
+  // const { postId } = useParams();
   const [myPosition, setMyPosition] = useState({ latitude: '', longitude: '' });
   const [postPosition, setPostPosition] = useState({
     latitude: '',
@@ -212,8 +208,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <MapContext.Provider
       value={{
-        map,
-        myMarker,
         initializeMap,
         moveCenterToMe,
         moveCenterToPost,
