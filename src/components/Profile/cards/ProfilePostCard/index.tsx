@@ -28,12 +28,13 @@ const ProfilePostCard = ({ data }: IProps) => {
   const transformFn = useCallback(
     (data: IUserPost) => {
       const copy = { ...data };
-      copy.Likers = data.Likers.map((user: any) => user.User);
+      copy.Likers = data?.Likers?.map((user: any) => user.User);
       return copy;
     },
     [data],
   );
 
+  if (!data) return <div>로딩중...</div>;
   return (
     <Card onClick={onPost}>
       <Inner>
@@ -43,7 +44,7 @@ const ProfilePostCard = ({ data }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
+              <img src={mediaPath(data?.Images[0].src)} />
             </>
           ) : (
             <NoMedia>
@@ -52,9 +53,9 @@ const ProfilePostCard = ({ data }: IProps) => {
           )}
         </PostImage>
         <Info>
-          <h3>{data.title}</h3>
-          <span className={'created-at'}>{data.created_at}</span>
-          {session?.id !== Number(data.User.id) && (
+          <h3>{data?.title}</h3>
+          <span className={'created-at'}>{data?.created_at}</span>
+          {session?.id !== Number(data?.User.id) && (
             <ProfileAvatar
               onClick={onProfile}
               style={{
@@ -65,14 +66,14 @@ const ProfilePostCard = ({ data }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath(data.User.profile_image_url)} />
+              <img src={mediaPath(data?.User.profile_image_url)} />
             </ProfileAvatar>
           )}
           <LikeButton data={transformFn(data)} style={{ position: 'absolute', top: '4px', right: 0 }} />
         </Info>
       </Inner>
       {session?.id === Number(userId) && (
-        <OwnerActionButtons editPageUrl={`/posts/${data.id}/edit`} onDelete={onDelete(data.id)} />
+        <OwnerActionButtons editPageUrl={`/posts/${data?.id}/edit`} onDelete={onDelete(data.id)} />
       )}
     </Card>
   );

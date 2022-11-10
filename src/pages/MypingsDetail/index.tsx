@@ -26,7 +26,7 @@ const MypingsDetail = () => {
     {
       icon: <BiEditAlt />,
       title: '마이핑스 수정하기',
-      onClick: () => navigate(`mypings/${mypingsId}/edit`),
+      onClick: () => navigate(`edit`),
     },
   ];
   const readOnlyItems: IMenuItem[] = [
@@ -67,7 +67,7 @@ const MypingsDetail = () => {
             <EmptyMessage message={`아직 ${Mypings?.User.nickname}님이 공유한 게시물이 없어요.`} />
           ) : (
             <CardList>
-              {readable(session?.id, MypingsPosts)?.map((Post) => (
+              {readable(session, MypingsPosts)?.map((Post) => (
                 // <PostCard key={Post.id} data={Post} />
                 <ProfilePostCard key={Post.id} data={Post} />
               ))}
