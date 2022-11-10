@@ -41,7 +41,7 @@ export const makeMentions = (data: string) =>
   });
 
 const PostNew = () => {
-  const { getMyPosition } = useMap();
+  const { getMyPosition, moveCenterToMe } = useMap();
   const { latitude, longitude } = getMyPosition();
   const navigator = useNavigate();
   const { session } = useSession();
@@ -70,6 +70,7 @@ const PostNew = () => {
 
   const toggleShowPreview = () => setShowPreview((p) => !p);
   const toggleOption = (option: string) => {
+    if (option === 'showSearchLocation') moveCenterToMe();
     setShowOptions((p) => ({ ...p, [option]: !p[option] }));
   };
 
@@ -128,7 +129,7 @@ const PostNew = () => {
                 onClick={() => toggleOption('showImages')}
               />
             </HoverLabel>
-            <HoverLabel label={'위치'} style={{ top: '-35px' }}>
+            <HoverLabel label={'내 위치로'} style={{ top: '-35px' }}>
               <ToolButton
                 icon={<HiLocationMarker />}
                 colors={{
