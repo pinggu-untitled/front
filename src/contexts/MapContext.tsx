@@ -177,6 +177,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     if (map && myMarker) {
       const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
         setMapCenter(latitude, longitude, myMarker);
+        setMyPosition((prev) => ({ latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) }));
       };
       const onError = (error: any) => {
         console.error(error);
