@@ -6,6 +6,7 @@ export const showPostInfo = (
   userImg: string,
   nickname: string,
 ) => {
+  console.log('postImg >>> ', postImg);
   return `
   <div style="position: relative;">
     <div classname="box" style='width: 400px; height: 150px; display: flex; padding: 5px; border-radius: 3px; background-color: rgba(0,0,0, 0.7); padding: 2px 12px 2px 12px;'>
@@ -21,7 +22,7 @@ export const showPostInfo = (
         </div>
       </div>
       <div classname="img-box"; style="display: flex; align-items: center; margin-left: 15px;">
-        <img src="joyking.jpeg" alt='testimg' style="width: 120px; height: 120px; border-radius: 5px;" />
+        <img src="http://localhost:8080/uploads/${postImg}" alt="post-image" style="width: 120px; height: 120px; border-radius: 5px;" />
       </div>
     </div>
     <div style="width: 400px; height: 30px; position: relative; overflow: hidden;">
