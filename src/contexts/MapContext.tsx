@@ -7,8 +7,6 @@ import debounce from '@utils/debounce';
 const { kakao } = window;
 
 interface IMapContext {
-  map: kakao.maps.Map | null;
-  myMarker: kakao.maps.Marker | null;
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => void;
   moveCenterToMe: () => void;
   moveCenterToPost: (latitude: number, longitude: number) => void;
@@ -20,8 +18,6 @@ let myMarker: kakao.maps.Marker | null;
 let postMarker: kakao.maps.Marker | null;
 
 const MapContext = createContext<IMapContext>({
-  map: null,
-  myMarker: null,
   initializeMap: (container: HTMLElement, latitude: number, longitude: number) => {},
   moveCenterToMe: () => {},
   moveCenterToPost: (latitude: number, longitude: number) => {},
@@ -30,7 +26,7 @@ const MapContext = createContext<IMapContext>({
 
 export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  const { postId } = useParams();
+  // const { postId } = useParams();
   const [myPosition, setMyPosition] = useState({ latitude: '', longitude: '' });
   const [postPosition, setPostPosition] = useState({
     latitude: '',
@@ -50,7 +46,10 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     post: IPost,
     markPosition: kakao.maps.LatLng,
   ) => {
-    const infoPosition = new kakao.maps.LatLng((markPosition.getLat() + 0.001).toFixed(6), markPosition.getLng());
+    const infoPosition = new kakao.maps.LatLng(
+      Number((markPosition.getLat() + 0.001).toFixed(6)),
+      markPosition.getLng(),
+    );
     const content = showPostInfo(
       post.title,
       post.Images[0]?.src,
@@ -59,14 +58,15 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
       post.User.profile_image_url,
       post.User.nickname,
     );
-    const overlay = new kakao.maps.CustomOverlay({
-      content,
-      map,
-      position: infoPosition,
-    });
-    overlay.setMap(map);
-
-    subMarker.addListener('mouseout', () => overlay.setMap(null));
+    if (map) {
+      const overlay = new kakao.maps.CustomOverlay({
+        content,
+        map,
+        position: infoPosition,
+      });
+      overlay.setMap(map);
+      subMarker.addListener('mouseout', () => overlay.setMap(null));
+    }
   };
 
   // /* event handler - 지도 이동 시 지도 범위 내에 등록된 포스트 목록 조회 후 마커로 표시 */
@@ -83,15 +83,17 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
         posts.forEach((post: IPost) => {
           const position = new kakao.maps.LatLng(Number(post.latitude), Number(post.longitude));
-          const subMarker = new kakao.maps.Marker({
-            map,
-            position,
-            image: markerImage,
-          });
-          // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
-          subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
-          // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
-          subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+          if (map) {
+            const subMarker = new kakao.maps.Marker({
+              map,
+              position,
+              image: markerImage,
+            });
+            // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
+            subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
+            // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
+            subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+          }
         });
       })
       .catch((err) => console.error(err));
@@ -181,6 +183,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     if (map && myMarker) {
       const onSuccess = ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
         setMapCenter(latitude, longitude, myMarker);
+        setMyPosition((prev) => ({ latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) }));
       };
       const onError = (error: any) => {
         console.error(error);
@@ -212,8 +215,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <MapContext.Provider
       value={{
-        map,
-        myMarker,
         initializeMap,
         moveCenterToMe,
         moveCenterToPost,

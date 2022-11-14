@@ -8,7 +8,7 @@ export const showPostInfo = (
 ) => {
   return `
   <div style="position: relative;">
-    <div classname="box" style='width: 400px; height: 150px; display: flex; padding: 5px; border-radius: 3px; background-color: rgba(0,0,0, 0.7); padding: 2px 12px 2px 12px;'>
+    <div classname="box" style='width: 410px; height: 150px; display: flex; padding: 5px; border-radius: 3px; background-color: rgba(0,0,0, 0.7); padding: 2px 12px 2px 12px;'>
       <div classname="tcn" style='display: flex; flex-direction: column; flex: 1;'>
         <h3 style="margin: 0; height: 25%; color: white; line-height: 55px; width: 250px;">${title}</h3>
         <p style="margin: 0; flex: 1; color: white; font-size: 0.8em; padding-top: 10px; width: 250px; white-space: normal">${content}</p>
@@ -21,7 +21,9 @@ export const showPostInfo = (
         </div>
       </div>
       <div classname="img-box"; style="display: flex; align-items: center; margin-left: 15px;">
-        <img src="joyking.jpeg" alt='testimg' style="width: 120px; height: 120px; border-radius: 5px;" />
+        <img src="http://localhost:8080/${
+          postImg ? 'uploads/' + postImg : 'default-images/default-post-image.png'
+        }" alt="post-image" style="width: 120px; height: 120px; border-radius: 5px;" />
       </div>
     </div>
     <div style="width: 400px; height: 30px; position: relative; overflow: hidden;">
