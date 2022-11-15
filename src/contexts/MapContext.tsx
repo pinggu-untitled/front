@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
 import { showPostInfo } from '@utils/showPostInfo';
@@ -26,7 +26,6 @@ const MapContext = createContext<IMapContext>({
 
 export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  // const { postId } = useParams();
   const [myPosition, setMyPosition] = useState({ latitude: '', longitude: '' });
   const [postPosition, setPostPosition] = useState({
     latitude: '',
@@ -149,22 +148,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
     myMarker?.addListener('click', () => {
       navigate('/posts/new');
-      // console.log(myMarker?.getPosition());
-      // // 게시물 작성 모달
-      // const content = `
-      //       <div style='background-color: black; color: white;'>
-      //         <ul>
-      //           <li>이것은 테스트</li>
-      //           <li>안녕하시오.</li>
-      //           <li>안녕하가시오.</li>
-      //         </ul>
-      //       </div>
-      //     `;
-      // const overlay = new kakao.maps.CustomOverlay({
-      //   position: myMarker?.getPosition(),
-      //   content,
-      // });
-      // overlay.setMap(map);
     });
   }, []);
 
