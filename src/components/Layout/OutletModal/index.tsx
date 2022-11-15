@@ -1,4 +1,4 @@
-import { ReactNode, useReducer } from 'react';
+import { ReactNode, useEffect, useReducer, useRef } from 'react';
 import { OutletZone, Slider } from './style';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import ProfileMypingsProvider from '@contexts/ProfileMypingsContext';

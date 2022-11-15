@@ -22,7 +22,7 @@ const ProfileSummary = () => {
   return (
     <Summary>
       <ProfileAvatar style={{ width: '120px', height: '120px' }}>
-        <img src={mediaPath(User?.profile_image_url)} alt={User?.nickname} />
+        <img src={mediaPath('profile', User?.profile_image_url)} alt={User?.nickname} />
       </ProfileAvatar>
       <Info>
         <h2>{User?.nickname}</h2>

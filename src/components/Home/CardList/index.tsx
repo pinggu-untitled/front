@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
 import { List } from '@components/Home/CardList/style';
 
-const CardList = ({ children }: { children: ReactNode }) => {
+interface IProps {
+  children: ReactNode;
+  setSize?: (index: number) => void;
+}
+const CardList = ({ children, setSize }: IProps) => {
   return <List>{children}</List>;
 };
 

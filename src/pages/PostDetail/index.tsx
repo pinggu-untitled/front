@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { ImagesContainer, PostImage, TextZone, More } from '@components/PostDetail/style';
-import mediaPath from '@utils/mediaPath';
 import { IImage, IPost } from '@typings/db';
 import { TotalCount } from '@components/Home/PostCard/style';
 import regexifyContent from '@utils/regexifyContent';
@@ -19,6 +18,8 @@ import readable from '@utils/readable';
 import PreviewSection from '@components/PostDetail/PreviewSection';
 import PreviewCard from '@components/PostDetail/PreviewSection/PreviewCard';
 import { useMap } from '@contexts/MapContext';
+import mediaPath from '@utils/mediaPath';
+import timeForToday from '@utils/timeForToday';
 
 const PostDetail = () => {
   const navigate = useNavigate();
@@ -107,15 +108,17 @@ const PostDetail = () => {
                   border: 'none',
                 }}
               >
-                <img src={mediaPath(Post?.Images[0].src)} alt={Post?.Images[0].id} />
+                <img src={mediaPath('post', Post?.Images[0].src)} alt={Post?.Images[0].id} />
               </PostImage>
             )}
             {Post?.Images.length === 2 &&
-              Post?.Images.slice(0, 2).map((data: IImage) => (
-                <PostImage key={data.id} style={{ width: '100%', height: '100%', borderRadius: 0 }}>
-                  <img src={`http://localhost:8080/uploads/${data.src}`} alt={`${data.id}`} />
-                </PostImage>
-              ))}
+              Post?.Images.slice(0, 2).map((data: IImage) => {
+                return (
+                  <PostImage key={data.id} style={{ width: '100%', height: '100%', borderRadius: 0 }}>
+                    <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
+                  </PostImage>
+                );
+              })}
             {Post?.Images.length >= 3 && (
               <>
                 <TotalCount>
@@ -124,15 +127,14 @@ const PostDetail = () => {
                 {Post?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
                     <PostImage key={data.id} style={postImageStyle}>
-                      <img src={mediaPath(data.src)} alt={`${data.id}`} />
+                      <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                     </PostImage>
                   ) : (
                     <More>
                       <PostImage key={data.id} style={postImageStyle}>
-                        <img src={mediaPath(data.src)} alt={`${data.id}`} />
+                        <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                       </PostImage>
                       <div className="button">{Post?.Images.length - 2}개 더보기</div>
-                      //{' '}
                     </More>
                   );
                 })}
@@ -140,34 +142,11 @@ const PostDetail = () => {
             )}
           </ImagesContainer>
         )}
-        {/*{Post?.User && <ProfileSummaryBar profile={Post?.User} />}*/}
-        {/*<TapList count={3}>*/}
-        {/*  <HoverLabel label={'좋아요'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<AiOutlineLike />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*  <HoverLabel label={'위치'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<HiOutlineLocationMarker />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId/mypings'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*  <HoverLabel label={'댓글'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<BiCommentDetail />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId/friends'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*</TapList>*/}
+
         <TextZone>
           <h3 className={'title'}>{Post?.title}</h3>
-          <div className={'mypings'}>
-            <span>{Post?.created_at}</span>
+          <div className={'created-at'}>
+            <span>{timeForToday(Date.parse(Post?.created_at))}</span>
           </div>
           <p className={'content'}>{regexifyContent(Post?.content)}</p>
           <p className={'meta'}>조회수 {Post?.hits}</p>

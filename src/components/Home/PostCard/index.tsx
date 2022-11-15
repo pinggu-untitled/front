@@ -6,6 +6,7 @@ import { HiOutlineCamera } from 'react-icons/hi';
 import { memo } from 'react';
 import LikeButton from './LikeButton';
 import mediaPath from '@utils/mediaPath';
+import timeForToday from '@utils/timeForToday';
 
 interface IProps {
   data: IPost | IUserPost;
@@ -20,7 +21,6 @@ const PostCard = ({ data }: IProps) => {
     navigate(`/${data.User.id}`);
   };
 
-  // const mut = (data) =>
   return (
     <Card onClick={onPost}>
       <Inner>
@@ -40,7 +40,7 @@ const PostCard = ({ data }: IProps) => {
         </PostImage>
         <Info>
           <h3>{data.title}</h3>
-          <span className={'created-at'}>{data.created_at}</span>
+          <span className={'created-at'}>{timeForToday(Date.parse(data.created_at))}</span>
           {!mypingsId && (
             <ProfileAvatar
               style={{
@@ -52,7 +52,7 @@ const PostCard = ({ data }: IProps) => {
               }}
               onClick={onProfile}
             >
-              <img src={mediaPath(data.User.profile_image_url)} />
+              <img src={mediaPath('profile', data?.User.profile_image_url)} />
             </ProfileAvatar>
           )}
           <LikeButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />

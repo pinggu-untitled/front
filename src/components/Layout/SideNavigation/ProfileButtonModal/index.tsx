@@ -30,7 +30,7 @@ const ProfileButtonModal = () => {
   return (
     <>
       <ProfileAvatar onClick={toggleShow}>
-        <img src={mediaPath(session?.profile_image_url)} alt={session?.nickname} />
+        <img src={mediaPath('profile', session?.profile_image_url)} alt={session?.nickname} />
       </ProfileAvatar>
       <Modal size={'full'} show={show} onCloseModal={toggleShow}>
         <MenuList items={items} onClick={toggleShow} style={{ bottom: '20px', left: '66px' }} />

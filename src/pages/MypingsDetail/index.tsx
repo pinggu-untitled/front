@@ -26,7 +26,7 @@ const MypingsDetail = () => {
     {
       icon: <BiEditAlt />,
       title: '마이핑스 수정하기',
-      onClick: () => navigate(`mypings/${mypingsId}/edit`),
+      onClick: () => navigate(`edit`),
     },
   ];
   const readOnlyItems: IMenuItem[] = [
