@@ -27,7 +27,7 @@ export const showPostInfo = (
       </div>
     </div>
     <div style="width: 400px; height: 30px; position: relative; overflow: hidden;">
-      <div style="width: 40px; height: 40px; background-color: rgba(0,0,0, 0.7); position: absolute; transform: rotate(45deg); top: -28px; left: 181px;"></div>
+      <div style="width: 40px; height: 40px; background-color: rgba(0,0,0, 0.7); position: absolute; transform: rotate(45deg); top: -28px; left: 185px;"></div>
     </div>
   </div>
   `;

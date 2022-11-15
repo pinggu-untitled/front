@@ -1,7 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useMap } from '@contexts/MapContext';
 
 const Map = () => {
+  const { pathname: tab, search } = useLocation();
   const { initializeMap } = useMap();
 
   /* 현재 위치를 지도의 중심 좌표로 설정 */
@@ -9,10 +11,14 @@ const Map = () => {
     ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
       const container = document.getElementById('myMap');
       if (initializeMap && container) {
-        initializeMap(container, latitude, longitude);
+        const [filter, keyword] = decodeURI(search)
+          .match(/((?<=filter=)\w+)|((?<=keyword=).+)/gi)
+          ?.toString()
+          .split(',') || ['', ''];
+        initializeMap(container, latitude, longitude, tab, filter, keyword);
       }
     },
-    [],
+    [tab, search],
   );
 
   /* 현재 위치를 가져오지 못한 경우 */
@@ -24,7 +30,7 @@ const Map = () => {
   /* geolocation을 이용해 현재 위치를 얻음 */
   useEffect(() => {
     navigator?.geolocation.getCurrentPosition(onSuccess, onError);
-  }, []);
+  }, [tab, search]);
 
   return (
     <div
