@@ -77,7 +77,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     // console.log(swLat, swLng, neLat, neLng);
     fetcher(`/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`)
       .then((posts) => {
-        console.log(posts);
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
         const imageSize = new kakao.maps.Size(20, 32);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);

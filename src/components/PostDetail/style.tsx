@@ -48,14 +48,10 @@ export const TextZone = styled.div`
     font-size: 22px;
   }
 
-  & .mypings {
+  & .created-at {
     font-size: 14px;
     margin-top: 10px;
     color: gray;
-
-    > span:first-of-type {
-      text-decoration: underline;
-    }
   }
 
   & .content {

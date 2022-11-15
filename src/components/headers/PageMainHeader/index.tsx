@@ -11,6 +11,7 @@ import { BiPencil } from 'react-icons/bi';
 import { MdOutlineBookmarkAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@contexts/SessionContext';
+import SearchModal from '@components/Layout/SideNavigation/SearchModal';
 
 interface IProps {
   pageName: string;
@@ -55,7 +56,7 @@ const PageHeader = ({ pageName }: IProps) => {
     <Header>
       <h2>{pageName}</h2>
       <ActionList>
-        <ActionButton>
+        <ActionButton onClick={() => toggleModals('search')}>
           <IoSearch />
         </ActionButton>
         <ActionButton onClick={() => toggleModals('menu')}>
@@ -68,6 +69,7 @@ const PageHeader = ({ pageName }: IProps) => {
           <MenuList items={items} style={{ top: '58px', left: '340px' }} />
         </Modal>
       </ActionList>
+      <SearchModal show={showModals.search} onCloseModal={() => toggleModals('search')} />
     </Header>
   );
 };

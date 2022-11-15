@@ -28,7 +28,6 @@ const SessionProvider = ({ children }: IProvider) => {
   const { data: session } = useSWR<IMe>('/users/me', (url: string) => axios.get(url).then((res) => res.data || null));
 
   useEffect(() => {
-    console.log('sessoin', session);
     if (session === null) navigate('/login');
   }, [session]);
 

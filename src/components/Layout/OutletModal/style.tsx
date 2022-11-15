@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 
 export const OutletZone = styled.div<{ isActive: boolean }>`
-  position: fixed;
+  position: absolute;
+  min-height: 100vh;
   top: 0;
   bottom: 0;
   left: 73px;

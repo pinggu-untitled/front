@@ -62,7 +62,7 @@ const ProfileImageInput = ({ control, name }: IProps) => {
 
   const handlePreview = (files: any) => {
     if (typeof files === 'string') {
-      setPreview(mediaPath(files));
+      setPreview(mediaPath('profile', files));
     } else {
       imagePreviewPromisfier(files).then((res) => setPreview(res[0]));
     }

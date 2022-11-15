@@ -1,4 +1,4 @@
-import { memo, useReducer } from 'react';
+import { memo, useEffect, useReducer } from 'react';
 import { Outlet } from 'react-router-dom';
 import { PageBase } from '@pages/Login/style';
 import SideNavigation from '@components/Layout/SideNavigation';
