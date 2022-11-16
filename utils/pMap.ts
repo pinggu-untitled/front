@@ -26,5 +26,3 @@ export const setMapCenter = (lat: number, lng: number) => {
   const latLng = new kakao.maps.LatLng(lat, lng);
   map.setCenter(latLng);
 };
-
-
