@@ -132,6 +132,8 @@ const Explore = () => {
     searchParams.set('filter', CATE[0].value);
   }, []);
 
+  console.log(results);
+
   return (
     <>
       <Header>

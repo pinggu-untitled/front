@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMap } from '@contexts/MapContext';
+import debounce from '@utils/debounce';
 
 const Map = () => {
   const { pathname: tab, search } = useLocation();
@@ -35,10 +36,12 @@ const Map = () => {
     if (!position) {
       navigator?.geolocation.getCurrentPosition(onSuccess, onError);
     } else {
-      if (!tab.includes('posts/')) {
-        const [latitude, longitude]: string[] = position.split(',');
-        onSuccess({ coords: { latitude: Number(latitude), longitude: Number(longitude) } });
-      }
+      // if (!tab.includes('posts')) {
+      //   const [latitude, longitude]: string[] = position.split(',');
+      //   onSuccess({ coords: { latitude: Number(latitude), longitude: Number(longitude) } });
+      // }
+      const [latitude, longitude]: string[] = position.split(',');
+      onSuccess({ coords: { latitude: Number(latitude), longitude: Number(longitude) } });
     }
   }, [tab, search]);
 
