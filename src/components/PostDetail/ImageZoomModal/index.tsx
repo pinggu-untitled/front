@@ -37,7 +37,7 @@ export const CloseButton = styled.div`
   right: 50px;
   font-size: 60px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 4000;
 
   &:active {
     color: lightgray;

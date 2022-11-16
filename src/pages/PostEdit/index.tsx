@@ -1,7 +1,6 @@
 import { PageMain } from '@pages/Home/style';
 import PageTitleHeader from '@components/headers/PageTitleHeader';
-import Input from '@components/PostNew/Input';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import IsPrivateInput from '@components/PostNew/IsPrivateInput';
 import { FixedBottom, Form, SubmitButton } from '@pages/MypingsNew/style';
 import { useSession } from '@contexts/SessionContext';
@@ -27,13 +26,7 @@ const PostEdit = () => {
   const { postId } = useParams<{ postId: string }>();
   const { data: Post } = useSWR(`/posts/${postId}`, fetcher);
   const { session } = useSession();
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<IPostForm>({
+  const { control, handleSubmit, watch, setValue } = useForm<IPostForm>({
     defaultValues: {
       title: '',
       content: '',

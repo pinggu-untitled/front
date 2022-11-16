@@ -9,8 +9,8 @@ import axios from 'axios';
 type Post = IPost | null;
 interface IContext {
   Post: Post;
-  onFetch: (postId: number) => () => any;
-  onEdit: (postId: number) => () => void;
+  // onFetch: (postId: number) => () => any;
+  // onEdit: (postId: number) => () => void;
   onDelete: (postId: number) => () => void;
 }
 
@@ -22,15 +22,15 @@ const PostProvider = ({ children }: IProvider) => {
   //   return { data, mutate };
   // };
 
-  const onEdit = useCallback(
-    (postId: number) => () => {
-      axios.patch(`/posts/${postId}`).then((res) => {
-        console.log(res.data);
-        // mutate();
-      });
-    },
-    [],
-  );
+  // const onEdit = useCallback(
+  //   (postId: number) => () => {
+  //     axios.patch(`/posts/${postId}`).then((res) => {
+  //       console.log(res.data);
+  //       // mutate();
+  //     });
+  //   },
+  //   [],
+  // );
 
   const onDelete = useCallback(
     (postId: number) => () => {
@@ -42,7 +42,7 @@ const PostProvider = ({ children }: IProvider) => {
     [],
   );
 
-  return <PostContext.Provider value={{ onEdit, onDelete }}>{children}</PostContext.Provider>;
+  return <PostContext.Provider value={{ onDelete }}>{children}</PostContext.Provider>;
 };
 
 export const usePost = (): IContext => useContext(PostContext);

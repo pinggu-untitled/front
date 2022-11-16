@@ -122,9 +122,6 @@ const PostDetail = () => {
                 {Post?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
                     <PostImage key={data.id} style={postImageStyle}>
-                      <TotalCount>
-                        <span className={'current'}>2</span> / {Post?.Images?.length}
-                      </TotalCount>
                       <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                     </PostImage>
                   ) : (
@@ -162,7 +159,7 @@ const PostDetail = () => {
                 displayEven,
               )(Posts)
                 .slice(0, 6)
-                ?.map((post, i) => <PreviewCard key={i} post={post} />)}
+                ?.map((post, i) => <PreviewCard key={post.id} post={post} />)}
           </PreviewSection>
         )}
       </PageMain>
