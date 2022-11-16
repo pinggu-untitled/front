@@ -45,7 +45,7 @@ const ProfilePostCard = ({ data }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={mediaPath('profile', data?.Images[0].src)} alt={data.User.nickname} />
+              <img src={mediaPath('post', data?.Images[0].src)} alt={data.User.nickname} />
             </>
           ) : (
             <NoMedia>

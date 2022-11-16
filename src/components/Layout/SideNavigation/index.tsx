@@ -6,16 +6,27 @@ import NavItem from '@components/Layout/SideNavigation/NavItem';
 import { useSession } from '@contexts/SessionContext';
 import ProfileButtonModal from '@components/Layout/SideNavigation/ProfileButtonModal';
 import { FaRegUser, FaUser } from 'react-icons/fa';
-// import { useMap } from '@contexts/MapContext';
+import styled from '@emotion/styled';
 
+const Logo = styled.div`
+  width: 50px;
+  height: 50px;
+  margin: 10px auto;
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+`;
 const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void }) => {
   const { session } = useSession();
-  // const { moveCenterToMe } = useMap();
 
   return (
     <Side onClick={!show ? toggle : undefined}>
       <NavItemList>
-        <h1>Pinggu</h1>
+        <Logo>
+          <img src={'/src/assets/logo.png'} alt={'logo'} />
+        </Logo>
         <NavItem
           icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }}
           title={'홈'}
@@ -32,6 +43,7 @@ const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void })
           url={'/explore'}
           // onClick={() => moveCenterToMe()}
         />
+
         <NavItem icons={{ outline: <RiChat3Line />, fill: <RiChat3Fill /> }} title={'채팅'} url={'/chatrooms'} />
         <NavItem
           icons={{
