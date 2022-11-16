@@ -95,6 +95,7 @@ const Explore = () => {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
+    console.log('>>>>>>>>>>', searchParams.toString());
     if (!search) return false;
     axios.get(`/results?${searchParams.toString()}`).then((res) => {
       setResults(res.data);
@@ -129,7 +130,7 @@ const Explore = () => {
 
   useEffect(() => {
     searchParams.set('filter', CATE[0].value);
-  }, [CATE]);
+  }, []);
 
   return (
     <>

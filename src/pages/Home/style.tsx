@@ -7,4 +7,5 @@ export const PageMain = styled.main`
   bottom: 0;
   left: 0;
   width: 440px;
+  /* z-index: 3000; */
 `;
