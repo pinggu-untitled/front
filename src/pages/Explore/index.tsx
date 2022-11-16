@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ActionButton } from '@components/headers/PageMainHeader/style';
 import { SlArrowLeft } from 'react-icons/sl';
 import useInput from '@hooks/useInput';
@@ -45,6 +45,7 @@ export const Form = styled.form`
     /* width: 120px; */
     font-size: 12px;
     border: none;
+    border: none;
     border-right: 1px solid #dfdfdf;
     text-align: center;
 
@@ -67,6 +68,7 @@ const Explore = () => {
   }, [value]);
 
   const selects = [
+    { title: '필터', value: 'none' },
     { title: '필터', value: 'none' },
     { title: '제목', value: 'title' },
     { title: '내용', value: 'content' },

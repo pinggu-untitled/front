@@ -40,6 +40,9 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   //   });
   // });
 
+  const KMap = kakao.maps;
+  const MapMarkEvent = KMap.event;
+
   /* event handler - subPostMarker에 hover시 인포윈도우 띄우기 */
   const getSubPostInfo = (
     subMarker: kakao.maps.Marker,
@@ -66,7 +69,8 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
         position: infoPosition,
       });
       overlay.setMap(map);
-      subMarker.addListener('mouseout', () => overlay.setMap(null));
+      // MarkEvent.addListener(subMarker, 'mouseout', () => overlay.setMap(null));
+      MapMarkEvent.addListener(subMarker, 'mouseout', () => overlay.setMap(null));
     }
   };
 
@@ -90,9 +94,9 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
               image: markerImage,
             });
             // event - 주변 포스트 마커 hover 시 인포윈도우 띄우기
-            subMarker.addListener('mouseover', () => getSubPostInfo(subMarker, map, post, position));
+            MapMarkEvent.addListener(subMarker, 'mouseover', () => getSubPostInfo(subMarker, map, post, position));
             // event - 주변 포스트 마커 클릭 시 포스트 상세 페이지로 이동
-            subMarker.addListener('click', () => navigate(`/posts/${post.id}`));
+            MapMarkEvent.addListener(subMarker, 'click', () => navigate(`/posts/${post.id}`));
           }
         });
       })
@@ -136,7 +140,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     postMarker?.setZIndex(1);
 
     // event-지도 클릭 시 내 위치 마커 이동
-    map?.addListener('click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
+    MapMarkEvent.addListener(map, 'click', ({ latLng }: { latLng: kakao.maps.LatLng }) => {
       setMyPosition((prev) => ({
         latitude: latLng.getLat().toFixed(6),
         longitude: latLng.getLng().toFixed(6),
@@ -144,10 +148,10 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
       myMarker?.setPosition(latLng);
     });
     // event-지도 이동 시 포스트 조회
-    map?.addListener('center_changed', () => dGetSubPosts(map));
+    MapMarkEvent.addListener(map, 'center_changed', () => dGetSubPosts(map));
 
     // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
-    myMarker?.addListener('click', () => {
+    MapMarkEvent.addListener(myMarker, 'click', () => {
       navigate('/posts/new');
       // console.log(myMarker?.getPosition());
       // // 게시물 작성 모달
