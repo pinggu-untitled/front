@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useReducer, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PostInputList } from '@components/PostNew/Input/style';
 import { IUserPost } from '@typings/db';
 import useSWR from 'swr';
@@ -35,21 +35,11 @@ const SelectPostsInput = ({ value, setValue }: IProps) => {
       <div className={'label'}>게시물 선택하기</div>
       <div className={'select-container'}>
         <div className={'select-button'} onClick={() => setShow((p) => !p)}>
-          마이핑스 게시물 확인하기
+          마이핑스에 넣을 게시물 확인하기
           <span className={'icon'}>{show ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</span>
         </div>
         {show && (
           <PostInputList>
-            {/*{UserPosts?.filter(*/}
-            {/*  (p) => !MypingsPosts?.map((m) => m.id)?.includes(p?.id)*/}
-            {/*)?.map((Post) => (*/}
-            {/*  <PostInput*/}
-            {/*    key={Post.id}*/}
-            {/*    data={Post}*/}
-            {/*    value={value}*/}
-            {/*    setValue={setValue}*/}
-            {/*  />*/}
-            {/*))}*/}
             {UserPosts && UserPosts.length > 0 ? (
               UserPosts?.map((Post) => <PostInput key={Post.id} data={Post} value={value} setValue={setValue} />)
             ) : (

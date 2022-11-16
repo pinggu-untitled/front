@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { IoCloseOutline } from 'react-icons/io5';
 import { IImage } from '@typings/db';
 import Modal from '@components/Modal';
+import mediaPath from '@utils/mediaPath';
 
 interface IProps {
   show: boolean;
@@ -11,7 +12,7 @@ interface IProps {
 }
 
 export const ModalContent = styled.div`
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -25,6 +26,7 @@ export const ModalContent = styled.div`
     width: 100%;
     height: auto;
     object-fit: contain;
+    background-color: #191919;
   }
 `;
 
@@ -48,9 +50,9 @@ const ImagesZoomModal: FC<IProps> = ({ show, onCloseModal, images }) => {
       <CloseButton onClick={onCloseModal}>
         <IoCloseOutline />
       </CloseButton>
-      <ModalContent>
+      <ModalContent style={{ zIndex: '1000' }}>
         {images?.map((img, i) => (
-          <img key={img.id} src={`http://localhost:8080/uploads/${img.src}`} alt={`${img.id}`} />
+          <img key={img.id} src={mediaPath('post', img.src)} alt={`${img.id}`} />
         ))}
       </ModalContent>
     </Modal>

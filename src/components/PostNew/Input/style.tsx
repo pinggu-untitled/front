@@ -40,7 +40,8 @@ export const PostInputList = styled.ul`
   border-top: 1px solid #dfdfdf;
   padding: 0 10px;
   overflow: scroll;
-  max-height: 500px;
+  max-height: 400px;
+  overflow: scroll;
 
   > label:not(:last-of-type) {
     border-bottom: 1px solid #f0f0f0;

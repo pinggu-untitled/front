@@ -1,5 +1,4 @@
 import { PageMain } from '@pages/Home/style';
-import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
 import PageTitleHeader from '@components/headers/PageTitleHeader';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@contexts/SessionContext';
@@ -28,6 +27,7 @@ export interface IPostForm {
   latitude: string;
   images: any[];
 }
+
 export const makeHashtags = (data: string) =>
   findMatches(data, /#[^\s#]+/g, (tag, i) => {
     tag.slice(1);
@@ -100,13 +100,9 @@ const PostNew = () => {
     navigator(`/${session?.id}`);
   });
 
-  const items: IMenuItem[] = [
-    // { icon: <BiEditAlt />, title: '마이핑스 수정하기', onClick: () => navigate(`mypings/${mypingsId}/edit`) },
-  ];
-
   return (
     <>
-      <PageTitleHeader title={'게시물 만들기'} menuItems={items} />
+      <PageTitleHeader title={'게시물 만들기'} />
       <PageMain style={{ bottom: '70px' }}>
         <Form style={{ overflow: 'scroll' }}>
           <IsPrivateInput value={isPrivate} onChange={togglePrivate} />

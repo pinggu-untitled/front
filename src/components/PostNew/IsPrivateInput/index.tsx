@@ -14,7 +14,7 @@ const IsPrivateInput = ({ value, onChange }: IProps) => {
   return (
     <Base>
       <ProfileAvatar style={{ width: '46px', height: '46px' }}>
-        <img src={mediaPath(session?.profile_image_url)} alt={session?.nickname} />
+        <img src={mediaPath('profile', session?.profile_image_url)} alt={session?.nickname} />
       </ProfileAvatar>
       <Info>
         <span className={'nickname'}>{session?.nickname}</span>

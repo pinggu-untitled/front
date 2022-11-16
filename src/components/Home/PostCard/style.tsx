@@ -6,6 +6,7 @@ export const Card = styled.li`
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  display: flex;
 `;
 
 export const Inner = styled.div`

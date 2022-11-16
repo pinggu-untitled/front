@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
 
 export const Side = styled.nav`
   width: 73px;
   height: 100vh;
   position: fixed;
   border-right: 1px solid #dfdfdf;
-  z-index: 1100;
+  // z-index: 1100;
   background-color: #fff;
   display: flex;
   flex-direction: column;

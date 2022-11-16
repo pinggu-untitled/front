@@ -15,9 +15,11 @@ import { useSession } from '@contexts/SessionContext';
 interface IProps {
   pageName: string;
 }
+
 interface IModals {
   [key: string]: boolean;
 }
+
 const PageHeader = ({ pageName }: IProps) => {
   const navigate = useNavigate();
   const { session } = useSession();
@@ -55,7 +57,7 @@ const PageHeader = ({ pageName }: IProps) => {
     <Header>
       <h2>{pageName}</h2>
       <ActionList>
-        <ActionButton>
+        <ActionButton onClick={() => navigate('/explore')}>
           <IoSearch />
         </ActionButton>
         <ActionButton onClick={() => toggleModals('menu')}>

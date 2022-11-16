@@ -1,6 +1,6 @@
-import { Dispatch, DispatchWithoutAction, SetStateAction } from 'react';
+import { DispatchWithoutAction } from 'react';
 import { Preview } from '@components/MypingsNew/ShortPreview/style';
-import { Card, Inner, Info, NoMedia, PostImage, CountsInfo } from '@components/Home/PostCard/style';
+import { Card, CountsInfo, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useSession } from '@contexts/SessionContext';
 import mediaPath from '@utils/mediaPath';
@@ -70,7 +70,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath(session?.profile_image_url)} />
+              <img src={mediaPath('profile', session?.profile_image_url)} />
             </ProfileAvatar>
             <CountsInfo>
               <span className={'info'} style={{ fontSize: '12px' }}>

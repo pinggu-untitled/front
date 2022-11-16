@@ -2,7 +2,7 @@ import { PageMain } from '@pages/Home/style';
 import PageTitleHeader from '@components/headers/PageTitleHeader';
 import Input from '@components/PostNew/Input';
 import useInput from '@hooks/useInput';
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import IsPrivateInput from '@components/PostNew/IsPrivateInput';
 import SelectCategoryInput from '@components/MypingsNew/SelectCategoryInput';
 import { FixedBottom, Form, SubmitButton } from '@pages/MypingsNew/style';
@@ -22,7 +22,8 @@ const MypingsNew = () => {
   const [title, onChangeTitle] = useInput('');
   const [category, onChangeCategory] = useInput(1);
   const [posts, setPosts] = useState<IUserPost[]>([]);
-  const [showPreview, toggleShowPreview] = useReducer((p) => !p, false);
+  const [showPreview, setShowPreview] = useState(false);
+  const toggleShowPreview = () => setShowPreview(false);
   const onSubmit = (e: any) => {
     e.preventDefault();
     const result = {
@@ -41,7 +42,7 @@ const MypingsNew = () => {
   const isSubmitAvailable = Boolean(title) && Boolean(category);
 
   useEffect(() => {
-    if (title) toggleShowPreview();
+    if (title) setShowPreview(true);
   }, [title]);
 
   return (

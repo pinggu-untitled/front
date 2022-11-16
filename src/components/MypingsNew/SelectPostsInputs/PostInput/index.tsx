@@ -1,10 +1,12 @@
-import { IPost, IUserPost } from '@typings/db';
-import { useNavigate, useParams } from 'react-router-dom';
+import { IUserPost } from '@typings/db';
+import { useNavigate } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
 import { Info, Inner, NoMedia, PostImage, TotalCount } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { Card, CheckBox } from '@components/MypingsNew/SelectPostsInputs/PostInput/style';
-import { Dispatch, SetStateAction, useEffect, useReducer, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import mediaPath from '@utils/mediaPath';
+import timeForToday from '@utils/timeForToday';
 
 interface IProps {
   data: IUserPost;
@@ -32,9 +34,9 @@ const PostInput = ({ data, value, setValue }: IProps) => {
   }, [value]);
 
   return (
-    <Card onClick={() => navigate(`/posts/${data?.id}`)}>
+    <Card>
       <CheckBox onClick={(e) => e.stopPropagation()} isChecked={isChecked}>
-        <div className={'check-button'}>{isChecked && <BsCheck />}</div>
+        <div className={'check-button'}> {isChecked && <BsCheck />}</div>
         <input type={'checkbox'} checked={isChecked} onChange={handleCheck} />
       </CheckBox>
       <Inner>
@@ -44,7 +46,7 @@ const PostInput = ({ data, value, setValue }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
+              <img src={mediaPath('post', data?.Images[0].src)} />
             </>
           ) : (
             <NoMedia style={{ fontSize: '16px' }}>
@@ -54,7 +56,7 @@ const PostInput = ({ data, value, setValue }: IProps) => {
         </PostImage>
         <Info>
           <h3>{data.title}</h3>
-          <span className={'created-at'}>{data.created_at}</span>
+          <span className={'created-at'}>{timeForToday(Date.parse(data.created_at))}</span>
         </Info>
       </Inner>
     </Card>

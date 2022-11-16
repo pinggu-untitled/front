@@ -18,6 +18,7 @@ export const Base = styled.li<{ depth: boolean }>`
 
 export const Inner = styled.div`
   margin-left: 8px;
+  width: 90%;
 
   > .nickname {
     font-size: 13px;
@@ -114,7 +115,7 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
   return (
     <Base depth={!isParentComment(comment.pid)}>
       <ProfileAvatar style={{ width: '28px', height: '28px' }} onClick={() => navigate(`/${comment.User.id}`)}>
-        <img src={mediaPath(comment.User.profile_image_url)} alt={comment.User.nickname} />
+        <img src={mediaPath('profile', comment.User.profile_image_url)} alt={comment.User.nickname} />
       </ProfileAvatar>
       <Inner>
         <span className={'nickname'}>{comment?.User.nickname}</span>
@@ -134,7 +135,7 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
         {showReplyInput && (
           <ReplyInputZone>
             <ProfileAvatar onClick={() => navigate(`/${comment.User.id}`)} style={{ width: '23px', height: '23px' }}>
-              <img src={mediaPath(comment.User.profile_image_url)} alt={comment.User.nickname} />
+              <img src={mediaPath('profile', comment.User.profile_image_url)} alt={comment.User.nickname} />
             </ProfileAvatar>
             <Textarea
               placeholder={'답글 달기...'}

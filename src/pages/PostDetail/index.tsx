@@ -2,14 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PagePrevHeader from '@components/headers/PagePrevHeader';
 import { PageMain } from '@pages/Home/style';
 import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
-import { BiEditAlt, BiLinkAlt } from 'react-icons/bi';
+import { BiEditAlt } from 'react-icons/bi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { useSession } from '@contexts/SessionContext';
 import ImagesZoomModal from '@components/PostDetail/ImageZoomModal';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import { ImagesContainer, PostImage, TextZone, More } from '@components/PostDetail/style';
+import { ImagesContainer, More, PostImage, TextZone } from '@components/PostDetail/style';
 import mediaPath from '@utils/mediaPath';
 import { IImage, IPost } from '@typings/db';
 import { TotalCount } from '@components/Home/PostCard/style';
@@ -19,6 +19,8 @@ import readable from '@utils/readable';
 import PreviewSection from '@components/PostDetail/PreviewSection';
 import PreviewCard from '@components/PostDetail/PreviewSection/PreviewCard';
 import { useMap } from '@contexts/MapContext';
+import timeForToday from '@utils/timeForToday';
+import AuthorCard from '@components/PostDetail/AuthorCard';
 
 const PostDetail = () => {
   const navigate = useNavigate();
@@ -45,10 +47,7 @@ const PostDetail = () => {
       onClick: () => navigate('/mypings/new'),
     },
   ];
-  //
-  // const readOnlyItems: IMenuItem[] = [
-  //   { icon: <BiLinkAlt />, title: '링크 복사하기', onClick: () => navigate('/posts/new') },
-  // ];
+
   const postImageStyle = {
     width: '100%',
     height: '100%',
@@ -74,9 +73,11 @@ const PostDetail = () => {
     }
   }, [Post]);
 
+  if (!Post) return <div>로딩중..</div>
+  
   return (
     <>
-      <PagePrevHeader menuItems={items} />
+      <PagePrevHeader menuItems={session.id === Post?.User.id ? items : undefined} />
       <PageMain>
         <ImagesZoomModal
           show={showModals.showImagesZoomModal}
@@ -107,13 +108,13 @@ const PostDetail = () => {
                   border: 'none',
                 }}
               >
-                <img src={mediaPath(Post?.Images[0].src)} alt={Post?.Images[0].id} />
+                <img src={mediaPath('post', Post?.Images[0].src)} alt={Post?.Images[0].id} />
               </PostImage>
             )}
             {Post?.Images.length === 2 &&
               Post?.Images.slice(0, 2).map((data: IImage) => (
                 <PostImage key={data.id} style={{ width: '100%', height: '100%', borderRadius: 0 }}>
-                  <img src={`http://localhost:8080/uploads/${data.src}`} alt={`${data.id}`} />
+                  <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                 </PostImage>
               ))}
             {Post?.Images.length >= 3 && (
@@ -124,15 +125,13 @@ const PostDetail = () => {
                 {Post?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
                     <PostImage key={data.id} style={postImageStyle}>
-                      <img src={mediaPath(data.src)} alt={`${data.id}`} />
+                      <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                     </PostImage>
                   ) : (
                     <More>
                       <PostImage key={data.id} style={postImageStyle}>
-                        <img src={mediaPath(data.src)} alt={`${data.id}`} />
+                        <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                       </PostImage>
-                      <div className="button">{Post?.Images.length - 2}개 더보기</div>
-                      //{' '}
                     </More>
                   );
                 })}
@@ -140,50 +139,29 @@ const PostDetail = () => {
             )}
           </ImagesContainer>
         )}
-        {/*{Post?.User && <ProfileSummaryBar profile={Post?.User} />}*/}
-        {/*<TapList count={3}>*/}
-        {/*  <HoverLabel label={'좋아요'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<AiOutlineLike />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*  <HoverLabel label={'위치'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<HiOutlineLocationMarker />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId/mypings'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*  <HoverLabel label={'댓글'} style={{ top: '34px' }}>*/}
-        {/*    <TapItem*/}
-        {/*      icon={<BiCommentDetail />}*/}
-        {/*      onClick={() => {}}*/}
-        {/*      match={'/:userId/friends'}*/}
-        {/*    />*/}
-        {/*  </HoverLabel>*/}
-        {/*</TapList>*/}
+        <AuthorCard data={Post} />
         <TextZone>
           <h3 className={'title'}>{Post?.title}</h3>
-          <div className={'mypings'}>
-            <span>{Post?.created_at}</span>
+          <div className={'created-at'}>
+            <span>{timeForToday(Date.parse(Post?.created_at))}</span>
           </div>
           <p className={'content'}>{regexifyContent(Post?.content)}</p>
           <p className={'meta'}>조회수 {Post?.hits}</p>
         </TextZone>
         <CommentPool />
-        <PreviewSection title={`${Post?.User.nickname}의 게시물`} url={`/${Post?.User.id}`}>
-          {session &&
-            Posts &&
-            compose(
-              (posts: IPost[]) => readable(session, posts),
-              exceptCurrentPost,
-              displayEven,
-            )(Posts)
-              .slice(0, 6)
-              ?.map((post, i) => <PreviewCard key={i} post={post} />)}
-        </PreviewSection>
+        {Posts && (
+          <PreviewSection title={`${Post?.User.nickname}의 게시물`} url={`/${Post?.User.id}`}>
+            {session &&
+              Posts &&
+              compose(
+                (posts: IPost[]) => readable(session, posts),
+                exceptCurrentPost,
+                displayEven,
+              )(Posts)
+                .slice(0, 6)
+                ?.map((post, i) => <PreviewCard key={i} post={post} />)}
+          </PreviewSection>
+        )}
       </PageMain>
     </>
   );

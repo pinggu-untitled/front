@@ -1,4 +1,3 @@
-import { useSession } from '@contexts/SessionContext';
 import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
 import { BiEditAlt, BiLinkAlt } from 'react-icons/bi';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,11 +7,11 @@ import { useProfileMypings } from '@contexts/ProfileMypingsContext';
 import ProfileMypingsCard from '@components/Profile/cards/ProfileMypingsCard';
 import { InnerTap, Tap } from '@pages/Profile/ProfileMypings/style';
 import { useState } from 'react';
-import isIdExisting from '@utils/isIdExisting';
 import EmptyMessage from '@components/Profile/EmptyMessage';
 import useSWR from 'swr';
 import { IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
+
 type Tap = 'all' | 'mypings' | 'sharepings';
 
 const ProfileMypings = () => {

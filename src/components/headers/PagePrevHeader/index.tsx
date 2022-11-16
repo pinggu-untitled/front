@@ -3,11 +3,12 @@ import { useReducer } from 'react';
 import Modal from '@components/Modal';
 import MenuList from '@components/Layout/MenuList';
 import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SlArrowLeft } from 'react-icons/sl';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
+
 interface IProps {
-  menuItems: IMenuItem[];
+  menuItems?: IMenuItem[];
 }
 
 interface IModals {
@@ -27,14 +28,16 @@ const PagePrevHeader = ({ menuItems }: IProps) => {
       <ActionButton onClick={() => navigate(-1)}>
         <SlArrowLeft style={{ fontSize: '18px' }} />
       </ActionButton>
-      <ActionList>
-        <ActionButton onClick={() => toggleModals('menu')}>
-          <IoEllipsisVerticalSharp />
-        </ActionButton>
-        <Modal show={showModals.menu} onCloseModal={() => toggleModals('menu')}>
-          <MenuList items={menuItems} style={{ top: '58px', left: '340px' }} />
-        </Modal>
-      </ActionList>
+      {menuItems && (
+        <ActionList>
+          <ActionButton onClick={() => toggleModals('menu')}>
+            <IoEllipsisVerticalSharp />
+          </ActionButton>
+          <Modal show={showModals.menu} onCloseModal={() => toggleModals('menu')}>
+            <MenuList items={menuItems} style={{ top: '58px', left: '340px' }} />
+          </Modal>
+        </ActionList>
+      )}
     </Header>
   );
 };

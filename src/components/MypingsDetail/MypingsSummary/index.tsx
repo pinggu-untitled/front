@@ -44,7 +44,7 @@ const MypingsSummary = ({ data }: { data: IMyPings }) => {
               bottom: '6px',
             }}
           >
-            <img src={mediaPath(data.User.profile_image_url)} />
+            <img src={mediaPath('profile', data.User.profile_image_url)} />
           </ProfileAvatar>
           {session?.id !== Number(data?.User.id) && (
             <ShareButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />

@@ -1,7 +1,7 @@
-import { Card, Inner, Info, NoMedia, PostImage, CountsInfo } from '@components/Home/PostCard/style';
+import { Card, CountsInfo, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import { useSession } from '@contexts/SessionContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { memo } from 'react';
 import mediaPath from '@utils/mediaPath';
 import OwnerActionButtons from '@components/Profile/OwnerActionButtons';
@@ -50,7 +50,7 @@ const ProfileMypingsCard = ({ data }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath(data.User.profile_image_url)} />
+              <img src={mediaPath('profile', data.User.profile_image_url)} />
             </ProfileAvatar>
           )}
           {session?.id !== Number(data?.User.id) && (

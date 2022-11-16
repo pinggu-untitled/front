@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Controller, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
 import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
-import { useParams } from 'react-router-dom';
 import mediaPath from '@utils/mediaPath';
 
 interface IProps {
@@ -14,11 +13,12 @@ export const Base = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  padding: 20px;
 `;
 
 export const ProfileImageWrapper = styled.label`
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border: 1px solid #dfdfdf;
   display: block;
   border-radius: 50%;
@@ -62,7 +62,7 @@ const ProfileImageInput = ({ control, name }: IProps) => {
 
   const handlePreview = (files: any) => {
     if (typeof files === 'string') {
-      setPreview(mediaPath(files));
+      setPreview(mediaPath('profile', files));
     } else {
       imagePreviewPromisfier(files).then((res) => setPreview(res[0]));
     }

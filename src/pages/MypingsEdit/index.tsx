@@ -2,7 +2,7 @@ import { PageMain } from '@pages/Home/style';
 import PageTitleHeader from '@components/headers/PageTitleHeader';
 import Input from '@components/PostNew/Input';
 import useInput from '@hooks/useInput';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import IsPrivateInput from '@components/PostNew/IsPrivateInput';
 import SelectCategoryInput from '@components/MypingsNew/SelectCategoryInput';
 import { FixedBottom, Form, SubmitButton } from '@pages/MypingsNew/style';
@@ -28,8 +28,6 @@ const MypingsEdit = () => {
   const toggleShowPreview = () => setShowPreview((p) => !p);
   const { data: Mypings } = useSWR<IMyPings>(`/mypings/${mypingsId}`, fetcher);
   const { data: MypingsPosts } = useSWR<IUserPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
-
-  console.log(MypingsPosts);
 
   const onSubmit = (e: any) => {
     e.preventDefault();

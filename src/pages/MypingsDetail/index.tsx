@@ -7,12 +7,10 @@ import { IMenuItem } from '@components/Layout/MenuList/MenuItem';
 import { BiEditAlt, BiLinkAlt } from 'react-icons/bi';
 import PageTitleHeader from '@components/headers/PageTitleHeader';
 import CardList from '@components/Home/CardList';
-import PostCard from '@components/Home/PostCard';
-import { IPost, IMyPings } from '@typings/db';
+import { IMyPings, IPost } from '@typings/db';
 import MypingsSummary from '@components/MypingsDetail/MypingsSummary';
 import EmptyMessage from '@components/Profile/EmptyMessage';
 import readable from '@utils/readable';
-import ProfileMypingsCard from '@components/Profile/cards/ProfileMypingsCard';
 import ProfilePostCard from '@components/Profile/cards/ProfilePostCard';
 
 const MypingsDetail = () => {
@@ -41,7 +39,11 @@ const MypingsDetail = () => {
 
   return (
     <>
-      <PageTitleHeader title={'마이핑스'} menuItems={items} style={{ borderBottom: 'none' }} />
+      <PageTitleHeader
+        title={'마이핑스'}
+        menuItems={session.id === Mypings.User.id ? items : undefined}
+        style={{ borderBottom: 'none' }}
+      />
       <PageMain>
         <div
           style={{
