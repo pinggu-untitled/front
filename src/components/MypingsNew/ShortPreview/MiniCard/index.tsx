@@ -1,9 +1,9 @@
 import { Card, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
 import mediaPath from '@utils/mediaPath';
-import { IPost } from '@typings/db';
+import { IPost, IUserPost } from '@typings/db';
 interface IProps {
-  data: IPost;
+  data: IPost | IUserPost;
 }
 const MiniCard = ({ data }: IProps) => {
   return (

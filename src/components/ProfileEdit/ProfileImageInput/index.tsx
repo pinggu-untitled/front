@@ -5,7 +5,7 @@ import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
 import mediaPath from '@utils/mediaPath';
 
 interface IProps {
-  control: Control<FieldValues, any> | undefined;
+  control: any;
   name: string;
 }
 
