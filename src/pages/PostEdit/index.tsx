@@ -64,8 +64,10 @@ const PostEdit = () => {
       hashtags: makeHashtags(data.content),
       mentions: makeMentions(data.content),
       is_private: isPrivate === true ? 1 : 0,
-      images: filenames,
+      images: filenames.flat(),
     };
+
+    console.log(filenames.flat());
 
     axios
       .patch(`/posts/${postId}`, temp)
