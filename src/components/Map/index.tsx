@@ -9,6 +9,8 @@ const Map = () => {
   /* 현재 위치를 지도의 중심 좌표로 설정 */
   const onSuccess = useCallback(
     ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+      localStorage.setItem('position', `${latitude},${longitude}`);
+
       const container = document.getElementById('myMap');
       if (initializeMap && container) {
         const [filter, keyword] = decodeURI(search)
@@ -29,7 +31,13 @@ const Map = () => {
 
   /* geolocation을 이용해 현재 위치를 얻음 */
   useEffect(() => {
-    navigator?.geolocation.getCurrentPosition(onSuccess, onError);
+    const position = localStorage.getItem('position');
+    if (!position) {
+      navigator?.geolocation.getCurrentPosition(onSuccess, onError);
+    } else {
+      const [latitude, longitude]: string[] = position.split(',');
+      onSuccess({ coords: { latitude: Number(latitude), longitude: Number(longitude) } });
+    }
   }, [tab, search]);
 
   return (
