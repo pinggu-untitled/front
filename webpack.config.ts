@@ -1,4 +1,5 @@
 import path from 'path';
+const __dirname = path.resolve();
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
@@ -73,10 +74,9 @@ const config: Configuration = {
       //   files: "./src/**/*",
       // },
     }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
-    // new webpack.DefinePlugin({
-    //   REACT_APP_KAKAO_MAP_KEY: JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
-    // }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: isDevelopment ? 'development' : 'production',
+    }),
 
     new HtmlWebpackPlugin({
       template: './index.html',
@@ -111,8 +111,6 @@ if (isDevelopment && config.plugins) {
       },
     }),
   );
-}
-if (!isDevelopment && config.plugins) {
 }
 
 export default config;
