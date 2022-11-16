@@ -11,7 +11,7 @@ import { useEffect } from "react";
 const Home = () => {
   const getKey = (pageIndex: number, previousPageData: IPost[]) => {
     if (previousPageData && !previousPageData.length) return null;
-    return `/posts?size=20&page=${pageIndex + 1}`;
+    return `/posts?size=20&page=${pageIndex}`;
   };
 
   const { data: Posts, setSize } = useSWRInfinite<IPost[]>(getKey, fetcher);
