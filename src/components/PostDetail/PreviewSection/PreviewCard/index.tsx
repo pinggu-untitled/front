@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { IPost } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
+import mediaPath from '../../../../utils/mediaPath';
 
 interface IProps {
   post: IPost;
@@ -37,9 +38,7 @@ const PreviewCard: FC<IProps> = ({ post }) => {
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageWrapper>
         <img
-          src={
-            post?.Images.length > 0 ? `http://localhost:8080/uploads/${post?.Images[0].src}` : '/public/placeholder.png'
-          }
+          src={post?.Images.length > 0 ? mediaPath('post', post?.Images[0].src) : '/assets/placeholder.png'}
           alt={post?.Images.length > 0 ? `${post?.Images[0].id}` : 'placholder.png'}
         />
       </ImageWrapper>

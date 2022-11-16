@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
 import { ActionButton } from '@components/headers/PageMainHeader/style';
 import { SlArrowLeft } from 'react-icons/sl';
+import { useNavigate } from 'react-router-dom';
 import useInput from '@hooks/useInput';
 
 export const Header = styled.header`
@@ -23,6 +23,7 @@ export const Header = styled.header`
     font-size: 18px;
   }
 `;
+
 export const Form = styled.form`
   width: calc(100% - 40px - 10px);
   border-radius: 20px;

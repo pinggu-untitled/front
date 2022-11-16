@@ -10,8 +10,8 @@ import ShareButton from '@components/Profile/ShareButton';
 import { useProfileMypings } from '@contexts/ProfileMypingsContext';
 import PrivateTag from '@components/Profile/PrivateTag';
 import CateTag from '@components/Profile/CateTag';
-import { useSWR } from 'swr';
-import { fetcher } from '@utils/fetcher';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 interface IProps {
   data: IMyPings;

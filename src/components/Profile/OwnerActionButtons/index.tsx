@@ -1,7 +1,7 @@
 import { Actions } from './style';
 import { useNavigate } from 'react-router-dom';
 import AlarmModal from '@components/Profile/AlarmModal';
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 
 interface IProps {
   editPageUrl: string;
@@ -10,6 +10,7 @@ interface IProps {
 
 const OwnerActionButtons = ({ editPageUrl, onDelete }: IProps) => {
   const navigate = useNavigate();
+  const [count, setCount] = useState(1);
   const onEditPage = () => navigate(editPageUrl);
   const [showModal, toggleShowModal] = useReducer((p) => !p, false);
   return (
