@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Control, Controller, FieldValues, useController } from 'react-hook-form';
+import { Controller, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
 import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
 import mediaPath from '@utils/mediaPath';
 
 interface IProps {
-  control: Control<FieldValues, any> | undefined;
+  control: any;
   name: string;
 }
 
