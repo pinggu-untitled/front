@@ -1,4 +1,7 @@
-const debounce = (cb: (map: kakao.maps.Map | null) => void, dealy: number) => {
+const debounce = (
+  cb: (map: kakao.maps.Map | null, tab: string, filter: string, keyword: string) => void,
+  dealy: number,
+) => {
   let timer: number;
   return (...args: unknown[]) => {
     if (timer) clearTimeout(timer);
