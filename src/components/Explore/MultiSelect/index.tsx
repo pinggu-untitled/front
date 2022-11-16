@@ -16,7 +16,7 @@ const Multiselect = ({ label, name, values = [], control }: IProps) => {
   }));
 
   return (
-    <div style={{ zIndex: '3000' }}>
+    <div style={{ zIndex: '3000', marginTop: '10px' }}>
       <label>{label}</label>
       <Controller
         name={'filter'}

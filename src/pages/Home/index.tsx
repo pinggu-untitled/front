@@ -30,7 +30,7 @@ const Home = () => {
         <CardList>
           {Posts?.map((posts, i) => {
             return posts?.map((post, j) => {
-              if (i === Posts.length - 1 && j === 1)
+              if (i === Posts.length - 1 && j === 15)
                 return posts?.map((post) => <PostCard key={post.id} data={post} ref={ref} />);
               return <PostCard key={post.id} data={post} />;
             });
