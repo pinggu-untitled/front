@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ActionButton } from '@components/headers/PageMainHeader/style';
 import { SlArrowLeft } from 'react-icons/sl';
 import useInput from '@hooks/useInput';
@@ -44,11 +44,12 @@ export const Form = styled.form`
   }
   
   > select {
-    width: 120px;
-    font-size: 11px;
+    /* width: 120px; */
+    font-size: 12px;
     border:none;
     border-right: 1px solid #dfdfdf;
-   
+    text-align: center;
+
     &:focus {
       outline: none;
      }
@@ -61,41 +62,29 @@ interface IForm {
 
 const Explore = () => {
   const navigate = useNavigate();
+  const searchParams = useSearchParams()
   const [value, onChangeValue] = useInput('');
   const ref = useRef<HTMLInputElement>(null);
   const onSubmit = (e: any) => {
     e.preventDefault();
+
   };
 
   useEffect(() => {
     if (!ref.current?.value) ref.current?.focus();
   }, [value]);
 
-  const { handleSubmit, setValue, control, watch, reset } = useForm<IForm>({
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-    shouldUnregister: true,
-    defaultValues: {
-      filter: [],
-    },
-  });
 
-  useEffect(() => {
-    (() => {
-      // await sleep(50);
-      setValue('filter', ['제목', '내용', '사용자', '마이핑스 카테고리', '해시태그'], { shouldValidate: true });
-      // reset({ disciplines: ["bbb", "ccc"] });
-    })();
-  }, []);
 
   const selects = [
+    {title: "필터", value:  'none'}, 
     { title: '제목', value: 'title' },
     { title: '내용', value: 'content' },
     {
       title: '사용자',
       value: 'user',
     },
-    { title: '마이핑스 카테고리', value: 'category' },
+    { title: '카테고리', value: 'category' },
     { title: '해시태그', value: 'hashtag' },
   ];
 
@@ -105,7 +94,7 @@ const Explore = () => {
         <ActionButton onClick={() => navigate(-1)}>
           <SlArrowLeft style={{ fontSize: '18px' }} />
         </ActionButton>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={onSubmit}>
           <select>
             {selects.map((v, i) => (
               <option key={i} value={v.value} label={v.title} />

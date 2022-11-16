@@ -15,9 +15,6 @@ const AuthorCard = ({ data }: { data: IPost }) => {
   const { session } = useSession();
   const { data: Followings } = useSWR<IUser[]>(`/users/${session?.id}/followings`, fetcher);
 
-  if (Followings) {
-    console.log('match', isIdExisting(Followings, data));
-  }
   if (!Followings) return <div>로딩중..</div>;
 
   return (
