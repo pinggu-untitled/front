@@ -73,8 +73,8 @@ const PostDetail = () => {
     }
   }, [Post]);
 
-  if (!Post) return <div>로딩중..</div>
-  
+  if (!Post) return <div>로딩중..</div>;
+
   return (
     <>
       <PagePrevHeader menuItems={session.id === Post?.User.id ? items : undefined} />

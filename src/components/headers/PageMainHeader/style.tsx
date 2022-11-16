@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export const Header = styled.header`
   position: fixed;
@@ -15,7 +15,7 @@ export const Header = styled.header`
   border-right: 1px solid #dfdfdf;
   z-index: 1000;
   overflow: hidden;
-   
+
   > h2 {
     font-size: 18px;
   }

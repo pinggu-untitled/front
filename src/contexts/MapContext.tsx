@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { createContext, useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetcher from '@utils/fetcher';
 import { IPost } from '@typings/db';
 import { showPostInfo } from '@utils/showPostInfo';
 import debounce from '@utils/debounce';
+
 const { kakao } = window;
 
 interface IMapContext {
@@ -77,7 +78,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     // console.log(swLat, swLng, neLat, neLng);
     fetcher(`/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=home`)
       .then((posts) => {
-        // console.log(posts);
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
         const imageSize = new kakao.maps.Size(20, 32);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
