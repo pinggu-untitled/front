@@ -83,7 +83,7 @@ const PostEdit = () => {
       setValue('content', Post?.content || '');
       setValue('longitude', Post?.longitude || '');
       setValue('latitude', Post?.latitude || '');
-      setValue('images', Post?.Images?.map((img: IImage) => img.src) || '');
+      setValue('images', Post?.Images?.map((img: IImage) => img.src) || []);
       setShowOptions((p) => ({ ...p, showImages: Post?.Images.length > 0 }));
       setIsPrivate(Post?.is_private);
     }
