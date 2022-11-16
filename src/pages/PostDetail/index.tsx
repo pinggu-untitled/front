@@ -119,17 +119,20 @@ const PostDetail = () => {
               ))}
             {Post?.Images.length >= 3 && (
               <>
-                <TotalCount>
-                  <span className={'current'}>2</span> / {Post?.Images?.length}
-                </TotalCount>
                 {Post?.Images.slice(0, 2).map((data: IImage, i: number) => {
                   return i === 0 ? (
                     <PostImage key={data.id} style={postImageStyle}>
+                      <TotalCount>
+                        <span className={'current'}>2</span> / {Post?.Images?.length}
+                      </TotalCount>
                       <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                     </PostImage>
                   ) : (
                     <More>
                       <PostImage key={data.id} style={postImageStyle}>
+                        <TotalCount>
+                          <span className={'current'}>2</span> / {Post?.Images?.length}
+                        </TotalCount>
                         <img src={mediaPath('post', data.src)} alt={`${data.id}`} />
                       </PostImage>
                     </More>

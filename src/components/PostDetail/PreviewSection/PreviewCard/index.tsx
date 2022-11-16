@@ -12,6 +12,7 @@ interface IProps {
 
 export const Base = styled.div`
   flex: 1;
+  position: relative;
   > p {
     font-size: 14px;
     font-weight: 600;
@@ -38,18 +39,21 @@ const PreviewCard: FC<IProps> = ({ post }) => {
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageWrapper>
-        {post?.Images.length > 0 ? (
-          <>
-            <TotalCount>
-              <span className={'current'}>1</span> / {post?.Images.length}
-            </TotalCount>
-            <img src={mediaPath('post', post?.Images[0].src)} alt={post.User.nickname} />
-          </>
-        ) : (
+        {!post?.Images.length && (
           <NoMedia>
             <HiOutlineCamera />
           </NoMedia>
         )}
+        {post?.Images.length > 3 && (
+          <>
+            <TotalCount>
+              <span className={'current'}>2</span> / {post?.Images.length}
+            </TotalCount>
+            <img src={mediaPath('post', post?.Images[0].src)} alt={post.User.nickname} />
+          </>
+        )}
+        {post?.Images.length === 1 ||
+          (post?.Images.length === 2 && <img src={mediaPath('post', post?.Images[0].src)} alt={post.User.nickname} />)}
       </ImageWrapper>
       <p className="title">{post.title}</p>
     </Base>

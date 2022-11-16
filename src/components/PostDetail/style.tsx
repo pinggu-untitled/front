@@ -72,6 +72,7 @@ export const PostImage = styled.div`
   height: 100px;
   border-radius: 4px;
   overflow: hidden;
+  position: relative;
   border: 1px solid #dfdfdf;
 
   > img {

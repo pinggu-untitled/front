@@ -96,7 +96,6 @@ const PostNew = () => {
         return res.data;
       });
 
-    console.log('newPost', newPost);
     navigator(`/${session?.id}`);
   });
 

@@ -7,11 +7,13 @@ import { useSession } from '@contexts/SessionContext';
 import ProfileButtonModal from '@components/Layout/SideNavigation/ProfileButtonModal';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 const Logo = styled.div`
   width: 50px;
   height: 50px;
   margin: 10px auto;
+  cursor: pointer;
   > img {
     width: 100%;
     height: 100%;
@@ -20,11 +22,11 @@ const Logo = styled.div`
 `;
 const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void }) => {
   const { session } = useSession();
-
+  const navigate = useNavigate();
   return (
     <Side onClick={!show ? toggle : undefined}>
       <NavItemList>
-        <Logo>
+        <Logo aria-hidden={'true'} onClick={() => navigate('/')}>
           <img src={'/src/assets/logo.png'} alt={'logo'} />
         </Logo>
         <NavItem
