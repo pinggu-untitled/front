@@ -75,7 +75,6 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
         position: infoPosition,
       });
       overlay.setMap(map);
-      // MarkEvent.addListener(subMarker, 'mouseout', () => overlay.setMap(null));
       MapMarkEvent.addListener(subMarker, 'mouseout', () => overlay.setMap(null));
     }
   };
@@ -86,10 +85,11 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     const [swLat, swLng] = bounds?.getSouthWest().toString().slice(1, -1).split(',') ?? [];
     const [neLat, neLng] = bounds?.getNorthEast().toString().slice(1, -1).split(',') ?? [];
     // console.log(swLat, swLng, neLat, neLng);
-    if (tab === '/' || (filter && keyword)) {
+    console.log(filter, keyword);
+    if (tab !== '/explore' || (filter && keyword)) {
       fetcher(
         `/posts/bounds?swLat=${swLat}&swLng=${swLng.trim()}&neLat=${neLat}&neLng=${neLng.trim()}&tab=${
-          tab === '/' ? 'home' : `explore&filter=${filter}&keyword=${keyword}`
+          tab !== '/explore' ? 'home' : `explore&filter=${filter}&keyword=${keyword}`
         }`,
       )
         .then((posts) => {
@@ -164,7 +164,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
       myMarker?.setPosition(latLng);
     });
     // event-지도 이동 시 포스트 조회
-    MapMarkEvent.addListener(map, 'center_changed', () => dGetSubPosts(map));
+    MapMarkEvent.addListener(map, 'center_changed', () => dGetSubPosts(map, tab, filter, keyword));
 
     // event-내 위치 마커 클릭 시 게시물 작성하기 모달 띄우기
     MapMarkEvent.addListener(myMarker, 'click', () => {
