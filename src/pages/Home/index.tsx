@@ -7,6 +7,8 @@ import CardList from '@components/Home/CardList';
 import { useInView } from 'react-intersection-observer';
 import useSWRInfinite from 'swr/infinite';
 import { useEffect } from 'react';
+import readable from '@utils/readable';
+import { useSession } from '@contexts/SessionContext';
 
 const Home = () => {
   const getKey = (pageIndex: number, previousPageData: IPost[]) => {
@@ -14,6 +16,7 @@ const Home = () => {
     return `/posts?size=20&page=${pageIndex}`;
   };
 
+  const { session } = useSession();
   const { data: Posts, setSize } = useSWRInfinite<IPost[]>(getKey, fetcher);
   const { ref, inView } = useInView({ threshold: 0 });
 
@@ -31,7 +34,7 @@ const Home = () => {
       <PageMain>
         <CardList>
           {Posts?.map((posts, i) => {
-            return posts?.map((post, j) => {
+            return readable(session, posts)?.map((post, j) => {
               return i === Posts.length - 1 && j === 15 ? (
                 posts?.map((post) => <PostCard key={post.id} data={post} ref={ref} />)
               ) : (

@@ -7,6 +7,7 @@ import { forwardRef, LegacyRef, memo } from 'react';
 import LikeButton from './LikeButton';
 import mediaPath from '@utils/mediaPath';
 import timeForToday from '@utils/timeForToday';
+import PrivateTag from '@components/Profile/PrivateTag';
 
 interface IProps {
   data: IPost | IUserPost;
@@ -40,7 +41,10 @@ const PostCard = forwardRef(({ data }: IProps, ref: LegacyRef<HTMLLIElement>) =>
           )}
         </PostImage>
         <Info>
-          <h3>{data.title}</h3>
+          <h3>
+            {data.title}
+            <PrivateTag active={data?.is_private} />
+          </h3>
           <span className={'created-at'}>{timeForToday(Date.parse(data.created_at))}</span>
           {!mypingsId && (
             <ProfileAvatar

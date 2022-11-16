@@ -10,7 +10,7 @@ import OwnerActionButtons from '@components/Profile/OwnerActionButtons';
 import { IUserPost } from '@typings/db';
 import { useProfilePosts } from '@contexts/ProfilePostsContext';
 import timeForToday from '@utils/timeForToday';
-
+import PrivateTag from '@components/Profile/PrivateTag';
 interface IProps {
   data: IUserPost;
 }
@@ -54,7 +54,9 @@ const ProfilePostCard = ({ data }: IProps) => {
           )}
         </PostImage>
         <Info>
-          <h3>{data?.title}</h3>
+          <h3>
+            {data?.title} <PrivateTag active={data?.is_private} />
+          </h3>
           <span className={'created-at'}>{timeForToday(Date.parse(data?.created_at))}</span>
           {session?.id !== Number(data?.User.id) && (
             <ProfileAvatar
