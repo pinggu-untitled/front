@@ -17,14 +17,10 @@ interface IContext {
 const PostContext = createContext<IContext | any>({});
 const PostProvider = ({ children }: IProvider) => {
   const id = useParams<{ postId: string }>();
-  const { data: Post, mutate } = useSWR(id ? `/posts/${id}` : null, fetcher);
-  const onFetch = useCallback(
-    (postId: number) => () => {
-      const { data, mutate } = useSWR(id ? `/posts/${postId}` : null, fetcher);
-      return { data, mutate };
-    },
-    [],
-  );
+  // const onFetch = (postId: number) => () => {
+  //   const { data, mutate } = useSWR(id ? `/posts/${postId}` : null, fetcher);
+  //   return { data, mutate };
+  // };
 
   const onEdit = useCallback(
     (postId: number) => () => {
@@ -46,7 +42,7 @@ const PostProvider = ({ children }: IProvider) => {
     [],
   );
 
-  return <PostContext.Provider value={{ onFetch, onEdit, onDelete }}>{children}</PostContext.Provider>;
+  return <PostContext.Provider value={{ onEdit, onDelete }}>{children}</PostContext.Provider>;
 };
 
 export const usePost = (): IContext => useContext(PostContext);

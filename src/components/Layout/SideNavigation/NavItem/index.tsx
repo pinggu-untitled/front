@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useReducer } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { Li } from '@components/Layout/SideNavigation/NavItem/style';
 import { NavLink } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ interface IProps {
   icons: { outline: ReactNode; fill: ReactNode; style?: CSSProperties };
   title: string;
   url: string;
-  onClick?: Function;
+  onClick?: () => void;
   [key: string]: any;
 }
 

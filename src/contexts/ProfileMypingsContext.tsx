@@ -11,8 +11,8 @@ interface IContext {
   Mypings: IMyPings[];
   Sharepings: IMyPings[];
   UserSharepings: IMyPings[];
-  onFetchMypings: (mypingsId: number) => { data: IMyPings; mutate: any };
-  onFetchMypingsPosts: (mypingsId: number) => { data: IPost[]; mutate: any };
+  // onFetchMypings: (mypingsId: number) => { data: IMyPings; mutate: any };
+  // onFetchMypingsPosts: (mypingsId: number) => { data: IPost[]; mutate: any };
   onEdit: (mypingsId: number) => () => void;
   onDelete: (mypingsId: number) => () => void;
 }
@@ -30,16 +30,15 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
 
   const { data: UserSharepings } = useSWR<IMyPings[]>(userId ? `/users/${userId}/sharepings` : null, fetcher);
 
-  const onFetchMypings = useCallback((mypingsId: number) => {
-    const { data, mutate } = useSWR<IMyPings[]>(`/mypings/${mypingsId}`, fetcher);
-    return { data, mutate };
-  }, []);
+  // const onFetchMypings = (mypingsId: number) => {
+  //   const { data, mutate } = useSWR<IMyPings[]>(`/mypings/${mypingsId}`, fetcher);
+  //   return { data, mutate };
+  // };
 
-  const onFetchMypingsPosts = useCallback((mypingsId: number) => {
-    const { data, mutate } = useSWR<IPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
-    return { data, mutate };
-  }, []);
-
+  // const onFetchMypingsPosts = (mypingsId: number) => {
+  //   const { data, mutate } = useSWR<IPost[]>(`/mypings/${mypingsId}/posts`, fetcher);
+  //   return { data, mutate };
+  // };
   const onEdit = useCallback(
     (mypingsId: number) => () => {
       axios.patch(`/mypings/${mypingsId}`).then((res) => {
@@ -66,8 +65,8 @@ const ProfileMypingsProvider = ({ children }: IProvider) => {
         Mypings: readable(session, Mypings),
         Sharepings: readable(session, Sharepings),
         UserSharepings: readable(session, UserSharepings),
-        onFetchMypings,
-        onFetchMypingsPosts,
+        // onFetchMypings,
+        // onFetchMypingsPosts,
         onEdit,
         onDelete,
       }}

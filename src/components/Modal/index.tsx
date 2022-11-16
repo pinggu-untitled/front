@@ -18,11 +18,15 @@ const Modal = ({ size = 'full', children, show, onCloseModal, style, rest }: IPr
 
   return size === 'full' ? (
     <FullScreen onClick={onCloseModal} style={style} {...rest}>
-      <div onClick={(e) => e.stopPropagation()}>{children}</div>
+      <div aria-hidden="true" onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
+        {children}
+      </div>
     </FullScreen>
   ) : (
     <HalfScreen onClick={onCloseModal} style={style} {...rest}>
-      <div onClick={(e) => e.stopPropagation()}>{children}</div>
+      <div aria-hidden="true" onClick={(e) => e.stopPropagation()}>
+        {children}
+      </div>
     </HalfScreen>
   );
 };

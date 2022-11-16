@@ -1,7 +1,6 @@
-import { ReactNode, useReducer } from 'react';
+import { ReactNode } from 'react';
 import { OutletZone, Slider } from './style';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
-import ProfileMypingsProvider from '@contexts/ProfileMypingsContext';
 
 interface IProps {
   outlet: ReactNode;

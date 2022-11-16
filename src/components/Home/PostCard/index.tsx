@@ -13,7 +13,7 @@ interface IProps {
   ref?: LegacyRef<HTMLLIElement>;
 }
 
-const PostCard = forwardRef(({ data }: IProps, ref) => {
+const PostCard = forwardRef(({ data }: IProps, ref: LegacyRef<HTMLLIElement>) => {
   const navigate = useNavigate();
   const { mypingsId } = useParams<{ mypingsId: string }>();
   const onPost = () => navigate(`/posts/${data.id}`);
@@ -31,7 +31,7 @@ const PostCard = forwardRef(({ data }: IProps, ref) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
+              <img src={mediaPath('post', data?.Images[0].src)} alt={data.User.nickname} />
             </>
           ) : (
             <NoMedia>
@@ -53,7 +53,7 @@ const PostCard = forwardRef(({ data }: IProps, ref) => {
               }}
               onClick={onProfile}
             >
-              <img src={mediaPath('profile', data.User.profile_image_url)} />
+              <img src={mediaPath('profile', data.User.profile_image_url)} alt={data.User.nickname} />
             </ProfileAvatar>
           )}
           <LikeButton data={data} style={{ position: 'absolute', top: '4px', right: 0 }} />

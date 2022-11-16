@@ -45,7 +45,7 @@ const ProfilePostCard = ({ data }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={mediaPath('profile', data?.Images[0].src)} />
+              <img src={mediaPath('profile', data?.Images[0].src)} alt={data.User.nickname} />
             </>
           ) : (
             <NoMedia>
@@ -67,7 +67,7 @@ const ProfilePostCard = ({ data }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath('profile', data?.User.profile_image_url)} />
+              <img src={mediaPath('profile', data?.User.profile_image_url)} alt={data.User.nickname} />
             </ProfileAvatar>
           )}
           <LikeButton data={transformFn(data)} style={{ position: 'absolute', top: '4px', right: 0 }} />

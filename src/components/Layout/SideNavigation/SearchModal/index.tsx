@@ -1,12 +1,8 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styled from '@emotion/styled';
-import { BsArrowLeft } from 'react-icons/bs';
 import Modal from '@components/Modal';
-import MenuList from '@components/Layout/MenuList';
-import PagePrevHeader from '@components/headers/PagePrevHeader';
-import { ActionButton, ActionList, Header } from '@components/headers/PageMainHeader/style';
+import { ActionButton, Header } from '@components/headers/PageMainHeader/style';
 import { SlArrowLeft } from 'react-icons/sl';
-import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
@@ -53,7 +49,7 @@ const SearchModal: FC<IProps> = ({ show, onCloseModal }) => {
           <SlArrowLeft style={{ fontSize: '18px' }} />
         </ActionButton>
         <Form>
-          <input type={'text'} autoFocus={true} placeholder={'검색'} />
+          <input type={'text'} placeholder={'검색'} />
           <input type={'submit'} hidden />
         </Form>
       </Header>

@@ -112,7 +112,5 @@ if (isDevelopment && config.plugins) {
     }),
   );
 }
-if (!isDevelopment && config.plugins) {
-}
 
 export default config;

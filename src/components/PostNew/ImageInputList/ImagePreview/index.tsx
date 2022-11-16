@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import { IoIosClose } from 'react-icons/io';
 
@@ -44,15 +44,10 @@ export const CloseButton = styled.div`
 `;
 
 const ImagePreview: FC<IProps> = ({ src, onClose }) => {
-  const handleClose = (e: any) => {
-    e.stopPropagation();
-    onClose();
-  };
-
   return (
     <>
       <Base>
-        <img src={src} alt={'upload-image-preview'} />
+        <img src={src} alt={'upload-preview'} />
         <CloseButton
           onClick={(e: any) => {
             e.stopPropagation();

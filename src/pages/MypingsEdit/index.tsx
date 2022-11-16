@@ -78,6 +78,7 @@ const MypingsEdit = () => {
               />
             ) : (
               <p
+                aria-hidden="true"
                 onClick={toggleShowPreview}
                 style={{
                   fontSize: '13px',

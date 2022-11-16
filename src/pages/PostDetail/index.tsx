@@ -58,7 +58,7 @@ const PostDetail = () => {
   const exceptCurrentPost = (posts: IPost[]) => posts.filter((item) => item.id !== Number(postId));
 
   const compose =
-    (...fns: Function[]) =>
+    (...fns: any[]) =>
     (arg: any): any[] =>
       fns.reduce((composed, fn) => fn(composed), arg);
 

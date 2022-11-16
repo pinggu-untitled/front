@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { IComment } from '@typings/db';
 import useSWR from 'swr';
@@ -47,16 +47,16 @@ const CommentPool = () => {
         hashtags: makeHashtags(content),
         mentions: makeMentions(content),
       })
-      .then((res) => {
+      .then(() => {
         mutateCd();
       })
       .catch((err) => console.error(err));
   };
 
-  const onDelete = (commentId: number) => (e: any) => {
+  const onDelete = (commentId: number) => () => {
     axios
       .delete(`/posts/${postId}/comments/${commentId}`)
-      .then((res) => {
+      .then(() => {
         mutateCd();
       })
       .catch((err) => console.error(err));
@@ -71,7 +71,7 @@ const CommentPool = () => {
         hashtags: makeHashtags(content),
         mentions: makeMentions(content),
       })
-      .then((res) => {
+      .then(() => {
         mutateCd();
         setIsSpread(true);
       })
@@ -83,10 +83,10 @@ const CommentPool = () => {
   const commentsArray = useCallback((comments: IComment[]): { fullComments: IComment[] | []; length: number } => {
     const copied: IComment[] = [];
 
-    for (let comment of comments) {
+    for (const comment of comments) {
       copied.push(comment);
       if (comment.Comments.length > 0) {
-        for (let comm of comment.Comments) {
+        for (const comm of comment.Comments) {
           copied.push(comm);
         }
       }

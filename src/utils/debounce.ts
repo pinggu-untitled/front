@@ -1,4 +1,4 @@
-const debounce = (cb: Function, dealy: number) => {
+const debounce = (cb: () => void, dealy: number) => {
   let timer: number;
   return (...args: any[]) => {
     if (timer) clearTimeout(timer);

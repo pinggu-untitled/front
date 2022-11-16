@@ -5,7 +5,7 @@ import { Actions } from '@components/Profile/OwnerActionButtons/style';
 interface IProps {
   show: boolean;
   onCloseModal: () => void;
-  onDelete: any;
+  onDelete: () => void;
 }
 
 const AlarmModal = ({ show, onCloseModal, onDelete }: IProps) => {

@@ -22,21 +22,6 @@ const ProfileMypings = () => {
 
   const [tap, setTap] = useState<Tap>('all');
 
-  const items: IMenuItem[] = [
-    {
-      icon: <BiEditAlt />,
-      title: '프로필 수정하기',
-      onClick: () => navigate(`/${userId}/edit`),
-    },
-  ];
-  const readOnlyItems: IMenuItem[] = [
-    {
-      icon: <BiLinkAlt />,
-      title: '링크 복사하기',
-      onClick: () => navigate('/posts/new'),
-    },
-  ];
-
   if (!userId && !Mypings && !UserSharepings) return <div>로딩중...</div>;
 
   return (

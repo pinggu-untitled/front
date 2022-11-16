@@ -5,10 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ContentZone, Main, Nav, OutlineLink, PageBase, Tap, TapZone } from './style';
 import { useEffect } from 'react';
 import { useSession } from '@contexts/SessionContext';
-import useSWR from 'swr';
-import fetcher from '@utils/fetcher';
-import { IMe } from '@typings/db';
-import axios from 'axios';
 
 type Tap = 'login' | 'register';
 
@@ -69,7 +65,7 @@ const Login = () => {
           {tap === 'register' && (
             <>
               <p className={'message'}>아직 준비되지 않은 서비스입니다.</p>
-              <p className={'message move-to-login'} onClick={() => setTap('login')}>
+              <p aria-hidden="true" className={'message move-to-login'} onClick={() => setTap('login')}>
                 👉🏻 소셜 계정으로 진행해 주세요
               </p>
             </>

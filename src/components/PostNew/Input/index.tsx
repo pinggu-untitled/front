@@ -1,4 +1,3 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { Label } from '@components/PostNew/Input/style';
 
 interface IProps {

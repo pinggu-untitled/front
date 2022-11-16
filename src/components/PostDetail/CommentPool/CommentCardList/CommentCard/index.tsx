@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { IComment, IMe, IPost } from '@typings/db';
 import styled from '@emotion/styled';
 import useSWR from 'swr';
@@ -121,12 +121,7 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
         <span className={'nickname'}>{comment?.User.nickname}</span>
         {showEditInput ? (
           <>
-            <Textarea
-              value={editComment}
-              onChange={onChangeEditComment}
-              autoFocus={true}
-              onKeyPress={onKeyPress('edit')}
-            />
+            <Textarea value={editComment} onChange={onChangeEditComment} onKeyPress={onKeyPress('edit')} />
             <button type={'submit'} hidden />
           </>
         ) : (
@@ -142,7 +137,6 @@ const CommentCard: FC<IProps> = ({ comment, onEdit, onDelete, onReply }) => {
               value={replyComment}
               onChange={onChangeReplyComment}
               onKeyPress={onKeyPress('reply')}
-              autoFocus={true}
             />
           </ReplyInputZone>
         )}

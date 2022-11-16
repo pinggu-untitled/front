@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Button } from '@components/PostNew/ToolBox/ToolButton/style';
 
 interface IProps {

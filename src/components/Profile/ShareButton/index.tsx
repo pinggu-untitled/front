@@ -3,7 +3,6 @@ import toggleMutator from '@utils/toggleMutator';
 import { Button } from '@components/Home/PostCard/LikeButton/style';
 import { IMyPings } from '@typings/db';
 import isIdExisting from '@utils/isIdExisting';
-import { useProfileMypings } from '@contexts/ProfileMypingsContext';
 import { useSession } from '@contexts/SessionContext';
 import { BsBookmark, BsBookmarkStarFill } from 'react-icons/bs';
 import useSWR from 'swr';

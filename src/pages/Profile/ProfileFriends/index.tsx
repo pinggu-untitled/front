@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CardList from '@components/Home/CardList';
 import { TapMain } from '@pages/Profile/ProfilePosts/style';
 import { InnerTap, Tap } from '@pages/Profile/ProfileMypings/style';
@@ -13,7 +13,6 @@ import FriendCard from '@components/Profile/cards/ProfileFollowCard';
 type Tap = 'followings' | 'follower';
 
 const ProfileFriends = () => {
-  const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const { data: User } = useSWR<IUser>(`/users/${userId}`, fetcher);
   const { data: Followings } = useSWR<IUser[]>(`/users/${userId}/followings`, fetcher);

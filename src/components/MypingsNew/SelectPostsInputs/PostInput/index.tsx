@@ -1,5 +1,4 @@
 import { IUserPost } from '@typings/db';
-import { useNavigate } from 'react-router-dom';
 import { BsCheck } from 'react-icons/bs';
 import { Info, Inner, NoMedia, PostImage, TotalCount } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
@@ -15,9 +14,8 @@ interface IProps {
 }
 
 const PostInput = ({ data, value, setValue }: IProps) => {
-  const navigate = useNavigate();
   const [isChecked, setChecked] = useState(false);
-  const handleCheck = (e: any) => {
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
     if (e.target.checked) {
       setValue((prev) => [...prev, { ...data }]);
@@ -46,7 +44,7 @@ const PostInput = ({ data, value, setValue }: IProps) => {
               <TotalCount>
                 <span className={'current'}>1</span> / {data?.Images.length}
               </TotalCount>
-              <img src={mediaPath('post', data?.Images[0].src)} />
+              <img src={mediaPath('post', data?.Images[0].src)} alt={data.User.nickname} />
             </>
           ) : (
             <NoMedia style={{ fontSize: '16px' }}>

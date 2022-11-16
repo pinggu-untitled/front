@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Li } from '@components/Layout/MenuList/style';
-import { Link } from 'react-router-dom';
 
 export interface IMenuItem {
   icon: ReactNode;

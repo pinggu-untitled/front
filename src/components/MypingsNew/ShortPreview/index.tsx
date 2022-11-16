@@ -35,7 +35,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
         }}
       >
         {message}
-        <span onClick={toggleShow} style={{ fontSize: '22px', cursor: 'pointer' }}>
+        <span aria-hidden="true" onClick={toggleShow} style={{ fontSize: '22px', cursor: 'pointer' }}>
           <IoIosClose />
         </span>
       </p>
@@ -70,7 +70,7 @@ const ShortPreview = ({ message, data, toggleShow }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath('profile', session?.profile_image_url)} />
+              <img src={mediaPath('profile', session?.profile_image_url)} alt={session?.nickname} />
             </ProfileAvatar>
             <CountsInfo>
               <span className={'info'} style={{ fontSize: '12px' }}>

@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { memo } from 'react';
 import mediaPath from '@utils/mediaPath';
 import OwnerActionButtons from '@components/Profile/OwnerActionButtons';
-import { IMyPings } from '@typings/db';
+import { IMyPings, IPost } from '@typings/db';
 import ShareButton from '@components/Profile/ShareButton';
 import { useProfileMypings } from '@contexts/ProfileMypingsContext';
 import PrivateTag from '@components/Profile/PrivateTag';
 import CateTag from '@components/Profile/CateTag';
+import { useSWR } from 'swr';
+import { fetcher } from '@utils/fetcher';
 
 interface IProps {
   data: IMyPings;
@@ -18,8 +20,8 @@ interface IProps {
 const ProfileMypingsCard = ({ data }: IProps) => {
   const navigate = useNavigate();
   const { session } = useSession();
-  const { onDelete, onFetchMypingsPosts } = useProfileMypings();
-  const { data: Posts } = onFetchMypingsPosts(data.id);
+  const { onDelete } = useProfileMypings();
+  const { data: Posts } = useSWR<IPost[]>(`/mypings/${data.id}/posts`, fetcher);
 
   const onProfile = (e: any) => {
     e.stopPropagation();
@@ -50,7 +52,7 @@ const ProfileMypingsCard = ({ data }: IProps) => {
                 bottom: '6px',
               }}
             >
-              <img src={mediaPath('profile', data.User.profile_image_url)} />
+              <img src={mediaPath('profile', data.User.profile_image_url)} alt={data.User.nickname} />
             </ProfileAvatar>
           )}
           {session?.id !== Number(data?.User.id) && (

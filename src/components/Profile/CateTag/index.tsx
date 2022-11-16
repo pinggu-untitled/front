@@ -1,6 +1,5 @@
 import { Tag } from '@components/Profile/CateTag/style';
-import { CSSProperties, useMemo } from 'react';
-import { CATEGORIES } from '@pages/MypingsNew';
+import { CSSProperties } from 'react';
 
 interface IProps {
   cateNumber: number;

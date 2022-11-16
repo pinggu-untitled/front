@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import { IoCloseOutline } from 'react-icons/io5';
 import { IImage } from '@typings/db';
@@ -51,7 +51,7 @@ const ImagesZoomModal: FC<IProps> = ({ show, onCloseModal, images }) => {
         <IoCloseOutline />
       </CloseButton>
       <ModalContent style={{ zIndex: '1000' }}>
-        {images?.map((img, i) => (
+        {images?.map((img) => (
           <img key={img.id} src={mediaPath('post', img.src)} alt={`${img.id}`} />
         ))}
       </ModalContent>

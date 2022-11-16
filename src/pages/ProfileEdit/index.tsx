@@ -15,11 +15,10 @@ import ProfileImageInput from '@components/ProfileEdit/ProfileImageInput';
 interface IForm {
   nickname: string;
   bio: string;
-  profile_image_url: any;
+  profile_image_url: string;
 }
 
 const ProfileEdit = () => {
-  const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const { data: User } = useSWR(`/users/${userId}`, fetcher);
   const navigator = useNavigate();
@@ -45,11 +44,6 @@ const ProfileEdit = () => {
         })
         .then((res) => res.data);
     }
-
-    const editedProfile = await axios
-      .patch('/profile/info', { ...data, profile_image_url: filename })
-      .then((res) => res.data)
-      .catch((err) => console.error(err));
 
     navigator(`/${userId}`);
   }, []);

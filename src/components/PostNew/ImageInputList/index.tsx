@@ -1,9 +1,8 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useFieldArray, Controller, useController } from 'react-hook-form';
 import { FaCamera } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
-import imagePreviewPromisfier, { fileReaderPromise } from '@utils/imagePreviewPromisfier';
+import { fileReaderPromise } from '@utils/imagePreviewPromisfier';
 import ImagePreview from '@components/PostNew/ImageInputList/ImagePreview';
 
 interface IProps {
@@ -90,7 +89,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
           <Controller
             control={control}
             name={name}
-            render={({ field }) => (
+            render={() => (
               <input type={'file'} onChange={(e: any) => handleChange(e.target.files)} multiple={true} hidden />
             )}
           />

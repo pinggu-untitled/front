@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import isIdExisting from '@utils/isIdExisting';
 import mediaPath from '@utils/mediaPath';
 import { ProfileAvatar } from '@components/Layout/SideNavigation/ProfileButtonModal/style';
 import FollowButton from '@components/Profile/FollowButton';
@@ -50,15 +49,12 @@ const ProfileSummaryBar = ({ data }: { data: IUser }) => {
         }}
         onClick={() => navigate(`/${data.id}`)}
       >
-        <img src={mediaPath(data.profile_image_url)} />
+        <img src={mediaPath('profile', data.profile_image_url)} alt={data.nickname} />
       </ProfileAvatar>
       {md?.id === pd?.User.id ? (
         <div>내 게시물</div>
       ) : (
-        <FollowButton
-          isActive={isIdExisting(Followings, session)}
-          style={{ position: 'absolute', top: '25px', right: '20px' }}
-        />
+        <FollowButton User={data} style={{ position: 'absolute', top: '25px', right: '20px' }} />
       )}
     </Base>
   );

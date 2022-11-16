@@ -34,7 +34,7 @@ const SelectPostsInput = ({ value, setValue }: IProps) => {
     <Select>
       <div className={'label'}>게시물 선택하기</div>
       <div className={'select-container'}>
-        <div className={'select-button'} onClick={() => setShow((p) => !p)}>
+        <div aria-hidden="true" className={'select-button'} onClick={() => setShow((p) => !p)}>
           마이핑스에 넣을 게시물 확인하기
           <span className={'icon'}>{show ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</span>
         </div>

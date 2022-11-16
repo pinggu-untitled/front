@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Controller, useController } from 'react-hook-form';
+import { Control, Controller, FieldValues, useController } from 'react-hook-form';
 import styled from '@emotion/styled';
 import imagePreviewPromisfier from '@utils/imagePreviewPromisfier';
 import mediaPath from '@utils/mediaPath';
 
 interface IProps {
-  control: any;
+  control: Control<FieldValues, any> | undefined;
   name: string;
 }
 
@@ -60,7 +60,7 @@ const ProfileImageInput = ({ control, name }: IProps) => {
   const { field } = useController({ control, name });
   const [preview, setPreview] = useState(field.value);
 
-  const handlePreview = (files: any) => {
+  const handlePreview = (files: string | FileList) => {
     if (typeof files === 'string') {
       setPreview(mediaPath('profile', files));
     } else {

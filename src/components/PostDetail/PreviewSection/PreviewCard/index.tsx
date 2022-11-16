@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { IPost } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';

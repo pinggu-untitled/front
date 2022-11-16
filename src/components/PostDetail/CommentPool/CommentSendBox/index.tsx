@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { BiSend } from 'react-icons/bi';
 import styled from '@emotion/styled';
 import useInput from '@hooks/useInput';

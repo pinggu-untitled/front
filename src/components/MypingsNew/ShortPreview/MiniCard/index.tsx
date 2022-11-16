@@ -1,10 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
-import { IUserPost } from '@typings/db';
 import { Card, Info, Inner, NoMedia, PostImage } from '@components/Home/PostCard/style';
 import { HiOutlineCamera } from 'react-icons/hi';
-import { IoIosClose } from 'react-icons/io';
+import mediaPath from '@utils/mediaPath';
+import { IPost } from '@typings/db';
 interface IProps {
-  data: any;
+  data: IPost;
 }
 const MiniCard = ({ data }: IProps) => {
   return (
@@ -16,7 +15,7 @@ const MiniCard = ({ data }: IProps) => {
       <Inner style={{ alignItems: 'center' }}>
         <PostImage style={{ width: '30px', height: '30px' }}>
           {data?.Images.length > 0 ? (
-            <img src={`http://localhost:8080/uploads/${data?.Images[0].src}`} />
+            <img src={mediaPath('post', data?.Images[0].src)} alt={data.User.nickname} />
           ) : (
             <NoMedia style={{ fontSize: '15px' }}>
               <HiOutlineCamera />

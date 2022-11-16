@@ -1,7 +1,6 @@
 import { Button } from '@components/Profile/FollowButton/style';
 import { CSSProperties, useEffect, useReducer } from 'react';
 import toggleMutator from '@utils/toggleMutator';
-import { useParams } from 'react-router-dom';
 import { IUser } from '@typings/db';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';

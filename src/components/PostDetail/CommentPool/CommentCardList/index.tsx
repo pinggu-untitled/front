@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { IComment } from '@typings/db';
 import styled from '@emotion/styled';
 import CommentCard from '@components/PostDetail/CommentPool/CommentCardList/CommentCard';

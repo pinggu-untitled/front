@@ -2,7 +2,6 @@ import LikeButton from '@components/Home/PostCard/LikeButton';
 import { IPost, IUser } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@contexts/SessionContext';
-import isIdExisting from '@utils/isIdExisting';
 import FollowButton from '@components/Profile/FollowButton';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';

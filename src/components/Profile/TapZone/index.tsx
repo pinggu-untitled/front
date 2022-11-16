@@ -11,9 +11,7 @@ const TapZone = ({ userId }: { userId: string }) => {
     <Taps>
       <Tap
         to={`/${userId}`}
-        style={({ isActive }) =>
-          location.pathname === `/${userId}` ? { fontWeight: 700, color: '#191919' } : undefined
-        }
+        style={() => (location.pathname === `/${userId}` ? { fontWeight: 700, color: '#191919' } : undefined)}
       >
         <span className={'content'}>
           <IoMdGrid />

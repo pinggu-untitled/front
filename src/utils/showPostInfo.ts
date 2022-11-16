@@ -1,6 +1,6 @@
 export const showPostInfo = (
   title: string,
-  postImg: string = '',
+  postImg: string,
   content: string,
   like: number,
   userImg: string,
@@ -22,7 +22,7 @@ export const showPostInfo = (
       </div>
       <div classname="img-box"; style="display: flex; align-items: center; margin-left: 15px;">
         <img src="http://localhost:8080/${
-          postImg ? 'uploads/' + postImg : 'default-images/default-post-image.png'
+          postImg ? 'uploads/' + (postImg || '') : 'default-images/default-post-image.png'
         }" alt="post-image" style="width: 120px; height: 120px; border-radius: 5px;" />
       </div>
     </div>
