@@ -23,6 +23,8 @@ const Home = () => {
     }
   }, [inView]);
 
+  if (!Posts) return <div>로딩중..</div>;
+
   return (
     <>
       <PageHeader pageName={'홈'} />
@@ -30,9 +32,11 @@ const Home = () => {
         <CardList>
           {Posts?.map((posts, i) => {
             return posts?.map((post, j) => {
-              if (i === Posts.length - 1 && j === 15)
-                return posts?.map((post) => <PostCard key={post.id} data={post} ref={ref} />);
-              return <PostCard key={post.id} data={post} />;
+              return i === Posts.length - 1 && j === 15 ? (
+                posts?.map((post) => <PostCard key={post.id} data={post} ref={ref} />)
+              ) : (
+                <PostCard key={post.id} data={post} />
+              );
             });
           })}
         </CardList>

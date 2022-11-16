@@ -3,6 +3,8 @@ import { IPost } from '@typings/db';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import mediaPath from '../../../../utils/mediaPath';
+import { NoMedia, TotalCount } from '@components/Home/PostCard/style';
+import { HiOutlineCamera } from 'react-icons/hi';
 
 interface IProps {
   post: IPost;
@@ -10,7 +12,6 @@ interface IProps {
 
 export const Base = styled.div`
   flex: 1;
-  max-width: 190px;
   > p {
     font-size: 14px;
     font-weight: 600;
@@ -37,10 +38,18 @@ const PreviewCard: FC<IProps> = ({ post }) => {
   return (
     <Base onClick={() => navigate(`/posts/${post.id}`)}>
       <ImageWrapper>
-        <img
-          src={post?.Images.length > 0 ? mediaPath('post', post?.Images[0].src) : '/assets/placeholder.png'}
-          alt={post?.Images.length > 0 ? `${post?.Images[0].id}` : 'placholder.png'}
-        />
+        {post?.Images.length > 0 ? (
+          <>
+            <TotalCount>
+              <span className={'current'}>1</span> / {post?.Images.length}
+            </TotalCount>
+            <img src={mediaPath('post', post?.Images[0].src)} alt={post.User.nickname} />
+          </>
+        ) : (
+          <NoMedia>
+            <HiOutlineCamera />
+          </NoMedia>
+        )}
       </ImageWrapper>
       <p className="title">{post.title}</p>
     </Base>

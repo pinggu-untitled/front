@@ -75,7 +75,7 @@ const ProfileImageInput = ({ control, name }: IProps) => {
   return (
     <Base>
       <ProfileImageWrapper>
-        <img src={preview || '/assets/placeholder.png'} alt={'프로필 사진 안나옴'} />
+        <img src={preview || '/src/assets/placeholder.png'} alt={'프로필 사진 안나옴'} />
         <Controller
           control={control}
           name={name}

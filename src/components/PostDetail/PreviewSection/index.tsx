@@ -59,7 +59,7 @@ export const Header = styled.div`
 export const InnerContent = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 8px;
   padding: 0 20px 20px;
 `;
 
