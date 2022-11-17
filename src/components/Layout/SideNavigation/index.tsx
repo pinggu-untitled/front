@@ -32,7 +32,7 @@ const SideNavigation = ({ show, toggle }: { show: boolean; toggle: () => void })
         <NavItem
           icons={{ outline: <RiHome5Line />, fill: <RiHome5Fill /> }}
           title={'홈'}
-          url={'/posts?size=20&page=0'}
+          url={'/'}
           // onClick={() => moveCenterToMe()}
         />
         <NavItem
