@@ -67,8 +67,6 @@ const PostEdit = () => {
       images: filenames.flat(),
     };
 
-    console.log(filenames.flat());
-
     axios
       .patch(`/posts/${postId}`, temp)
       .then((res) => {
