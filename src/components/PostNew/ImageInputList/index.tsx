@@ -97,7 +97,7 @@ const ImageInputList: FC<IProps> = ({ control, name }) => {
         {previews.length >= 1 &&
           previews?.map((preview: string, i) => {
             const isNew = preview.startsWith('data:image');
-            const baseUrl = 'http://localhost:8080/uploads';
+            const baseUrl = `${import.meta.env.VITE_HOST}/uploads`;
             return (
               <ImagePreview
                 key={`${preview}.${i}`}

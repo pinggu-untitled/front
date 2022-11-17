@@ -49,7 +49,7 @@ const PageHeader = ({ pageName }: IProps) => {
     {
       icon: <FiLogIn />,
       title: '로그아웃',
-      href: 'http://localhost:8080/auth/logout',
+      href: `${import.meta.env.VITE_HOST}/auth/logout`,
     },
   ];
 

@@ -43,7 +43,7 @@ const Login = () => {
               <div className={'socials'}>
                 <a
                   className={'social-link'}
-                  href={'http://localhost:8080/auth/login/kakao'}
+                  href={`${import.meta.env.VITE_HOST}/auth/login/kakao`}
                   style={{ backgroundColor: '#fee601' }}
                 >
                   <BsFillChatFill style={{ color: '#3b1d1e', fontSize: '19px' }} />
@@ -51,7 +51,7 @@ const Login = () => {
                 </a>
                 <a
                   className={'social-link'}
-                  href={'http://localhost:8080/auth/login/google'}
+                  href={`${import.meta.env.VITE_HOST}/auth/login/google`}
                   style={{
                     backgroundColor: '#fff',
                     border: '1px solid #dfdfdf',

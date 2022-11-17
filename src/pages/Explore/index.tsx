@@ -80,26 +80,33 @@ export const Message = styled.div`
 
 const Explore = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
   const [results, setResults] = useState<{ [key: string]: any[] }>({});
+  const filterRef = useRef<HTMLSelectElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
-  const ref = useRef<HTMLInputElement>(null);
-
-  const clearParams = () => {
-    searchParams.delete('search_query');
-    searchParams.delete('filter');
-    setSearchParams(searchParams);
-  };
+  // const clearParams = () => {
+  //   searchParams.delete('search_query');
+  //   searchParams.delete('filter');
+  //   setSearchParams(searchParams);
+  // };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    console.log('>>>>>>>>>>', searchParams.toString());
-    if (!search) return false;
-    axios.get(`/results?${searchParams.toString()}`).then((res) => {
-      setResults(res.data);
-    });
+    if (filterRef && searchRef) {
+      const filterValue = filterRef.current?.value;
+      const searchValue = searchRef.current?.value;
+      axios.get(`/results?filter=${filterValue}&search_query=${searchValue}`).then((res) => {
+        setResults(res.data);
+      });
+      if (filterValue === 'post') {
+        navigate(`/explore?filter=${filterValue}&keyword=${searchValue}`);
+      }
+    }
+    // if (!search) return false;
+    // axios.get(`/results?${searchParams.toString()}`).then((res) => {
+    //   setResults(res.data);
+    // });
   };
 
   const CATE = useMemo(
@@ -112,25 +119,23 @@ const Explore = () => {
     [],
   );
 
-  const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    searchParams.set('search_query', e.target.value);
-    setSearchParams(searchParams);
-  };
+  // useEffect(() => {
+  //   if (!ref.current?.value) ref.current?.focus();
+  // }, [search]);
 
-  const onChangeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
-    searchParams.set('filter', e.target.value);
-    setSearchParams(searchParams);
-  };
+  // const onChangeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setFilter(e.target.value);
+  //   searchParams.set('filter', e.target.value);
+  //   setSearchParams(searchParams);
+  // };
 
-  useEffect(() => {
-    if (!ref.current?.value) ref.current?.focus();
-  }, [search]);
+  // useEffect(() => {
+  //   if (!ref.current?.value) ref.current?.focus();
+  // }, [search]);
 
-  useEffect(() => {
-    searchParams.set('filter', CATE[0].value);
-  }, []);
+  // useEffect(() => {
+  //   searchParams.set('filter', CATE[0].value);
+  // }, [CATE]);
 
   console.log(results);
 
@@ -141,12 +146,12 @@ const Explore = () => {
           <SlArrowLeft style={{ fontSize: '18px' }} />
         </ActionButton>
         <Form onSubmit={onSubmit}>
-          <select value={filter} onChange={onChangeFilter}>
+          <select ref={filterRef}>
             {CATE.map((cate, i) => (
               <option key={i} value={cate.value} label={cate.label} />
             ))}
           </select>
-          <input value={search} onChange={onChangeSearch} ref={ref} type={'text'} placeholder={'검색'} />
+          <input ref={searchRef} type={'text'} placeholder={'검색'} />
           <input type={'submit'} hidden />
         </Form>
       </Header>

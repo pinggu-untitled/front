@@ -93,7 +93,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
         }`,
       )
         .then((posts) => {
-          console.log(posts);
+          console.log('MapContext >> ', posts);
           const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
           const imageSize = new kakao.maps.Size(20, 32);
           const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);

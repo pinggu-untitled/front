@@ -21,9 +21,9 @@ export const showPostInfo = (
         </div>
       </div>
       <div classname="img-box"; style="display: flex; align-items: center; margin-left: 15px;">
-        <img src="http://localhost:8080/${
-          postImg ? 'uploads/' + (postImg || '') : 'default-images/default-post-image.png'
-        }" alt="post-image" style="width: 120px; height: 120px; border-radius: 5px;" />
+        <img src="${import.meta.env.VITE_HOST}/${
+    postImg ? 'uploads/' + postImg : 'default-images/default-post-image.png'
+  }" alt="post-image" style="width: 120px; height: 120px; border-radius: 5px;" />
       </div>
     </div>
     <div style="width: 400px; height: 30px; position: relative; overflow: hidden;">
